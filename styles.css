@@ -1,0 +1,64 @@
+@keyframes bg{
+    from {background-color:white}
+    to{background-color:#00c7ff}
+}
+
+@keyframes title-Ani{
+    from{
+        opacity: 0;
+        top:-40px;
+    }
+    to{
+        opacity: 1;
+        top:50%;
+    }
+}
+
+@keyframes title-caption-Ani{
+    from{
+        opacity: 0;
+        top:150%;
+    }
+    to{
+        opacity: 1;
+        top:57%;
+    }
+}
+
+html{
+    animation-name: bg;
+    animation-duration:1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+#title{
+    position: fixed;
+    left:50%;
+    transform: translate(-50%,-50%);
+    
+    color:white;
+    font-size:4em;
+    text-align: center;
+    font-family: arial;
+
+    animation-name: title-Ani;
+    animation-duration:1s;
+    animation-fill-mode:forwards;
+
+}
+
+#title-caption{
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+    color:white;
+    font-size:1em;
+    text-align: center;
+    font-family: arial;
+
+    animation-name: title-caption-Ani;
+    animation-duration:1s;
+    animation-fill-mode:forwards;
+}
