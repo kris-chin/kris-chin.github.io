@@ -79,6 +79,15 @@ body.things{
     animation-duration:0.5s;
 }
 
+.showcaseItem{
+    padding: 40px;
+}
+
+.dl{
+    font-size:0.5em;
+    transform: translate(0px, -10px);
+}
+
 #title{
     position: fixed;
     left:50%;
