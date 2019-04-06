@@ -10,8 +10,16 @@
         background-color:#f442a7;
     }
 }
+@keyframes bg3{
+    from{
+        background-color: #00c7ff;
+    }
+    to{
+        background-color: #b942f4;
+    }
+}
 
-@keyframes title-Ani{
+@keyframes title-ani{
     from{
         opacity: 0;
         top:-40px;
@@ -21,7 +29,7 @@
         top:50%;
     }
 }
-@keyframes title-caption-Ani{
+@keyframes title-caption-ani{
     from{
         opacity: 0;
         top:150%;
@@ -32,17 +40,26 @@
     }
 }
 
-@keyframes enter-Ani{
+@keyframes enter-ani{
     from{
         opacity: 0;
         top:150%;
     } to{
         opacity: 1;
-        top:70%;
+        top:60%;
+    }
+}
+@keyframes enter-ani-2{
+    from{
+        opacity: 0;
+        top:150%;
+    } to{
+        opacity: 1;
+        top:65%;
     }
 }
 
-@keyframes showcase-Ani{
+@keyframes showcase-ani{
     from{
         opacity: 0;
     }
@@ -63,6 +80,12 @@ body.things{
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
+body.about{
+    animation-name: bg3;
+    animation-duration:1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
 
 #showcase{
     text-align:center;
@@ -73,7 +96,7 @@ body.things{
     text-align: center;
     font-family: arial;
 
-    animation-name: showcase-Ani;
+    animation-name: showcase-ani;
     animation-delay:1s;
     animation-fill-mode:forwards;
     animation-duration:0.5s;
@@ -98,7 +121,7 @@ body.things{
     text-align: center;
     font-family: arial;
 
-    animation-name: title-Ani;
+    animation-name: title-ani;
     animation-duration:1s;
     animation-fill-mode:forwards;
 
@@ -114,30 +137,46 @@ body.things{
     text-align: center;
     font-family: arial;
 
-    animation-name: title-caption-Ani;
+    animation-name: title-caption-ani;
     animation-duration:1s;
     animation-fill-mode:forwards;
 }
 
 #enter{
+    color: white;
+    font-size: 1.1em;
+    text-align: center;
+    font-family: arial;
+    font-weight:bold;
+}
+
+#enter-showcase{
     position: fixed;
     left:50%;
     transform: translate(-50%,-50%);
-    color: white;
-    font-size: 1.2em;
-    text-align: center;
-    font-family: arial;
+    opacity:0;
 
-    opacity: 0;
-
-    animation-name: enter-Ani;
+    animation-name: enter-ani;
     animation-duration: 1s;
     animation-delay:0.5s;
     animation-fill-mode:forwards;
 }
 
+#enter-about{
+    position: fixed;
+    left:50%;
+    transform: translate(-50%,-50%);
+    opacity: 0;
+
+    animation-name: enter-ani-2;
+    animation-duration: 1s;
+    animation-delay:1s;
+    animation-fill-mode:forwards;
+}
+
+
 a{
-    /*text-decoration: none;*/
+    text-decoration: none;
     color: white;
 }
 a:hover{
