@@ -2,6 +2,15 @@
     from {background-color:white}
     to{background-color:#00c7ff}
 }
+@keyframes bg2{
+    from{
+        background-color: #00c7ff;
+    }
+    to{
+        background-color:#f442a7;
+    }
+}
+
 @keyframes title-Ani{
     from{
         opacity: 0;
@@ -33,14 +42,41 @@
     }
 }
 
+@keyframes showcase-Ani{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
 body.splash{
     animation-name: bg;
     animation-duration:1s;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
-body{
-    background-color: #00c7ff;
+body.things{
+    animation-name: bg2;
+    animation-duration:1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+#showcase{
+    text-align:center;
+    opacity:0;
+    
+    color:white;
+    font-size:1em;
+    text-align: center;
+    font-family: arial;
+
+    animation-name: showcase-Ani;
+    animation-delay:1s;
+    animation-fill-mode:forwards;
+    animation-duration:0.5s;
 }
 
 #title{
