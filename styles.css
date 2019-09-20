@@ -114,24 +114,35 @@ body.about{
     width: 300px;
     vertical-align: top;
 
-    border-width: 2px;
+    border-width: 1px;
     border-style: solid;
     border-color: white;
 
     display: inline-flex;
     flex-direction:column;
+    justify-content:center;
 }
 
 .item-name{
-    font-size:1em;
+    font-size:0.9em;
     color:black;
     font-weight:bold;
 }
 
-.item-links{
+.item-link{
     font-size:0.5em;
     margin-top:auto;
     color:black;
+}
+
+.item-link-icon{
+    max-width:8px;
+    max-height:8px;
+    display:inline-block;
+}
+
+.item-link-name{
+    display:inline-block;
 }
 
 .item-header{
@@ -155,6 +166,19 @@ body.about{
 
     height: 20px;
     width: 300px;
+
+}
+
+.item-body{
+    flex-direction:column;
+    justify-content:middle;
+    font-size:0.75em;
+    padding:2.5px;
+}
+
+img{
+    max-height:80%;
+    max-width:80%;
 
 }
 
