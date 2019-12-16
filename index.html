@@ -1,20 +1,56 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>KRISCHIN LAYON</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
+	<head>
+		<meta charset="utf-8">
+		<title>KRISCHIN LAYON</title>
+        <link rel="stylesheet" href="styles2.css">
+	</head>
+	<body>
+        <script src="js/three.js"></script>
+		<script>
+            var scene = new THREE.Scene();
+            //camera:
+                //fov: 75
+                //resolution: innerwidth/innerheigh
+                //near clipping plane: 0.1
+                //far clipping plane: 1000
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
-    <body class = 'splash'>
-        <div id='title'>
-            <p><b>KRISCHIN LAYON</b></p>
-        </div>
-        <div id='title-caption'>
-        </div>
-        <div id = 'enter'>
-            <p id='enter-showcase'><a href="things.html">THINGS I'VE MADE</p>
-            <!-- <p id='enter-about'><a href="about.html">ABOUT ME</a></p> -->
-        </div>
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight); //set the renderer size to width x height
+			document.body.appendChild( renderer.domElement ); //append a renderer element to the HTML doc, which is a <canvas> element
 
-    </body>
+			var geometry = new THREE.BoxGeometry( 1, 1, 1 ); //set a geometry that is a 1x1x1 box
+			var material = new THREE.MeshBasicMaterial( { color: 0xffffff } ); //create a white mesh material
+			var cube = new THREE.Mesh( geometry, material );
+			scene.add( cube ); //add the cube to the scene
+
+			camera.position.z = 5; //move the camera a bit out
+
+            var time = 0;
+
+			var animate = function () { //main animate function
+				requestAnimationFrame( animate );
+
+                time += 0.01;
+
+				cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                
+                cube.position.y = 0.25 * Math.sin(time*2);
+
+				renderer.render( scene, camera );
+			};
+
+			animate();
+        </script>
+        <div id ="splash-title">
+            KRISCHIN LAYON
+        </div>
+        <div id="enter">
+            <a href="things.html">
+                ENTER
+            </a>
+        </div>
+	</body>
 </html>
