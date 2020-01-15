@@ -7,7 +7,7 @@
         background-color: #000000;
     }
     to{
-        background-color:#f442a7;
+        background-color:#000000;
     }
 }
 @keyframes bg3{
@@ -68,6 +68,13 @@
     }
 }
 
+
+@keyframes showcase-bg{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
 /* ----------------------------------------*/
 
 body.splash{
@@ -104,6 +111,7 @@ body.about{
     animation-delay:1s;
     animation-fill-mode:forwards;
     animation-duration:0.5s;
+    
 }
 
 .showcaseItem{
