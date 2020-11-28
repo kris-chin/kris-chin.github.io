@@ -15,7 +15,7 @@
     "three": "^0.123.0",
     "web-vitals": "^0.2.4"
   },
-  "homepage": "https://kris-chin.github.io",
+  "homepage": "https://krischinlayon.com/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
