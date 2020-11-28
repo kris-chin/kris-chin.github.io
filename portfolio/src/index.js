@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Router, Route, Switch } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+
+import Splash from './components/Splash';
+import Projects from './components/Projects';
+
+const history = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+
+    <Router history={history}>
+      <Switch>
+          <Route exact path="/">
+            <Splash />
+          </Route>
+          <Route path = "/things">
+            <Projects />
+          </Route>
+        </Switch>
+    </Router>
+
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
