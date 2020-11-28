@@ -36,7 +36,7 @@ export class Item extends React.Component {
 
                 <div class = 'item-footer'>
                     <div class = 'item-link'>
-                        <img class = "item-link-icon" src={githubLogo} />
+                        <img class = "item-link-icon" src={githubLogo} alt=""/>
                         <a href={this.state.github} class ='item-link-name'>
                             GITHUB
                         </a>
