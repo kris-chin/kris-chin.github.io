@@ -6,7 +6,7 @@ import githubLogo from './images/github.png';
 /*
 import Link from 'react-router-dom';
 */
-import projectData from './projectList.json';
+import projectData from '../data/projectList.json';
 
 
 export class Item extends React.Component {
