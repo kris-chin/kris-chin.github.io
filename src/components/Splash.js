@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as THREE from 'three';
-import './Splash.css';
+import './Splash.scss';
 
 export class Splash extends React.Component {
 
