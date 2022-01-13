@@ -1,6 +1,19 @@
+/*
+SceneManager.ts
+This is the uppermost THREE class. All of our THREE code will run underneath this SceneManager.
+This class is responsible for renderer-related processes. NOT actual geometries.
+
+For readibility purposes, all of our actual geometry will be nested within a seperate World class.
+
+*/
+
+//Imports from JS packages
 import * as THREE from 'three';
 
-//Uppermost THREE Class
+//THREE imports
+import World from './World';
+
+
 export class SceneManager {
 
     //Scene Related
@@ -20,6 +33,7 @@ export class SceneManager {
             0.1, //Near Clipping Plane
             1000 //Far Clipping Plane
         );
+        this.camera.position.z = 5; //move the camera a bit out
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,14 +43,18 @@ export class SceneManager {
 
     //Start the scene
     Initialize(){
-        this.Animate()
+        //Add our World
+        this.scene.add(new World());
+
+        //Start Animations
+        this.Step()
     }
 
     //Function called every frame
-    Animate(){
+    Step(){
 
         //Set the callback functino to be the animation function again
-        requestAnimationFrame( this.Animate ); 
+        requestAnimationFrame( this.Step ); 
         this.time += 0.01;
 
         this.renderer.render(this.scene, this.camera);

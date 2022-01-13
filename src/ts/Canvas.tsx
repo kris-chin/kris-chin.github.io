@@ -1,3 +1,10 @@
+/*
+Canvas.tsx
+
+This React Component serves as the bridge between the THREE code and the React code.
+
+*/
+
 //React Imports
 import React from 'react';
 
