@@ -9,24 +9,43 @@ Type: Object3D.
 
 //THREE imports
 import * as THREE from 'three';
+import Cube from './objects/Cube';
 
-export class World extends THREE.Object3D {
+export class World extends THREE.Group {
+
+    cubes : Array<Cube>;
 
     //Add a bunch of geometry
     constructor(){
         super();
 
-        var box = new THREE.BoxGeometry(1, 1,1);
-        var mat = new THREE.MeshBasicMaterial( { color: 0xffffff});
-        var cube1 = new THREE.Mesh(box, mat);
-        var cube2 = new THREE.Mesh(box,mat);
+        console.log("WORLD INSTANTIATED (should only be once)")
 
-        this.add(cube1);
-        this.add(cube2);
+        //I don't wanna make duplicate geos and materials
+        var geometry = new THREE.BoxGeometry(0.5, 0.5,0.5);
+        var material = new THREE.MeshBasicMaterial( { color: 0xffffff});
 
-        cube1.position.y = 1;
+        this.cubes = [];
 
-        cube2.position.x = 1;
+        //Add some cubes
+        for (let i = 0; i < 10; i++){
+
+            let cuber = new Cube(geometry, material)
+            this.cubes.push(cuber)
+            
+            this.add(cuber.mesh)
+
+            cuber.mesh.position.x = ((Math.random() - 0.5) * 2) * 2;
+            cuber.mesh.position.y = ((Math.random() - 0.5) * 2) * 2;
+            cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
+            
+        }
+    }
+
+    Step(){
+        for (let cube of this.cubes){
+            cube.Step();
+        }
     }
 
 }

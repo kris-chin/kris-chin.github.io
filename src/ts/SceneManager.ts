@@ -2,8 +2,11 @@
 SceneManager.ts
 This is the uppermost THREE class. All of our THREE code will run underneath this SceneManager.
 This class is responsible for renderer-related processes. NOT actual geometries.
+Additionally, this Scene Class will hold all of our Data and Configurations
 
 For readibility purposes, all of our actual geometry will be nested within a seperate World class.
+
+
 
 */
 
@@ -23,6 +26,9 @@ export class SceneManager {
 
     //Animation Related
     time: number;
+
+    //World
+    world: World;
     
     constructor(){
         this.scene = new THREE.Scene();
@@ -39,25 +45,35 @@ export class SceneManager {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         
         this.time = 0;
+        this.world = new World();
     }
 
     //Start the scene
     Initialize(){
         //Add our World
-        this.scene.add(new World());
+        this.scene.add(this.world);
+
+        //Locally point to our vars (references to "this" won't work within Step Function)
+        //TODO: You can pass this all into the Step function as a Context
+        var r = this.renderer;
+        var t = this.time;
+        var s = this.scene;
+        var c = this.camera;
+        var w = this.world;
+        
+        //Function called every frame
+        var Step = function(){
+            requestAnimationFrame( Step ); 
+
+            //Set the callback functino to be the animation function again
+            t = t + 0.01;
+            w.Step();
+
+            r.render(s, c);
+        }
 
         //Start Animations
-        this.Step()
-    }
-
-    //Function called every frame
-    Step(){
-
-        //Set the callback functino to be the animation function again
-        requestAnimationFrame( this.Step ); 
-        this.time += 0.01;
-
-        this.renderer.render(this.scene, this.camera);
+        Step();
     }
 
 }
