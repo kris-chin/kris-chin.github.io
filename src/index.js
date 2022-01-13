@@ -6,6 +6,9 @@ import { createBrowserHistory } from 'history';
 import Splash from './components/Splash';
 import Projects from './components/Projects';
 
+//Testing THREE
+import Canvas from './ts/Canvas';
+
 const history = createBrowserHistory();
 
 ReactDOM.render(
@@ -18,6 +21,9 @@ ReactDOM.render(
           </Route>
           <Route path = "/things">
             <Projects />
+          </Route>
+          <Route path ="/test">
+            <Canvas />
           </Route>
         </Switch>
     </Router>
