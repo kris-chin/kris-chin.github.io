@@ -7,7 +7,6 @@ Extend your objects from this instead of THREE.Object3D.
 */
 
 import * as THREE from 'three';
-import SceneManager from '../Scene';
 
 export abstract class SceneObject extends THREE.Object3D {
 
