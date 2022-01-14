@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
+//Pages
 import Splash from './components/Splash';
 import Projects from './components/Projects';
 

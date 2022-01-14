@@ -9,7 +9,10 @@ This React Component serves as the bridge between the THREE code and the React c
 import React from 'react';
 
 //THREE Imports
-import SceneManager from './SceneManager'
+import SceneManager from './Scene'
+
+//Determine if WebGL is even avaiable
+import { WEBGL } from '../js/WebGL';
 
 export class Canvas extends React.Component {
 
@@ -17,14 +20,29 @@ export class Canvas extends React.Component {
     componentDidMount(): void {
         let canvas = new SceneManager();
 
-        //Get the DIV Element that this Class Exports and replace it with a canvas element
+        //Get the DIV Element that this Class Exports
         const element : (HTMLElement | null) = document.getElementById('canvas');
         
         //If canvas was successsfully grabbed
         if (element && element.parentNode){
-            element.parentNode.replaceChild(canvas.renderer.domElement, element);
-            //Start the scene
-            canvas.Initialize()
+
+            //Check if WebGL is available
+            if (WEBGL.isWebGLAvailable() ) {
+                //Replace the DIV element with a canvas element
+                element.parentNode.replaceChild(canvas.renderer.domElement, element);
+
+                //Start the scene
+                canvas.Initialize()
+            } else {
+                
+                //Display WebGL Warning
+                const warning = WEBGL.getWebGLErrorMessage();
+                const container : (HTMLElement | null) = document.getElementById( 'container' );
+
+                if (container){
+	                container.appendChild( warning );
+                }
+            }
         }
            
     }
