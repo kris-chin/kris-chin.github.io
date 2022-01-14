@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+import SceneObject from './SceneObject'
+import World from '../World';
 
-export class Cube extends THREE.Object3D {
+export class Cube extends SceneObject {
 
     geometry : THREE.BoxGeometry;
     material : THREE.Material;
@@ -9,9 +11,7 @@ export class Cube extends THREE.Object3D {
     constructor(geometry: THREE.BoxGeometry, material: THREE.Material){
         super();
 
-        console.log("CUBE INSTANTIATED")
-
-        //Set up Box Geometry and Material
+        //Set up Geometry and Material
         //We do this externally to avoid making duplicate geometries and materials
         this.geometry = geometry;
         this.material = material;
@@ -23,7 +23,7 @@ export class Cube extends THREE.Object3D {
     Step(){
         this.mesh.rotation.x += 0.01;
         this.mesh.rotation.y += 0.01;
-        //this.mesh.position.y = 0.25 * Math.sin()
+        this.mesh.position.y += 0.01 * Math.sin((<World>this.parent).time)
 
     }
 

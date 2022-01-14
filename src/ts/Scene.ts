@@ -4,7 +4,7 @@ This is the uppermost THREE class. All of our THREE code will run underneath thi
 This class is responsible for renderer-related processes. NOT actual geometries.
 Additionally, this Scene Class will hold all of our Data and Configurations
 
-For readibility purposes, all of our actual geometry will be nested within a seperate World class.
+For readibility purposes, all of our actual geometry will be nested within a nested World class.
 
 
 
@@ -17,17 +17,14 @@ import * as THREE from 'three';
 import World from './World';
 
 
-export class SceneManager {
+export class Scene {
 
     //Scene Related
     scene: THREE.Scene;
     camera: THREE.Camera;
     renderer: THREE.Renderer;
 
-    //Animation Related
-    time: number;
-
-    //World
+    //World for this Scene
     world: World;
     
     constructor(){
@@ -44,31 +41,31 @@ export class SceneManager {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         
-        this.time = 0;
         this.world = new World();
     }
 
     //Start the scene
     Initialize(){
-        //Add our World
+        //Add our World inside Scene
         this.scene.add(this.world);
 
         //Locally point to our vars (references to "this" won't work within Step Function)
         //TODO: You can pass this all into the Step function as a Context
         var r = this.renderer;
-        var t = this.time;
         var s = this.scene;
         var c = this.camera;
         var w = this.world;
         
         //Function called every frame
         var Step = function(){
+            //Set the callback functino to be the animation function again
             requestAnimationFrame( Step ); 
 
-            //Set the callback functino to be the animation function again
-            t = t + 0.01;
+            //Call the step function in the world.
+            //Make all calculations to World instead of here
             w.Step();
 
+            //Render
             r.render(s, c);
         }
 
@@ -78,4 +75,4 @@ export class SceneManager {
 
 }
 
-export default SceneManager
+export default Scene
