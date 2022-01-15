@@ -14,8 +14,10 @@ import SceneObject from './objects/SceneObject';
 
 export class World extends THREE.Group {
 
-    //All objects in world
-    objects : Array<SceneObject>;
+    //Structures to hold all of our 3D information
+    objects : Array<SceneObject>; //All objects in world
+    geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
+    materials : Map<string,THREE.Material>; //Map of all materials used
 
     //"Global" Variables
     time : number;
@@ -24,20 +26,23 @@ export class World extends THREE.Group {
     constructor(){
         super();
         this.time = 0;
+        
+        //All 
         this.objects = [];
+        this.geometries = new Map<string,THREE.BufferGeometry>();
+        this.materials = new Map<string,THREE.Material>();
 
         //Everything below this line is arbitrary
         //------------------------------------------------
 
-        //I don't wanna make duplicate geos and materials
-        var geometry = new THREE.BoxGeometry(0.5, 0.5,0.5);
-        var material = new THREE.MeshBasicMaterial( { color: 0xffffff});
+        this.geometries.set('box', new THREE.BoxGeometry(0.5, 0.5,0.5));
+        this.materials.set('white', new THREE.MeshBasicMaterial( { color: 0xffffff}));
 
         //Add some cubes
         for (let i = 0; i < 30; i++){
 
-            let cuber = new Cube(geometry, material)
-            this.AddObject(cuber)
+            let cuber = new Cube('box' , 'white');
+            this.AddObject(cuber);
 
             cuber.mesh.position.x = ((Math.random() - 0.5) * 2) * 2;
             cuber.mesh.position.y = ((Math.random() - 0.5) * 2) * 2;
@@ -64,8 +69,12 @@ export class World extends THREE.Group {
         this.objects.push(object) //Object is added in array
         object.parent = this //Set the world to be the parent
 
+        object.Initialize(this); //Point the Object to the World and create mesh
+
         if (object.mesh){
             this.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+        } else {
+            console.error("Failed to create mesh")
         }
 
     }
