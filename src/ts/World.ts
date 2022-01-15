@@ -12,6 +12,9 @@ import * as THREE from 'three';
 import Cube from './objects/Cube';
 import SceneObject from './objects/SceneObject';
 import Scene from './Scene';
+import GeometryLoader from './GeometryLoader';
+import MaterialLoader from './MaterialLoader';
+import { Material } from 'three';
 
 export class World extends THREE.Group {
 
@@ -19,6 +22,10 @@ export class World extends THREE.Group {
     objects : Array<SceneObject>; //All objects in world
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,THREE.Material>; //Map of all materials used
+
+    //Loaders for 3D information
+    private loader_geometries : GeometryLoader;
+    private loader_materials : MaterialLoader;
 
     //Respective Scene Object
     scene : Scene;
@@ -31,20 +38,18 @@ export class World extends THREE.Group {
         super();
         this.scene = scene;
         this.time = 0;
+
+        //Setup Loaders
+        this.loader_materials = new MaterialLoader();
+        this.loader_geometries = new GeometryLoader();
         
-        //All 
+        //Initalize all of our 3D Information
         this.objects = [];
-        this.geometries = new Map<string,THREE.BufferGeometry>();
-        this.materials = new Map<string,THREE.Material>();
+        this.geometries = this.loader_geometries.map
+        this.materials = this.loader_materials.map
 
         //Everything below this line is arbitrary
         //------------------------------------------------
-
-        this.geometries.set('box', new THREE.BoxGeometry(0.5, 0.5,0.5));
-        this.materials.set('red', new THREE.MeshBasicMaterial( { color: 0xff4040}));
-        this.materials.set('yellow', new THREE.MeshBasicMaterial( { color: 0xffec40}));
-        this.materials.set('green', new THREE.MeshBasicMaterial( { color: 0x17a64b}));
-        this.materials.set('blue', new THREE.MeshBasicMaterial( { color: 0x424bf5}));
 
         //Add some cubes
         for (let i = 0; i < 30; i++){
