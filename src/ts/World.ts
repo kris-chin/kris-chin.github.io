@@ -41,17 +41,35 @@ export class World extends THREE.Group {
         //------------------------------------------------
 
         this.geometries.set('box', new THREE.BoxGeometry(0.5, 0.5,0.5));
-        this.materials.set('white', new THREE.MeshBasicMaterial( { color: 0xffffff}));
+        this.materials.set('red', new THREE.MeshBasicMaterial( { color: 0xff4040}));
+        this.materials.set('yellow', new THREE.MeshBasicMaterial( { color: 0xffec40}));
+        this.materials.set('green', new THREE.MeshBasicMaterial( { color: 0x17a64b}));
+        this.materials.set('blue', new THREE.MeshBasicMaterial( { color: 0x424bf5}));
 
         //Add some cubes
         for (let i = 0; i < 30; i++){
 
-            let cuber = new Cube('box' , 'white');
+            let color = Math.random()
+            let c : string;
+            if (color < 0.25){
+                c = 'red'
+            } else if (color < 0.5) {
+                c = 'blue'
+            } else if (color < 0.75) {
+                c = 'yellow'
+            } else{
+                c = 'green'
+            }
+
+            let cuber = new Cube('box' , c);
             this.AddObject(cuber);
 
-            cuber.mesh.position.x = ((Math.random() - 0.5) * 2) * 2;
-            cuber.mesh.position.y = ((Math.random() - 0.5) * 2) * 2;
-            cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
+            if (cuber.mesh){
+                cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
+                cuber.mesh.position.y = ( Math.sin(i/30 * 2*Math.PI)) * 2;
+
+                cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
+            }
             
         }
 
@@ -79,7 +97,7 @@ export class World extends THREE.Group {
         if (object.mesh){
             this.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
         } else {
-            console.error("Failed to create mesh")
+            console.error("Failed to create mesh", object)
         }
 
     }

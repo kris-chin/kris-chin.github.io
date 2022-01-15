@@ -40,6 +40,14 @@ export abstract class SceneObject extends THREE.Object3D {
         this.geometry = this.world.geometries.get(this.key_geometry)
         this.material = this.world.materials.get(this.key_material)
 
+        if (!this.geometry){
+            console.error("Invalid Geometry: \'" + this.key_geometry + "\'")
+        }
+
+        if (!this.material){
+            console.error("Invalid Material: \'" + this.key_material + "\'")
+        }
+
         //initialize mesh
         if (this.geometry && this.material){
             this.mesh = new Mesh(this.geometry,this.material)
