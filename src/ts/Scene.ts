@@ -1,13 +1,12 @@
 /*
-SceneManager.ts
-This is the uppermost THREE class. All of our THREE code will run underneath this SceneManager.
-This class is responsible for renderer-related processes. NOT actual geometries.
-Additionally, this Scene Class will hold all of our Data and Configurations
+    SceneManager.ts
 
-For readibility purposes, all of our actual geometry will be nested within a nested World class.
+    This is the uppermost THREE class. All of our THREE code will run underneath this SceneManager.
+    This class is responsible for renderer-related processes. NOT actual Meshes, Geometries, or Materials.
 
+    All "Global" variables or configurations are in the World Class, a seperate class that handles actual objects.
 
-
+    Every Scene Class creates its own World class.
 */
 
 //Imports from JS packages

@@ -1,15 +1,16 @@
 /*
-Canvas.tsx
+    Canvas.tsx
 
-This React Component serves as the bridge between the THREE code and the React code.
+    This React Component serves as the bridge between the THREE code and the React code.
 
+    Creates a Scene Class, whose renderer attribute provides a DOM element
 */
 
 //React Imports
 import React from 'react';
 
 //THREE Imports
-import SceneManager from './Scene'
+import Scene from './Scene'
 
 //Determine if WebGL is even avaiable
 import { WEBGL } from '../js/WebGL';
@@ -18,7 +19,7 @@ export class Canvas extends React.Component {
 
     //Run when this component is mounted to the DOM
     componentDidMount(): void {
-        let canvas = new SceneManager();
+        let canvas = new Scene();
 
         //Get the DIV Element that this Class Exports
         const element : (HTMLElement | null) = document.getElementById('canvas');

@@ -1,10 +1,10 @@
 /*
-World.ts
+    World.ts 
 
-Contains all of our actual geometry and "Global" Variables
+    Contains all of our actual objects and "Global" Variables.
+    Geometries and materials are all loaded through seperate loader classes.
 
-Type: Object3D.
-
+    Provides a useful interface for loading and adding objects that point back to the World. (useful for "Global" varibales such as time)
 */
 
 //THREE imports
