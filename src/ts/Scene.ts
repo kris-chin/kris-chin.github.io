@@ -41,7 +41,7 @@ export class Scene {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         
-        this.world = new World();
+        this.world = new World(this);
     }
 
     //Start the scene

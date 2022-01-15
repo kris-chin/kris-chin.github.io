@@ -11,6 +11,7 @@ Type: Object3D.
 import * as THREE from 'three';
 import Cube from './objects/Cube';
 import SceneObject from './objects/SceneObject';
+import Scene from './Scene';
 
 export class World extends THREE.Group {
 
@@ -19,12 +20,16 @@ export class World extends THREE.Group {
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,THREE.Material>; //Map of all materials used
 
+    //Respective Scene Object
+    scene : Scene;
+
     //"Global" Variables
     time : number;
 
     //Add a bunch of geometry
-    constructor(){
+    constructor(scene: Scene){
         super();
+        this.scene = scene;
         this.time = 0;
         
         //All 
