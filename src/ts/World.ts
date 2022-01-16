@@ -15,6 +15,7 @@ import Scene from './Scene';
 import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
 import Skybox from './objects/Skybox';
+import Plane from './objects/Plane';
 
 export class World extends THREE.Group {
 
@@ -117,6 +118,11 @@ export class World extends THREE.Group {
         //Add a skybox
         let skybox = new Skybox('skybox', 'skybox0');
         this.AddObject(skybox);
+
+        //Add a plane
+        let plane = new Plane('plane', 'white');
+        this.AddObject(plane);
+        plane.mesh.position.set(0,-2.5,0);
 
     }
 

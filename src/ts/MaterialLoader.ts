@@ -25,6 +25,7 @@ export class MaterialLoader {
         this.map.set('yellow', new THREE.MeshBasicMaterial( { color: 0xffec40}));
         this.map.set('green', new THREE.MeshBasicMaterial( { color: 0x17a64b}));
         this.map.set('blue', new THREE.MeshBasicMaterial( { color: 0x424bf5}));
+        this.map.set('white', new THREE.MeshBasicMaterial( {color: 0xdddddd}));
 
     }
 
