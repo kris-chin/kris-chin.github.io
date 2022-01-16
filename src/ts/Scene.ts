@@ -15,12 +15,15 @@ import * as THREE from 'three';
 //THREE imports
 import World from './World';
 
+//Non-Class variables used simply for the Window Resize Function that is called on Window Resize.
+var cam : THREE.PerspectiveCamera;
+var ren : THREE.Renderer;
 
 export class Scene {
 
     //Scene Related
     scene: THREE.Scene;
-    camera: THREE.Camera;
+    camera: THREE.PerspectiveCamera;
     renderer: THREE.Renderer;
 
     //World for this Scene
@@ -32,16 +35,30 @@ export class Scene {
         this.camera = new THREE.PerspectiveCamera(
             75, //FOV
             window.innerWidth/window.innerHeight, //Resolution
-            0.1, //Near Clipping Plane
-            1000 //Far Clipping Plane
+            0.01, //Near Clipping Plane
+            30000 //Far Clipping Plane
         );
-        this.camera.position.z = 5; //move the camera a bit out
+        this.camera.position.set(0, 0, 0); //move the camera a bit out
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        //Add an event listener to the window on resize
+        window.addEventListener('resize', this.OnWindowResize, false);
         
+        //Set outside variables that can be accessed later outside of context
+        cam = this.camera;
+        ren = this.renderer;
+
         //Create World
         this.world = new World(this);
+    }
+
+    //Function to call on resize
+    private OnWindowResize(){
+        cam.aspect = window.innerWidth/window.innerHeight;
+        cam.updateProjectionMatrix(); //need to call this whenever updating config
+        ren.setSize(window.innerWidth, window.innerHeight);
     }
 
     //Start the scene

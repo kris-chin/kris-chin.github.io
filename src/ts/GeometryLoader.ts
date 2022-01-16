@@ -21,6 +21,7 @@ export class GeometryLoader {
     //Adds Basic Geometries to Geometry Map
     MapBasicGeometries(){
         this.map.set('box', new THREE.BoxGeometry(0.5, 0.5,0.5));
+        this.map.set('skybox', new THREE.BoxGeometry(10000, 10000,10000));
     }
     
 

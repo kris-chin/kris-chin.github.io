@@ -14,13 +14,14 @@ import SceneObject from './objects/SceneObject';
 import Scene from './Scene';
 import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
+import Skybox from './objects/Skybox';
 
 export class World extends THREE.Group {
 
     //Structures to hold all of our 3D information
     objects : Array<SceneObject>; //All objects in world
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
-    materials : Map<string,THREE.Material>; //Map of all materials used
+    materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
 
     //Loaders for 3D information
     private loader_geometries : GeometryLoader;
@@ -51,8 +52,7 @@ export class World extends THREE.Group {
         this.PlaceObjects()
 
         //Done
-        console.log("WORLD INSTANTIATED")
-        console.log(this)
+        console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
     }
 
     //Update all objects
@@ -107,10 +107,16 @@ export class World extends THREE.Group {
                 cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
                 cuber.mesh.position.y = ( Math.sin(i/30 * 2*Math.PI)) * 2;
 
+                cuber.mesh.position.z = -5;
+
                 cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
             }
             
         }
+
+        //Add a skybox
+        let skybox = new Skybox('skybox', 'skybox0');
+        this.AddObject(skybox);
 
     }
 

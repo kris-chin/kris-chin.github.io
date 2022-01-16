@@ -18,7 +18,7 @@ export abstract class SceneObject extends THREE.Object3D {
 
     //Actual Geometry and Material
     private geometry! : (THREE.BufferGeometry | undefined);
-    private material! : (THREE.Material | undefined);
+    private material! : (THREE.Material | Array<THREE.Material> | undefined);
 
     //Mesh Object
     mesh! : THREE.Mesh; //Code assumes Mesh will be initalized by the time the class is used
