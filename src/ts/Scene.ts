@@ -11,6 +11,7 @@
 
 //Imports from JS packages
 import * as THREE from 'three';
+import { OrbitControls } from '../js/OrbitControls';
 
 //THREE imports
 import World from './World';
@@ -25,6 +26,8 @@ export class Scene {
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera;
     renderer: THREE.Renderer;
+
+    controls: OrbitControls;
 
     //World for this Scene
     world: World;
@@ -43,8 +46,16 @@ export class Scene {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-        //Add an event listener to the window on resize
-        window.addEventListener('resize', this.OnWindowResize, false);
+        //Setup Controls
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enabled = true;
+        this.controls.enableDamping = true;
+        this.controls.minDistance = 10;
+        this.camera.position.set(0,0,10); //readjust camera
+
+        //Add event listeners
+        window.addEventListener('resize', this.OnWindowResize, false); //Adjust to window resize
+        this.controls.listenToKeyEvents(window); //Window listens to keypress events
         
         //Set outside variables that can be accessed later outside of context
         cam = this.camera;
@@ -72,6 +83,7 @@ export class Scene {
         var s = this.scene;
         var c = this.camera;
         var w = this.world;
+        var con = this.controls
         
         //Function called every frame
         var Step = function(){
@@ -81,6 +93,9 @@ export class Scene {
             //Call the step function in the world.
             //Make all calculations to World instead of here
             w.Step();
+
+            //Update Controls
+            con.update();
 
             //Render
             r.render(s, c);

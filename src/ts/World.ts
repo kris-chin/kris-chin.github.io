@@ -107,7 +107,7 @@ export class World extends THREE.Group {
                 cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
                 cuber.mesh.position.y = ( Math.sin(i/30 * 2*Math.PI)) * 2;
 
-                cuber.mesh.position.z = -5;
+                cuber.mesh.position.z = 0;
 
                 cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
             }
