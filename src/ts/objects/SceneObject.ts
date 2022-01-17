@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import { Mesh } from 'three';
 import World from '../World';
 
-export abstract class SceneObject extends THREE.Object3D {
+export abstract class SceneObject {
 
     //Proposed Key Values for instantiation
     private key_geometry : string;
@@ -27,7 +27,6 @@ export abstract class SceneObject extends THREE.Object3D {
     world!: World;
 
     constructor(key_geometry: string, key_material: string){
-        super();
         this.key_geometry = key_geometry;
         this.key_material = key_material;
     }
