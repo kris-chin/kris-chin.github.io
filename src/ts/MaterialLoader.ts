@@ -19,13 +19,14 @@ export class MaterialLoader {
         this.MapSkyboxes();
     }
 
-    //Adds Basic Materials to Material Map
+    //Adds Materials to Material Map
     MapBasicMaterials(){
-        this.map.set('red', new THREE.MeshBasicMaterial( { color: 0xff4040}));
-        this.map.set('yellow', new THREE.MeshBasicMaterial( { color: 0xffec40}));
-        this.map.set('green', new THREE.MeshBasicMaterial( { color: 0x17a64b}));
-        this.map.set('blue', new THREE.MeshBasicMaterial( { color: 0x424bf5}));
-        this.map.set('white', new THREE.MeshBasicMaterial( {color: 0xdddddd}));
+        //Lambert Materials have shadow computations enabled
+        this.map.set('red', new THREE.MeshLambertMaterial( { color: 0xff4040}));
+        this.map.set('yellow', new THREE.MeshLambertMaterial( { color: 0xffec40}));
+        this.map.set('green', new THREE.MeshLambertMaterial( { color: 0x17a64b}));
+        this.map.set('blue', new THREE.MeshLambertMaterial( { color: 0x424bf5}));
+        this.map.set('white', new THREE.MeshLambertMaterial( {color: 0xffffff}));
 
     }
 

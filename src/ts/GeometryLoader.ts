@@ -22,7 +22,7 @@ export class GeometryLoader {
     MapBasicGeometries(){
         this.map.set('box', new THREE.BoxGeometry(0.5, 0.5,0.5));
         this.map.set('skybox', new THREE.BoxGeometry(10000, 10000,10000));
-        this.map.set('plane', new THREE.BoxGeometry(10,0.5,10));
+        this.map.set('plane', new THREE.BoxGeometry(10,0.1,10));
     }
     
 

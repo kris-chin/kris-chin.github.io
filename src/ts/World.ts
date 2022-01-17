@@ -69,11 +69,15 @@ export class World extends THREE.Group {
     public AddObject(object:SceneObject){
         
         this.objects.push(object) //Object is added in array
-        object.parent = this //Set the world to be the parent
-
         object.Initialize(this); //Point the Object to the World and create mesh
 
         if (object.mesh){
+
+            object.mesh.parent = this //Set the world to be the parent
+
+            object.mesh.castShadow = true; //Allow the object to cast a shadow
+            object.mesh.receiveShadow = true;
+            
             this.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
         } else {
             console.error("Failed to create mesh", object)
@@ -123,6 +127,20 @@ export class World extends THREE.Group {
         let plane = new Plane('plane', 'white');
         this.AddObject(plane);
         plane.mesh.position.set(0,-2.5,0);
+
+        //Add a light (I didn't add compatibility for it yet with our SceneObject interface. but it IS an object3D)
+        let light = new THREE.DirectionalLight(0xffffff,1)
+        light.position.set(0, 4, 2); //position determines a directional light's direction
+        //light.target.position.set(10,0,0);
+        light.castShadow = true;
+        this.add(light);
+
+        let ambient = new THREE.AmbientLight(0xffffff, 0.25);
+        this.add(ambient);
+
+        //shadow helper
+        //let helper = new THREE.CameraHelper(light.shadow.camera);
+        //this.add(helper);
 
     }
 

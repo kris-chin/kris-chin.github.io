@@ -25,7 +25,7 @@ export class Scene {
     //Scene Related
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera;
-    renderer: THREE.Renderer;
+    renderer: THREE.WebGLRenderer;
 
     controls: OrbitControls;
 
@@ -43,14 +43,19 @@ export class Scene {
         );
         this.camera.position.set(0, 0, 0); //move the camera a bit out
 
+        //add the helper camera to debug the light
+        //this.scene.add(new THREE.CameraHelper(this.camera));
+
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.shadowMap.enabled = true; //enables shadows
+        //this.renderer.shadowMap.type = 
 
         //Setup Controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enabled = true;
         this.controls.enableDamping = true;
-        this.controls.minDistance = 10;
+        this.controls.minDistance = 5;
         this.camera.position.set(0,0,10); //readjust camera
 
         //Add event listeners
