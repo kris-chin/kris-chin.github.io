@@ -1,0 +1,23 @@
+[
+    {
+        "name" : 'box',
+        "type" : 'box',
+        "geometryParameters" : {
+            "size" : {x: 0.5, y: 0.5, z: 0.5}
+        }
+    },
+    {
+        "name" : 'plane',
+        "type" : 'box',
+        "geometryParameters" : {
+            "size" : {x: 10, y: 0.1, z: 10}
+        }
+    },
+    {
+        "name" : 'skybox',
+        "type" : 'box',
+        "geometryParameters" : {
+            "size" : {x: 10000, y: 10000, z: 10000}
+        }
+    },
+]

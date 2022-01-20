@@ -25,7 +25,7 @@ export class World extends THREE.Group {
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
 
     //Loaders for 3D information
-    private loader_geometries : GeometryLoader;
+    private loader_geometries ?: GeometryLoader;
     private loader_materials : MaterialLoader;
 
     //Respective Scene Object
@@ -40,20 +40,25 @@ export class World extends THREE.Group {
         this.scene = scene;
         this.time = 0;
 
-        //Setup Loaders
-        this.loader_materials = new MaterialLoader();
-        this.loader_geometries = new GeometryLoader();
-        
-        //Initalize all of our 3D Information
-        this.objects = [];
-        this.geometries = this.loader_geometries.map
-        this.materials = this.loader_materials.map
+        //Create our objects list and Maps
+        this.objects = []
+        this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
+        this.geometries = new Map<string,THREE.BufferGeometry>();
 
-        //Place Objects 
-        this.PlaceObjects()
+        //Setup Loaders and pass our maps into them for loading
+        this.loader_materials = new MaterialLoader(this.materials);
+        this.loader_geometries = new GeometryLoader(this.geometries);
 
-        //Done
-        console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
+        //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
+        const self = this;
+        Promise.all([this.loader_materials.LoadMaterials(), this.loader_geometries.LoadGeometries()])
+            .then(data => {
+                self.materials = data[0] //set material map
+                self.geometries = data[1] //set geometry map
+
+                self.PlaceObjects()
+                console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
+            })
     }
 
     //Update all objects
