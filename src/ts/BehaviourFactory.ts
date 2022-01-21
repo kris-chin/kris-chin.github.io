@@ -8,7 +8,7 @@
 
 */
 
-import Behaviour from './behaviours/Behaviour';
+import Behaviour from './Behaviour';
 import SceneObject from './SceneObject';
 
 //Import all Behaviours

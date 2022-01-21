@@ -1,4 +1,4 @@
-import Behaviour from "./Behaviour";
+import Behaviour from "../Behaviour";
 
 interface CubeCircleParams{
     rotation : number

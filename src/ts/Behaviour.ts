@@ -5,7 +5,7 @@
 
 */
 
-import SceneObject from '../SceneObject'
+import SceneObject from './SceneObject'
 
 
 export abstract class Behaviour {

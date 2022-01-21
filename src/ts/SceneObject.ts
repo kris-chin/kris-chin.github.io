@@ -9,7 +9,7 @@ Extend your objects from this instead of THREE.Object3D.
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import World from './World';
-import Behaviour from './behaviours/Behaviour';
+import Behaviour from './Behaviour';
 
 export class SceneObject {
 
