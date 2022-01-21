@@ -124,11 +124,7 @@ export class World extends THREE.Group {
             let cuber = this.AddObject('box' , "behaviour:RandomColor", ['Rotate']);
 
             if (cuber.mesh){
-                cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
-                cuber.mesh.position.y = ( Math.sin(i/30 * 2*Math.PI)) * 2;
-
-                cuber.mesh.position.z = 0;
-
+                cuber.mesh.position.set( Math.cos(i/30 * 2*Math.PI) * 2, Math.sin(i/30 * 2*Math.PI) * 2, 0)
                 cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
             }
             

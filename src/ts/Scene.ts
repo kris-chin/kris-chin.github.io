@@ -81,14 +81,7 @@ export class Scene {
     Initialize(){
         //Add our World inside Scene
         this.scene.add(this.world);
-
-        //Locally point to our vars (references to "this" won't work within Step Function)
-        //TODO: You can pass this all into the Step function as a Context
-        var r = this.renderer;
-        var s = this.scene;
-        var c = this.camera;
-        var w = this.world;
-        var con = this.controls
+        var self = this
         
         //Function called every frame
         var Step = function(){
@@ -97,13 +90,13 @@ export class Scene {
 
             //Call the step function in the world.
             //Make all calculations to World instead of here
-            w.Step();
+            self.world.Step();
 
             //Update Controls
-            con.update();
+            self.controls.update();
 
             //Render
-            r.render(s, c);
+            self.renderer.render(self.scene, self.camera);
         }
 
         //Start Animations
