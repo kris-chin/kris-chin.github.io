@@ -10,22 +10,12 @@
 //THREE imports
 import * as THREE from 'three';
 import SceneObject from './SceneObject';
-import objects from '../data/objects.json'; //objects JSON
 import Scene from './Scene';
 import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
+import { KeyObjectLoader, KeyObject } from './KeyObjectLoader';
 import BehaviourFactory from './BehaviourFactory';
 
-
-//Interface for object keys
-interface KeyObject {
-    name: string,
-    sceneObject: {
-        geometry : string,
-        material : string,
-        behaviours : Array<{ name:string,params:Object} >
-    }
-}
 
 export class World extends THREE.Group {
 
@@ -39,6 +29,7 @@ export class World extends THREE.Group {
     //Loaders for 3D information
     private loader_geometries : GeometryLoader;
     private loader_materials : MaterialLoader;
+    private loader_keyObjects : KeyObjectLoader;
 
     //Respective Scene Object
     scene : Scene;
@@ -56,23 +47,24 @@ export class World extends THREE.Group {
         this.sceneObjects = []
         this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
         this.geometries = new Map<string,THREE.BufferGeometry>();
+        this.keyObjects = new Map<string,KeyObject>();
         this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
         this.loader_geometries = new GeometryLoader(this.geometries);
-
-        //Setup avaiable objects Map
-        this.keyObjects = new Map<string,KeyObject>();
-        for (let object of objects){
-            this.keyObjects.set(object.name, object)
-        }
+        this.loader_keyObjects = new KeyObjectLoader(this.keyObjects);
 
         //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
-        Promise.all([this.loader_materials.LoadMaterials(), this.loader_geometries.LoadGeometries()])
+        Promise.all([
+            this.loader_materials.LoadMaterials(),
+            this.loader_geometries.LoadGeometries(),
+            this.loader_keyObjects.LoadKeyObjects()]
+        )
             .then(data => {
                 this.materials = data[0] //set material map
                 this.geometries = data[1] //set geometry map
+                this.keyObjects = data[2]
 
                 this.PlaceObjects()
                 console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
