@@ -69,13 +69,12 @@ export class World extends THREE.Group {
         }
 
         //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
-        const self = this;
         Promise.all([this.loader_materials.LoadMaterials(), this.loader_geometries.LoadGeometries()])
             .then(data => {
-                self.materials = data[0] //set material map
-                self.geometries = data[1] //set geometry map
+                this.materials = data[0] //set material map
+                this.geometries = data[1] //set geometry map
 
-                self.PlaceObjects()
+                this.PlaceObjects()
                 console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
             })
     }
@@ -167,8 +166,6 @@ export class World extends THREE.Group {
         if (plane && plane.mesh){
             plane.mesh.position.set(0,-2.5,0);
         }
-
-        //------------------------------------------------
 
         //Add lights
         let light = new THREE.DirectionalLight(0xffffff,1)

@@ -81,22 +81,21 @@ export class Scene {
     Initialize(){
         //Add our World inside Scene
         this.scene.add(this.world);
-        var self = this
         
         //Function called every frame
-        var Step = function(){
+        const Step = () => {
             //Set the callback functino to be the animation function again
             requestAnimationFrame( Step ); 
 
             //Call the step function in the world.
             //Make all calculations to World instead of here
-            self.world.Step();
+            this.world.Step();
 
             //Update Controls
-            self.controls.update();
+            this.controls.update();
 
             //Render
-            self.renderer.render(self.scene, self.camera);
+            this.renderer.render(this.scene, this.camera);
         }
 
         //Start Animations

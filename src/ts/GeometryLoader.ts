@@ -31,8 +31,7 @@ export class GeometryLoader {
 
     //Asynchronous call to load geometries. Promises a Map of the geometries
     LoadGeometries() : Promise< Map<string,THREE.BufferGeometry> > {
-        var self = this;
-        var promise = new Promise< Map<string,THREE.BufferGeometry> >( function (resolve,reject){
+        var promise = new Promise< Map<string,THREE.BufferGeometry> >( (resolve,reject) => {
             
             //Wait for geometry data and then map it
             fetch('./json/geometries.json5')
@@ -43,10 +42,10 @@ export class GeometryLoader {
                 const geometries : Array<Geometry> = JSON5.parse(data)
 
                 //Start mapping geometries to map
-                self.MapGeometries(geometries)
+                this.MapGeometries(geometries)
 
                 //Resolve Promise
-                resolve(self.map)
+                resolve(this.map)
             })
             
         })

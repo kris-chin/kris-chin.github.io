@@ -26,8 +26,7 @@ export class MaterialLoader {
     
     //Asynchronous call to load materials. Promises a Map of the materials
     LoadMaterials() : Promise< Map<string, (THREE.Material | Array<THREE.Material>)> >{
-        var self = this;
-        var promise = new Promise< Map<string, (THREE.Material | Array<THREE.Material>)> >( function(resolve,reject){
+        var promise = new Promise< Map<string, (THREE.Material | Array<THREE.Material>)> >( (resolve,reject) => {
             
             //Wait for material data and then map it
             fetch('./json/materials.json5')
@@ -38,10 +37,10 @@ export class MaterialLoader {
                 const materials : Array<Material> = JSON5.parse(data)
 
                 //Start adding key-value pairs to our map
-                self.MapMaterials(materials);
+                this.MapMaterials(materials);
 
                 //Resolve  promise
-                resolve(self.map)
+                resolve(this.map)
             })
         }) 
 
