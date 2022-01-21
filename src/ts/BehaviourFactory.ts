@@ -18,7 +18,7 @@ import RandomColor from './behaviours/RandomColor';
 export class BehaviourFactory {
 
     //Returns a newly Instantiated Behaviour Class based on Key Value
-    GetBehaviour(key : string, parent : SceneObject) : (Behaviour | undefined) {
+    GetBehaviour(key : string, parent : (SceneObject | undefined)=undefined) : (Behaviour | undefined) {
         switch(key){
             case('Rotate'): return new Rotate(parent);
             case('RandomColor'): return new RandomColor(parent);

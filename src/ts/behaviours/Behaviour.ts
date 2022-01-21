@@ -10,9 +10,9 @@ import SceneObject from '../SceneObject'
 
 export abstract class Behaviour {
 
-    base : SceneObject
+    base : (SceneObject|undefined)
 
-    constructor(base : SceneObject){
+    constructor(base : (SceneObject|undefined)=undefined){
         this.base = base
     }
 

@@ -73,6 +73,12 @@ export class World extends THREE.Group {
     //Helper Method for pushing objects into array
     public AddObject(geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject {
         
+        //Determine if Material or Geometry have behaviours
+        if (materialKey.startsWith("behaviour:")){
+            const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
+            materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
+        }
+
         //Create new Object
         let object = new SceneObject(geometryKey, materialKey)
 
@@ -109,19 +115,7 @@ export class World extends THREE.Group {
         //Add some cubes
         for (let i = 0; i < 30; i++){
 
-            let color = Math.random()
-            let c : string;
-            if (color < 0.25){
-                c = 'red'
-            } else if (color < 0.5) {
-                c = 'blue'
-            } else if (color < 0.75) {
-                c = 'yellow'
-            } else{
-                c = 'green'
-            }
-
-            let cuber = this.AddObject('box' , c, ['Rotate']);
+            let cuber = this.AddObject('box' , "behaviour:RandomColor", ['Rotate']);
 
             if (cuber.mesh){
                 cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
@@ -136,6 +130,7 @@ export class World extends THREE.Group {
 
         //Add a skybox
         let skybox = this.AddObject('skybox', 'skybox0',[]);
+        skybox.mesh.position.set(0,0,0);
 
         //Add a plane
         let plane = this.AddObject('plane', 'white',[]);

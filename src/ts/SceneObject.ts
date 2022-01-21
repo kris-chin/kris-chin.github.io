@@ -29,21 +29,8 @@ export class SceneObject {
     world!: World;
 
     constructor(geometryString: string, materialString: string){
-        
-        //String Code for special Geometry
-        if (geometryString.startsWith("behaviour:")){
-            this.key_geometry = geometryString;
-        } else {
-            this.key_geometry = geometryString
-        }
-        
-        //String Code for special material
-        if (materialString.startsWith("behaviour:")){
-            this.key_material = materialString;
-        }
-        else{
-            this.key_material = materialString;
-        }
+        this.key_geometry = geometryString;
+        this.key_material = materialString;
     }
 
     //Points object to World object and loads in mesh
