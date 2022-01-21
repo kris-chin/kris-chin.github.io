@@ -24,7 +24,7 @@ export class World extends THREE.Group {
     behaviours : BehaviourFactory;
 
     //Loaders for 3D information
-    private loader_geometries ?: GeometryLoader;
+    private loader_geometries : GeometryLoader;
     private loader_materials : MaterialLoader;
 
     //Respective Scene Object
