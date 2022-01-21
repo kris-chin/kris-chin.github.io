@@ -19,6 +19,8 @@ export class Canvas extends React.Component {
 
     //Run when this component is mounted to the DOM
     componentDidMount(): void {
+
+        //Create the Scene Object
         let canvas = new Scene();
 
         //Get the DIV Element that this Class Exports

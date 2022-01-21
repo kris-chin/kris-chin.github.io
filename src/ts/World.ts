@@ -18,7 +18,7 @@ import BehaviourFactory from './BehaviourFactory';
 export class World extends THREE.Group {
 
     //Structures to hold all of our 3D information
-    objects : Array<SceneObject>; //All objects in world
+    sceneObjects : Array<SceneObject>; //All objects in world
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
     behaviours : BehaviourFactory;
@@ -40,7 +40,7 @@ export class World extends THREE.Group {
         this.time = 0;
 
         //Create our objects list and Maps
-        this.objects = []
+        this.sceneObjects = []
         this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
         this.geometries = new Map<string,THREE.BufferGeometry>();
         this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
@@ -63,7 +63,7 @@ export class World extends THREE.Group {
 
     //Update all objects
     public Step(){
-        for (let obj of this.objects){
+        for (let obj of this.sceneObjects){
             obj.Step();
         }
 
@@ -89,7 +89,7 @@ export class World extends THREE.Group {
         let object = new SceneObject(geometryKey, materialKey)
 
         //Push Object into world array
-        this.objects.push(object)
+        this.sceneObjects.push(object)
 
         //Generate behaviours and apply to object
         let behaviours = behaviourKeys.map(key=>{
@@ -99,11 +99,9 @@ export class World extends THREE.Group {
         object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
 
         if (object.mesh){
-
             object.mesh.parent = this //Set the world to be the parent
-
             object.mesh.castShadow = true; //Allow the object to cast a shadow
-            object.mesh.receiveShadow = true;
+            object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
             
             this.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
         } else {
