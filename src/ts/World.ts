@@ -17,6 +17,12 @@ import { KeyObjectLoader, KeyObject } from './KeyObjectLoader';
 import BehaviourFactory from './BehaviourFactory';
 
 
+//Interface for Optional AddObject Arguments
+interface args{
+    threeParent : THREE.Object3D,
+    pos : {x: number, y: number, z: number} //Position
+}
+
 export class World extends THREE.Group {
 
     //Structures to hold all of our 3D information
@@ -81,10 +87,12 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(objectKey : string, threeParent :THREE.Object3D = this) : SceneObject | undefined {
-    
+    //Returns a reference to the new object in case you want to work with it
+    public AddObject(objectKey : string, arg? : Object) : SceneObject | undefined {  
+        const args = arg as args //Cast our Arguments as our args interface. This allows for optional arguments
+
         //First look for the object key in our map
-        let keyObject = this.keyObjects.get(objectKey)
+        const keyObject = this.keyObjects.get(objectKey)
 
         //If the keyObject is inside our map
         if (keyObject){
@@ -119,11 +127,19 @@ export class World extends THREE.Group {
             object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
 
             if (object.mesh){
-                object.mesh.parent = threeParent //Set the threeJS parent
+
+                let parent : THREE.Object3D = this
+                if (args && args.threeParent) parent = args.threeParent //If parent argument is provided, set parent
+
+                object.mesh.parent = parent //Set the threeJS parent
                 object.mesh.castShadow = true; //Allow the object to cast a shadow
                 object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
                 
                 object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+
+                //If a position argument is provided, set the position
+                if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z)
+
                 return object
             } else {
                 console.error("Failed to create mesh", object)
@@ -142,12 +158,9 @@ export class World extends THREE.Group {
         //------------------------------------------------
         this.AddObject('cubeCircle') //Add some cubes
         this.AddObject('skybox'); //Add a skybox
-        const plane = this.AddObject('plane'); //Add a plane
-        if (plane) plane.mesh.position.set(0,-2.5,0);
-        const light = this.AddObject('DirectionalLight') //Add lights
-        if (light) light.mesh.position.set(0, 4, 2); //position determines a directional light's direction
+        this.AddObject('plane',{'pos': {'x':0,'y':-2.5,'z':0}}); //Add a plane
+        this.AddObject('DirectionalLight', {'pos':{'x':0,'y':4,'z':2}}) //Add lights
         this.AddObject('AmbientLight')
-
     }
 
 }
