@@ -81,7 +81,7 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(threeParent :THREE.Object3D, objectKey : string) : SceneObject | undefined {
+    public AddObject(objectKey : string, threeParent :THREE.Object3D = this) : SceneObject | undefined {
     
         //First look for the object key in our map
         let keyObject = this.keyObjects.get(objectKey)
@@ -142,19 +142,19 @@ export class World extends THREE.Group {
         //------------------------------------------------
 
         //Add some cubes
-        let cubeCircle = this.AddObject(this, 'cubeCircle')
+        let cubeCircle = this.AddObject('cubeCircle')
         if (cubeCircle && cubeCircle.mesh){
             cubeCircle.mesh.position.set(0,0,0);
         }
 
         //Add a skybox
-        let skybox = this.AddObject(this, 'skybox');
+        let skybox = this.AddObject('skybox');
         if (skybox && skybox.mesh){
             skybox.mesh.position.set(0,0,0);
         }
 
         //Add a plane
-        let plane = this.AddObject(this, 'plane');
+        let plane = this.AddObject('plane');
         if (plane && plane.mesh){
             plane.mesh.position.set(0,-2.5,0);
         }
