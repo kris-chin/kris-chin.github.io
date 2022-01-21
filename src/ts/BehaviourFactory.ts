@@ -15,6 +15,8 @@ import SceneObject from './SceneObject';
 import Rotate from './behaviours/Rotate';
 import RandomColor from './behaviours/RandomColor';
 import CubeCircle from './behaviours/CubeCircle';
+import DirectionalLight from './behaviours/DirectionalLight'; //note: this shares the same name as the directional light from THREE
+import AmbientLight from './behaviours/AmbientLight';
 
 export class BehaviourFactory {
 
@@ -24,6 +26,8 @@ export class BehaviourFactory {
             case('Rotate'): return new Rotate(parent,parameters);
             case('RandomColor'): return new RandomColor(parent,parameters);
             case('CubeCircle'): return new CubeCircle(parent,parameters);
+            case('DirectionalLight'): return new DirectionalLight(parent,parameters);
+            case('AmbientLight'): return new AmbientLight(parent, parameters);
             default:
                 console.error("Invalid Behaviour: '" + key + "'")
                 return undefined

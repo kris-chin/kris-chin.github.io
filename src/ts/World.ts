@@ -140,33 +140,13 @@ export class World extends THREE.Group {
     private PlaceObjects(){
         //Everything below this line is arbitrary
         //------------------------------------------------
-
-        //Add some cubes
-        let cubeCircle = this.AddObject('cubeCircle')
-        if (cubeCircle && cubeCircle.mesh){
-            cubeCircle.mesh.position.set(0,0,0);
-        }
-
-        //Add a skybox
-        let skybox = this.AddObject('skybox');
-        if (skybox && skybox.mesh){
-            skybox.mesh.position.set(0,0,0);
-        }
-
-        //Add a plane
-        let plane = this.AddObject('plane');
-        if (plane && plane.mesh){
-            plane.mesh.position.set(0,-2.5,0);
-        }
-
-        //Add lights
-        let light = new THREE.DirectionalLight(0xffffff,1)
-        light.position.set(0, 4, 2); //position determines a directional light's direction
-        light.castShadow = true;
-        this.add(light);
-
-        let ambient = new THREE.AmbientLight(0xffffff, 0.25);
-        this.add(ambient);
+        this.AddObject('cubeCircle') //Add some cubes
+        this.AddObject('skybox'); //Add a skybox
+        const plane = this.AddObject('plane'); //Add a plane
+        if (plane) plane.mesh.position.set(0,-2.5,0);
+        const light = this.AddObject('DirectionalLight') //Add lights
+        if (light) light.mesh.position.set(0, 4, 2); //position determines a directional light's direction
+        this.AddObject('AmbientLight')
 
     }
 

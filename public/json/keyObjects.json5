@@ -5,7 +5,7 @@
             "geometry" : "box",
             "material" : "behaviour:RandomColor",
             "behaviours": [
-                { "name": "Rotate", "params": {"speed":20} }
+                { "name": "Rotate", "params": {"speed":-2} }
             ]
         }
     },
@@ -31,8 +31,31 @@
             "geometry" : "",
             "material" : "",
             "behaviours" : [ 
-                {"name":"CubeCircle", "params":{"rotation":0.2} } 
+                {"name":"CubeCircle", "params":{"rotation":0} },
+                {"name": "Rotate", "params": {"speed":1} } 
             ]
         }
-    }
+    },
+    {
+        "name" : "DirectionalLight",
+        "sceneObject": {
+            "geometry" : "",
+            "material" : "",
+            "behaviours" : [ 
+                {"name":"DirectionalLight",
+                "params":{"color":0xffffff,"intensity":1} } 
+            ]
+        }
+    },
+    {
+        "name" : "AmbientLight",
+        "sceneObject": {
+            "geometry" : "",
+            "material" : "",
+            "behaviours" : [ 
+                {"name":"AmbientLight",
+                "params":{"color":0xffffff,"intensity":0.25} } 
+            ]
+        }
+    },
 ]
