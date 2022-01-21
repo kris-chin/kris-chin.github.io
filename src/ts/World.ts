@@ -71,7 +71,7 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject | undefined {
+    public AddObject(threeParent :THREE.Object3D, geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject | undefined {
         
         //Determine if Material or Geometry have behaviours
         //NOTE: these behaviours are not appened to the "behaviours" list
@@ -99,11 +99,11 @@ export class World extends THREE.Group {
         object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
 
         if (object.mesh){
-            object.mesh.parent = this //Set the world to be the parent
+            object.mesh.parent = threeParent //Set the threeJS parent
             object.mesh.castShadow = true; //Allow the object to cast a shadow
             object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
             
-            this.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+            object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
             return object
         } else {
             console.error("Failed to create mesh", object)
@@ -118,25 +118,19 @@ export class World extends THREE.Group {
         //------------------------------------------------
 
         //Add some cubes
-        for (let i = 0; i < 30; i++){
-
-            let cuber = this.AddObject('box' , "behaviour:RandomColor", ['Rotate']);
-
-            if (cuber && cuber.mesh){
-                cuber.mesh.position.set( Math.cos(i/30 * 2*Math.PI) * 2, Math.sin(i/30 * 2*Math.PI) * 2, 0)
-                cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
-            }
-            
+        let cubeCircle = this.AddObject(this, '','',['CubeCircle'])
+        if (cubeCircle && cubeCircle.mesh){
+            cubeCircle.mesh.position.set(5,0,5);
         }
 
         //Add a skybox
-        let skybox = this.AddObject('skybox', 'skybox0',[]);
+        let skybox = this.AddObject(this, 'skybox', 'skybox0',[]);
         if (skybox && skybox.mesh){
             skybox.mesh.position.set(0,0,0);
         }
 
         //Add a plane
-        let plane = this.AddObject('plane', 'white',[]);
+        let plane = this.AddObject(this, 'plane', 'white',[]);
         if (plane && plane.mesh){
             plane.mesh.position.set(0,-2.5,0);
         }

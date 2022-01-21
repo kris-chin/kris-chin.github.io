@@ -14,6 +14,7 @@ import SceneObject from './SceneObject';
 //Import all Behaviours
 import Rotate from './behaviours/Rotate';
 import RandomColor from './behaviours/RandomColor';
+import CubeCircle from './behaviours/CubeCircle';
 
 export class BehaviourFactory {
 
@@ -22,6 +23,7 @@ export class BehaviourFactory {
         switch(key){
             case('Rotate'): return new Rotate(parent);
             case('RandomColor'): return new RandomColor(parent);
+            case('CubeCircle'): return new CubeCircle(parent);
             default:
                 console.error("Invalid Behaviour: '" + key + "'")
                 return undefined
