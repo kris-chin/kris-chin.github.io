@@ -41,17 +41,28 @@ export class SceneObject {
         //get geometry and material
         this.geometry = this.world.geometries.get(this.key_geometry)
         this.material = this.world.materials.get(this.key_material)
+        
+        //Flag for when we want to assign a "none" geometry or material
+        let assignAnyways : boolean = false;
 
         if (!this.geometry){
-            console.error("Invalid Geometry: '" + this.key_geometry + "'")
+            if (this.key_geometry === "" ){ //if assigned no geometry
+                assignAnyways = true;
+            } else {
+                console.error("Invalid Geometry: '" + this.key_geometry + "'")
+            }
         }
 
         if (!this.material){
-            console.error("Invalid Material: '" + this.key_material + "'")
+            if (this.key_material === ""){ //if assigned no material
+                assignAnyways = true;
+            } else {
+                console.error("Invalid Material: '" + this.key_material + "'")
+            }
         }
 
         //initialize mesh
-        if (this.geometry && this.material){
+        if ( (this.geometry && this.material) || (assignAnyways) ){
             this.mesh = new Mesh(this.geometry,this.material)
         }
 

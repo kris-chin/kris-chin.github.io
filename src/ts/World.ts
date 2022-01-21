@@ -71,7 +71,7 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject {
+    public AddObject(geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject | undefined {
         
         //Determine if Material or Geometry have behaviours
         //NOTE: these behaviours are not appened to the "behaviours" list
@@ -104,11 +104,12 @@ export class World extends THREE.Group {
             object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
             
             this.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+            return object
         } else {
             console.error("Failed to create mesh", object)
+            return undefined
         }
-
-        return object
+        
     }
 
     //Helper Method for placing objects
@@ -121,7 +122,7 @@ export class World extends THREE.Group {
 
             let cuber = this.AddObject('box' , "behaviour:RandomColor", ['Rotate']);
 
-            if (cuber.mesh){
+            if (cuber && cuber.mesh){
                 cuber.mesh.position.set( Math.cos(i/30 * 2*Math.PI) * 2, Math.sin(i/30 * 2*Math.PI) * 2, 0)
                 cuber.mesh.rotation.z = ((Math.random() - 0.5) * 2) * 2;
             }
@@ -130,11 +131,15 @@ export class World extends THREE.Group {
 
         //Add a skybox
         let skybox = this.AddObject('skybox', 'skybox0',[]);
-        skybox.mesh.position.set(0,0,0);
+        if (skybox && skybox.mesh){
+            skybox.mesh.position.set(0,0,0);
+        }
 
         //Add a plane
         let plane = this.AddObject('plane', 'white',[]);
-        plane.mesh.position.set(0,-2.5,0);
+        if (plane && plane.mesh){
+            plane.mesh.position.set(0,-2.5,0);
+        }
 
         //Add a light (I didn't add compatibility for it yet with our SceneObject interface. but it IS an object3D)
         let light = new THREE.DirectionalLight(0xffffff,1)
