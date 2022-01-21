@@ -1,0 +1,34 @@
+[
+    {
+        "name" : "cube",
+        "sceneObject": {
+            "geometry" : "box",
+            "material" : "behaviour:RandomColor",
+            "behaviours": ["Rotate"]
+        }
+    },
+    {
+        "name" : "plane",
+        "sceneObject": {
+            "geometry" : "plane",
+            "material" : "white",
+            "behaviours": []
+        }
+    },
+    {
+        "name" : "skybox",
+        "sceneObject": {
+            "geometry" : "skybox",
+            "material" : "skybox0",
+            "behaviours": []
+        }
+    },
+    {
+        "name" : "cubeCircle",
+        "sceneObject": {
+            "geometry" : "",
+            "material" : "",
+            "behaviours" : ["CubeCircle"]
+        }
+    }
+]

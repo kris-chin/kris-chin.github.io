@@ -10,10 +10,22 @@
 //THREE imports
 import * as THREE from 'three';
 import SceneObject from './SceneObject';
+import objects from '../data/objects.json'; //objects JSON
 import Scene from './Scene';
 import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
 import BehaviourFactory from './BehaviourFactory';
+
+
+//Interface for object keys
+interface KeyObject {
+    name: string,
+    sceneObject: {
+        geometry : string,
+        material : string,
+        behaviours : Array<string>
+    }
+}
 
 export class World extends THREE.Group {
 
@@ -21,7 +33,8 @@ export class World extends THREE.Group {
     sceneObjects : Array<SceneObject>; //All objects in world
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
-    behaviours : BehaviourFactory;
+    private behaviours : BehaviourFactory;
+    private keyObjects : Map<string,KeyObject> //placeable objects. used for keys
 
     //Loaders for 3D information
     private loader_geometries : GeometryLoader;
@@ -49,6 +62,12 @@ export class World extends THREE.Group {
         this.loader_materials = new MaterialLoader(this.materials);
         this.loader_geometries = new GeometryLoader(this.geometries);
 
+        //Setup avaiable objects Map
+        this.keyObjects = new Map<string,KeyObject>();
+        for (let object of objects){
+            this.keyObjects.set(object.name,object)
+        }
+
         //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
         const self = this;
         Promise.all([this.loader_materials.LoadMaterials(), this.loader_geometries.LoadGeometries()])
@@ -71,42 +90,56 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(threeParent :THREE.Object3D, geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject | undefined {
-        
-        //Determine if Material or Geometry have behaviours
-        //NOTE: these behaviours are not appened to the "behaviours" list
-        if (materialKey.startsWith("behaviour:")){
-            const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
-            materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
-        }
+    public AddObject(threeParent :THREE.Object3D, objectKey : string) : SceneObject | undefined {
+    
+        //First look for the object key in our map
+        let keyObject = this.keyObjects.get(objectKey)
 
-        if (geometryKey.startsWith("behaviour:")){
-            const geoBehaviour = geometryKey.split(":")[1]
-            geometryKey = this.behaviours.GetBehaviour(geoBehaviour)?.Get()
-        }
+        //If the keyObject is inside our map
+        if (keyObject){
+            //get our keys from KeyObject
+            let materialKey = keyObject.sceneObject.material;
+            let geometryKey = keyObject.sceneObject.geometry;
+            let behaviourKeys = keyObject.sceneObject.behaviours;
 
-        //Create new Object
-        let object = new SceneObject(geometryKey, materialKey)
+            //Determine if Material or Geometry have behaviours
+            //NOTE: these behaviours are not appened to the "behaviours" list
+            if (materialKey.startsWith("behaviour:")){
+                const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
+                materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
+            }
 
-        //Push Object into world array
-        this.sceneObjects.push(object)
+            if (geometryKey.startsWith("behaviour:")){
+                const geoBehaviour = geometryKey.split(":")[1]
+                geometryKey = this.behaviours.GetBehaviour(geoBehaviour)?.Get()
+            }
 
-        //Generate behaviours and apply to object
-        let behaviours = behaviourKeys.map(key=>{
-            return this.behaviours.GetBehaviour(key,object)
-        })
+            //Create new Object
+            let object = new SceneObject(geometryKey, materialKey)
 
-        object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
+            //Push Object into world array
+            this.sceneObjects.push(object)
 
-        if (object.mesh){
-            object.mesh.parent = threeParent //Set the threeJS parent
-            object.mesh.castShadow = true; //Allow the object to cast a shadow
-            object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
-            
-            object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
-            return object
+            //Generate behaviours and apply to object
+            let behaviours = behaviourKeys.map(key=>{
+                return this.behaviours.GetBehaviour(key,object)
+            })
+
+            object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
+
+            if (object.mesh){
+                object.mesh.parent = threeParent //Set the threeJS parent
+                object.mesh.castShadow = true; //Allow the object to cast a shadow
+                object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
+                
+                object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+                return object
+            } else {
+                console.error("Failed to create mesh", object)
+                return undefined
+            }
         } else {
-            console.error("Failed to create mesh", object)
+            console.error("Invalid Object Key: '" + objectKey + "'")
             return undefined
         }
         
@@ -118,20 +151,20 @@ export class World extends THREE.Group {
         //------------------------------------------------
 
         //Add some cubes
-        let cubeCircle = this.AddObject(this, '','',['CubeCircle'])
+        let cubeCircle = this.AddObject(this, 'cubeCircle')
         if (cubeCircle && cubeCircle.mesh){
             cubeCircle.mesh.position.set(0,0,0);
             cubeCircle.mesh.rotateX(1.2)
         }
 
         //Add a skybox
-        let skybox = this.AddObject(this, 'skybox', 'skybox0',[]);
+        let skybox = this.AddObject(this, 'skybox');
         if (skybox && skybox.mesh){
             skybox.mesh.position.set(0,0,0);
         }
 
         //Add a plane
-        let plane = this.AddObject(this, 'plane', 'white',[]);
+        let plane = this.AddObject(this, 'plane');
         if (plane && plane.mesh){
             plane.mesh.position.set(0,-2.5,0);
         }
