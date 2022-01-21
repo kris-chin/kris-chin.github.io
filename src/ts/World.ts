@@ -16,6 +16,14 @@ import MaterialLoader from './MaterialLoader';
 import { KeyObjectLoader, KeyObject } from './KeyObjectLoader';
 import BehaviourFactory from './BehaviourFactory';
 
+//Arbitrary import of testWorld JSON 
+import testWorld from '../data/testWorld.json';
+
+///Interface for worldObjects
+interface worldObject {
+    name : string,
+    args : args
+}
 
 //Interface for Optional AddObject Arguments
 interface args{
@@ -72,7 +80,7 @@ export class World extends THREE.Group {
                 this.geometries = data[1] //set geometry map
                 this.keyObjects = data[2]
 
-                this.PlaceObjects()
+                this.PlaceObjects(testWorld) //place objects. arbitrarily places based on testWorld
                 console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
             })
     }
@@ -152,15 +160,13 @@ export class World extends THREE.Group {
         
     }
 
-    //Helper Method for placing objects
-    private PlaceObjects(){
-        //Everything below this line is arbitrary
-        //------------------------------------------------
-        this.AddObject('cubeCircle') //Add some cubes
-        this.AddObject('skybox'); //Add a skybox
-        this.AddObject('plane',{'pos': {'x':0,'y':-2.5,'z':0}}); //Add a plane
-        this.AddObject('DirectionalLight', {'pos':{'x':0,'y':4,'z':2}}) //Add lights
-        this.AddObject('AmbientLight')
+    //Helper Method for placing objects given an array
+    private PlaceObjects(worldObjectArray : Array<Object>){
+        for (let o of worldObjectArray){
+            const object = o as worldObject; //Cast as worldObject interface
+            if (object.args) this.AddObject(object.name,object.args)
+            else this.AddObject(object.name)
+        }
     }
 
 }
