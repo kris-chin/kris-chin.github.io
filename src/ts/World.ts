@@ -71,11 +71,15 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(object:SceneObject, behaviourKeys:Array<string>){
+    public AddObject(geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject {
         
-        this.objects.push(object) //Object is added in array
+        //Create new Object
+        let object = new SceneObject(geometryKey, materialKey)
 
-        //Generate behaviour objects
+        //Push Object into world array
+        this.objects.push(object)
+
+        //Generate behaviours and apply to object
         let behaviours = behaviourKeys.map(key=>{
             return this.behaviours.GetBehaviour(key,object)
         })
@@ -94,6 +98,7 @@ export class World extends THREE.Group {
             console.error("Failed to create mesh", object)
         }
 
+        return object
     }
 
     //Helper Method for placing objects
@@ -116,8 +121,7 @@ export class World extends THREE.Group {
                 c = 'green'
             }
 
-            let cuber = new SceneObject('box' , c);
-            this.AddObject(cuber, ['Rotate']);
+            let cuber = this.AddObject('box' , c, ['Rotate']);
 
             if (cuber.mesh){
                 cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
@@ -131,12 +135,10 @@ export class World extends THREE.Group {
         }
 
         //Add a skybox
-        let skybox = new SceneObject('skybox', 'skybox0');
-        this.AddObject(skybox,[]);
+        let skybox = this.AddObject('skybox', 'skybox0',[]);
 
         //Add a plane
-        let plane = new SceneObject('plane', 'white');
-        this.AddObject(plane,[]);
+        let plane = this.AddObject('plane', 'white',[]);
         plane.mesh.position.set(0,-2.5,0);
 
         //Add a light (I didn't add compatibility for it yet with our SceneObject interface. but it IS an object3D)
