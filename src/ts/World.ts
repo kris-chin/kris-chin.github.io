@@ -74,9 +74,15 @@ export class World extends THREE.Group {
     public AddObject(geometryKey: string, materialKey: string, behaviourKeys:Array<string>) : SceneObject {
         
         //Determine if Material or Geometry have behaviours
+        //NOTE: these behaviours are not appened to the "behaviours" list
         if (materialKey.startsWith("behaviour:")){
             const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
             materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
+        }
+
+        if (geometryKey.startsWith("behaviour:")){
+            const geoBehaviour = geometryKey.split(":")[1]
+            geometryKey = this.behaviours.GetBehaviour(geoBehaviour)?.Get()
         }
 
         //Create new Object
@@ -90,7 +96,7 @@ export class World extends THREE.Group {
             return this.behaviours.GetBehaviour(key,object)
         })
 
-        object.Initialize(this,behaviours); //Point the Object to the World and create mesh
+        object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
 
         if (object.mesh){
 
