@@ -120,7 +120,8 @@ export class World extends THREE.Group {
         //Add some cubes
         let cubeCircle = this.AddObject(this, '','',['CubeCircle'])
         if (cubeCircle && cubeCircle.mesh){
-            cubeCircle.mesh.position.set(5,0,5);
+            cubeCircle.mesh.position.set(0,0,0);
+            cubeCircle.mesh.rotateX(1.2)
         }
 
         //Add a skybox
@@ -135,19 +136,16 @@ export class World extends THREE.Group {
             plane.mesh.position.set(0,-2.5,0);
         }
 
-        //Add a light (I didn't add compatibility for it yet with our SceneObject interface. but it IS an object3D)
+        //------------------------------------------------
+
+        //Add lights
         let light = new THREE.DirectionalLight(0xffffff,1)
         light.position.set(0, 4, 2); //position determines a directional light's direction
-        //light.target.position.set(10,0,0);
         light.castShadow = true;
         this.add(light);
 
         let ambient = new THREE.AmbientLight(0xffffff, 0.25);
         this.add(ambient);
-
-        //shadow helper
-        //let helper = new THREE.CameraHelper(light.shadow.camera);
-        //this.add(helper);
 
     }
 
