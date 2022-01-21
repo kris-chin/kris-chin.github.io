@@ -11,9 +11,11 @@ import SceneObject from '../SceneObject'
 export abstract class Behaviour {
 
     base : (SceneObject|undefined)
+    parameters: (Object|undefined) //Behaviour parameters must fit within an interface for good practice
 
-    constructor(base : (SceneObject|undefined)=undefined){
+    constructor(base : (SceneObject|undefined)=undefined, parameters:(Object|undefined)=undefined){
         this.base = base
+        this.parameters = parameters
     }
 
     abstract Get() : any //If unused, just return null

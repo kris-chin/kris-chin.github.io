@@ -1,5 +1,9 @@
 import Behaviour from "./Behaviour";
 
+interface CubeCircleParams{
+    rotation : number
+}
+
 export class CubeCircle extends Behaviour{
 
     firstRun : boolean = false;
@@ -9,6 +13,8 @@ export class CubeCircle extends Behaviour{
     Step(){
         if (!this.firstRun){
             if (this.base && this.base.mesh){
+
+                let params = this.parameters as CubeCircleParams
 
                 //Creates 30 Cubes
                 for (let i = 0; i < 30; i++){
@@ -23,6 +29,8 @@ export class CubeCircle extends Behaviour{
                 }
 
                 this.firstRun = true;
+
+                this.base.mesh.rotateX(params.rotation)
             }
         }
     }

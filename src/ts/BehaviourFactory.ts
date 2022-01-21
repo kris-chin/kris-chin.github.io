@@ -19,11 +19,11 @@ import CubeCircle from './behaviours/CubeCircle';
 export class BehaviourFactory {
 
     //Returns a newly Instantiated Behaviour Class based on Key Value
-    GetBehaviour(key : string, parent : (SceneObject | undefined)=undefined) : (Behaviour | undefined) {
+    GetBehaviour(key : string, parent : (SceneObject | undefined)=undefined, parameters : (Object | undefined) = undefined) : (Behaviour | undefined) {
         switch(key){
-            case('Rotate'): return new Rotate(parent);
-            case('RandomColor'): return new RandomColor(parent);
-            case('CubeCircle'): return new CubeCircle(parent);
+            case('Rotate'): return new Rotate(parent,parameters);
+            case('RandomColor'): return new RandomColor(parent,parameters);
+            case('CubeCircle'): return new CubeCircle(parent,parameters);
             default:
                 console.error("Invalid Behaviour: '" + key + "'")
                 return undefined

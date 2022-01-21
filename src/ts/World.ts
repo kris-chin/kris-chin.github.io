@@ -23,7 +23,7 @@ interface KeyObject {
     sceneObject: {
         geometry : string,
         material : string,
-        behaviours : Array<string>
+        behaviours : Array<{ name:string,params:Object} >
     }
 }
 
@@ -65,7 +65,7 @@ export class World extends THREE.Group {
         //Setup avaiable objects Map
         this.keyObjects = new Map<string,KeyObject>();
         for (let object of objects){
-            this.keyObjects.set(object.name,object)
+            this.keyObjects.set(object.name, object)
         }
 
         //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
@@ -122,7 +122,7 @@ export class World extends THREE.Group {
 
             //Generate behaviours and apply to object
             let behaviours = behaviourKeys.map(key=>{
-                return this.behaviours.GetBehaviour(key,object)
+                return this.behaviours.GetBehaviour(key.name,object,key.params)
             })
 
             object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
@@ -154,7 +154,6 @@ export class World extends THREE.Group {
         let cubeCircle = this.AddObject(this, 'cubeCircle')
         if (cubeCircle && cubeCircle.mesh){
             cubeCircle.mesh.position.set(0,0,0);
-            cubeCircle.mesh.rotateX(1.2)
         }
 
         //Add a skybox

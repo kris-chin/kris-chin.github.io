@@ -4,7 +4,9 @@
         "sceneObject": {
             "geometry" : "box",
             "material" : "behaviour:RandomColor",
-            "behaviours": ["Rotate"]
+            "behaviours": [
+                { "name": "Rotate", "params": {"speed":20} }
+            ]
         }
     },
     {
@@ -28,7 +30,9 @@
         "sceneObject": {
             "geometry" : "",
             "material" : "",
-            "behaviours" : ["CubeCircle"]
+            "behaviours" : [ 
+                {"name":"CubeCircle", "params":{"rotation":0.2} } 
+            ]
         }
     }
 ]
