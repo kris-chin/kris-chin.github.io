@@ -9,13 +9,11 @@
 
 //THREE imports
 import * as THREE from 'three';
-import Cube from './objects/Cube';
-import SceneObject from './objects/SceneObject';
+import SceneObject from './SceneObject';
 import Scene from './Scene';
 import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
-import Skybox from './objects/Skybox';
-import Plane from './objects/Plane';
+import BehaviourFactory from './BehaviourFactory';
 
 export class World extends THREE.Group {
 
@@ -23,6 +21,7 @@ export class World extends THREE.Group {
     objects : Array<SceneObject>; //All objects in world
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
+    behaviours : BehaviourFactory;
 
     //Loaders for 3D information
     private loader_geometries ?: GeometryLoader;
@@ -44,6 +43,7 @@ export class World extends THREE.Group {
         this.objects = []
         this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
         this.geometries = new Map<string,THREE.BufferGeometry>();
+        this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
@@ -71,10 +71,16 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for pushing objects into array
-    public AddObject(object:SceneObject){
+    public AddObject(object:SceneObject, behaviourKeys:Array<string>){
         
         this.objects.push(object) //Object is added in array
-        object.Initialize(this); //Point the Object to the World and create mesh
+
+        //Generate behaviour objects
+        let behaviours = behaviourKeys.map(key=>{
+            return this.behaviours.GetBehaviour(key,object)
+        })
+
+        object.Initialize(this,behaviours); //Point the Object to the World and create mesh
 
         if (object.mesh){
 
@@ -110,8 +116,8 @@ export class World extends THREE.Group {
                 c = 'green'
             }
 
-            let cuber = new Cube('box' , c);
-            this.AddObject(cuber);
+            let cuber = new SceneObject('box' , c);
+            this.AddObject(cuber, ['Rotate']);
 
             if (cuber.mesh){
                 cuber.mesh.position.x = ( Math.cos(i/30 * 2*Math.PI)) * 2;
@@ -125,12 +131,12 @@ export class World extends THREE.Group {
         }
 
         //Add a skybox
-        let skybox = new Skybox('skybox', 'skybox0');
-        this.AddObject(skybox);
+        let skybox = new SceneObject('skybox', 'skybox0');
+        this.AddObject(skybox,[]);
 
         //Add a plane
-        let plane = new Plane('plane', 'white');
-        this.AddObject(plane);
+        let plane = new SceneObject('plane', 'white');
+        this.AddObject(plane,[]);
         plane.mesh.position.set(0,-2.5,0);
 
         //Add a light (I didn't add compatibility for it yet with our SceneObject interface. but it IS an object3D)

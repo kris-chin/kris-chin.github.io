@@ -8,9 +8,10 @@ Extend your objects from this instead of THREE.Object3D.
 
 import * as THREE from 'three';
 import { Mesh } from 'three';
-import World from '../World';
+import World from './World';
+import Behaviour from './behaviours/Behaviour';
 
-export abstract class SceneObject {
+export class SceneObject {
 
     //Proposed Key Values for instantiation
     private key_geometry : string;
@@ -19,6 +20,7 @@ export abstract class SceneObject {
     //Actual Geometry and Material
     private geometry! : (THREE.BufferGeometry | undefined);
     private material! : (THREE.Material | Array<THREE.Material> | undefined);
+    private behaviours! : Array<Behaviour | undefined>;
 
     //Mesh Object
     mesh! : THREE.Mesh; //Code assumes Mesh will be initalized by the time the class is used
@@ -26,14 +28,28 @@ export abstract class SceneObject {
     //World Object (contains "Global" variables)
     world!: World;
 
-    constructor(key_geometry: string, key_material: string){
-        this.key_geometry = key_geometry;
-        this.key_material = key_material;
+    constructor(geometryString: string, materialString: string){
+        
+        //String Code for special Geometry
+        if (geometryString.startsWith("behaviour:")){
+            this.key_geometry = geometryString;
+        } else {
+            this.key_geometry = geometryString
+        }
+        
+        //String Code for special material
+        if (materialString.startsWith("behaviour:")){
+            this.key_material = materialString;
+        }
+        else{
+            this.key_material = materialString;
+        }
     }
 
     //Points object to World object and loads in mesh
-    Initialize(world: World){
+    Initialize(world: World, behaviours: Array<Behaviour | undefined>){
         this.world = world;
+        this.behaviours = behaviours;
 
         //get geometry and material
         this.geometry = this.world.geometries.get(this.key_geometry)
@@ -56,7 +72,15 @@ export abstract class SceneObject {
     }
 
     //Called every frame
-    Step(){}
+    Step(){
+
+        //Go through any custom behaviours and run them
+        for (let behaviour of this.behaviours){
+            if (behaviour){
+                behaviour.Step()
+            }
+        }
+    }
 
 }
 
