@@ -53,8 +53,7 @@
             "geometry" : "",
             "material" : "",
             "behaviours" : [ 
-                {"name":"AmbientLight",
-                "params":{"color":0xffffff,"intensity":0.25} } 
+                {"name":"AmbientLight", "params":{"color":0xffffff,"intensity":0.25} } 
             ]
         }
     },
@@ -64,8 +63,17 @@
             "geometry" : "",
             "material" : "",
             "behaviours" : [
-                {"name": "Links",
-                "params":{"elementId":"links"} }
+                {"name": "Links", "params":{"elementId":"links"} }
+            ]
+        }
+    },
+    {
+        "name" : "ProjectionTextCube",
+        "sceneObject":{
+            "geometry" : "box",
+            "material" : "white",
+            "behaviours" : [
+                {"name": "ProjectionText", "params":{"elementId":"projectionTextCube"} }
             ]
         }
     }

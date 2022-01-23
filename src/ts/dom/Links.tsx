@@ -2,20 +2,18 @@ import DomText, { DomParams, translate3d, rotate3d} from "../behaviours/DomText"
 
 export default class Links extends DomText{
 
-    Get(){}
-
     Render(params: DomParams): JSX.Element {
 
         const testFunc = () => this.base!.world.AddObject('cube',{"pos": {x: 0, y: 0, z: 0}})
 
         return(
             <div id ="links_body">
-                <a onClick={testFunc} id = "links_button1">
+                <p onClick={testFunc} id = "links_button1">
                     hi
-                </a>
-                <button onClick={testFunc} id = "links_button2">
+                </p>
+                <p onClick={testFunc} id = "links_button2">
                     son
-                </button>
+                </p>
             </div>
         );
     }
