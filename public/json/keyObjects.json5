@@ -58,4 +58,15 @@
             ]
         }
     },
+    {
+        "name" : "DOM_Links",
+        "sceneObject":{
+            "geometry" : "",
+            "material" : "",
+            "behaviours" : [
+                {"name": "Links",
+                "params":{"elementId":"links"} }
+            ]
+        }
+    }
 ]

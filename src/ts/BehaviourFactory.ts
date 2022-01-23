@@ -17,6 +17,7 @@ import RandomColor from './behaviours/RandomColor';
 import CubeCircle from './behaviours/CubeCircle';
 import DirectionalLight from './behaviours/DirectionalLight'; //note: this shares the same name as the directional light from THREE
 import AmbientLight from './behaviours/AmbientLight';
+import Links from './dom/Links';
 
 export class BehaviourFactory {
 
@@ -28,6 +29,7 @@ export class BehaviourFactory {
             case('CubeCircle'): return new CubeCircle(parent,parameters);
             case('DirectionalLight'): return new DirectionalLight(parent,parameters);
             case('AmbientLight'): return new AmbientLight(parent, parameters);
+            case("Links"): return new Links(parent, parameters);
             default:
                 console.error("Invalid Behaviour: '" + key + "'")
                 return undefined

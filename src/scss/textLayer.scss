@@ -1,0 +1,13 @@
+#textLayer{
+    position: absolute;
+    z-index: 100; //Put the text above the canvas
+    transform:translate3d(0,0,1);
+
+    *{
+        position:absolute;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}

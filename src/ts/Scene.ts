@@ -10,6 +10,7 @@
 */
 
 //Imports from JS packages
+import React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from '../js/OrbitControls';
 
@@ -31,8 +32,12 @@ export class Scene {
 
     //World for this Scene
     world: World;
+
+    //Pointer to the component that the scene rests in
+    canvas : React.Component
     
-    constructor(){
+    constructor(hostComponent: React.Component){
+        this.canvas = hostComponent; //point to the host component
         this.scene = new THREE.Scene();
 
         this.camera = new THREE.PerspectiveCamera(
@@ -84,8 +89,8 @@ export class Scene {
         
         //Function called every frame
         const Step = () => {
-            //Set the callback functino to be the animation function again
-            requestAnimationFrame( Step ); 
+            //Set the callback function to be the animation function again
+            requestAnimationFrame( Step ); //This line is specifically a CPU-Friendly way to use the callback function 
 
             //Call the step function in the world.
             //Make all calculations to World instead of here

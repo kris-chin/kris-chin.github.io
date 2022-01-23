@@ -15,13 +15,23 @@ import Scene from './Scene'
 //Determine if WebGL is even avaiable
 import { WEBGL } from '../js/WebGL';
 
+import TextLayer from './TextLayer';
+
 export class Canvas extends React.Component {
+
+    textLayer : TextLayer
+
+    constructor(props : Object){
+        super(props)
+        //Create the text layer component and point to it
+        this.textLayer = new TextLayer(this.props)
+    }
 
     //Run when this component is mounted to the DOM
     componentDidMount(): void {
 
-        //Create the Scene Object
-        let canvas = new Scene();
+        //Create the Scene Object and point it to this element
+        const scene = new Scene(this);
 
         //Get the DIV Element that this Class Exports
         const element : (HTMLElement | null) = document.getElementById('canvas');
@@ -32,10 +42,10 @@ export class Canvas extends React.Component {
             //Check if WebGL is available
             if (WEBGL.isWebGLAvailable() ) {
                 //Replace the DIV element with a canvas element
-                element.parentNode.replaceChild(canvas.renderer.domElement, element);
+                element.parentNode.replaceChild(scene.renderer.domElement, element);
 
                 //Start the scene
-                canvas.Initialize()
+                scene.Initialize()
             } else {
                 
                 //Display WebGL Warning
@@ -53,9 +63,10 @@ export class Canvas extends React.Component {
     //Return the Div
     render(){
         return(
-            <div>
+            <>
+                {this.textLayer.render()}
                 <div id='canvas' />
-            </div>
+            </>
         )
     }
 
