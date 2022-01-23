@@ -14,17 +14,18 @@ export default class TextLayer extends Component {
     this.elements = new Array<JSX.Element>()
   }
 
-  AddElement(element : JSX.Element, elementId : string){
+  //Returns true if the element is successfully acquired
+  AddElement(element : JSX.Element, elementId : string) {
     this.totalCount += 1;
     const tempElement : JSX.Element = (<div id = {elementId} key = {this.totalCount}>{element}</div>);
     this.elements.push(tempElement) //push element to array
 
     //Then re-render the element inside the textLayer div
-    ReactDOM.render(this.elements, document.getElementById('textLayer'))
+    ReactDOM.render(<>{this.elements}</>, document.getElementById('textLayer'))
   }
 
   ReRender(){ //helper call to re-render component
-    ReactDOM.render(this.elements, document.getElementById('textLayer'))
+    ReactDOM.render(<>{this.elements}</>, document.getElementById('textLayer'))
   }
 
   render() {

@@ -44,9 +44,17 @@ export default abstract class DomText extends Behaviour{
             this.jsx_element = this.Render(params);
 
             //Add Element to textLayer and point to its domObject
-            this.textLayer.AddElement(this.jsx_element, params.elementId);
-            this.html_element = document.getElementById(params.elementId)
-
+            if (params.elementId){
+                if (!document.getElementById(params.elementId)){
+                    this.textLayer.AddElement(this.jsx_element, params.elementId);
+                    this.html_element = document.getElementById(params.elementId);
+                    if (!this.html_element) console.error("Failed to create HTML Element: %o",this.html_element)
+                } else {
+                    console.error("DOM ElementId: '" + params.elementId + "' already exists. Not creating duplicate DOMElement")
+                }
+            } else {
+                console.error("DOM ElementId is required to access DomText. Not Creating DOMElement")
+            }
             this.firstRun = true;
         }
     }
@@ -55,9 +63,12 @@ export default abstract class DomText extends Behaviour{
     Step(){
         if (!this.firstRun) this.Init()
         if (this.html_element){
-            try {if (this.base && this.base.world) this.Animate()}
+            try {
+                if (this.base && this.base.world) this.Animate()
+                else console.error("Animate function uncalled")
+            }
             catch {}
-        } 
+        }
     }
 
 }
