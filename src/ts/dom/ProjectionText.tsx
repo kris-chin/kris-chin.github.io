@@ -1,8 +1,11 @@
-import DomText, { DomParams, rotate3d, translate3d } from '../behaviours/DomText'
+import DomText, { DomParams, translate3d } from '../behaviours/DomText'
 import * as THREE from 'three';
 
 //What percent from the viewport border to cut off text (to avoid view-resizing)
-const BORDER = 0.1
+const BORDER = 0 //We have css: 'overflow: hidden'. but i'm keeping this here just in case
+//Offsets for placement
+const X_OFFSET = -10;
+const Y_OFFSET = -50;
 
 export default class ProjectionText extends DomText{
 
@@ -26,8 +29,8 @@ export default class ProjectionText extends DomText{
         var v = p.project(this.base!.world.scene.camera);
 
         //Relate the Vector to the viewport
-        v.x = (v.x + 1) / 2 * window.innerWidth; 
-        v.y = -(v.y - 1) / 2 * window.innerHeight;
+        v.x = (v.x + 1) / 2 * window.innerWidth + X_OFFSET; 
+        v.y = -(v.y - 1) / 2 * window.innerHeight + Y_OFFSET;
              
         const a = document.getElementById("raycastText_hello")
         if (a) {
