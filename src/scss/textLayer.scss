@@ -2,13 +2,19 @@
     position: absolute;
     z-index: 100; //Put the text above the canvas
 
-    *{
+    div{
         position:absolute;
         transform:translate3d(0,0,0.01); //im not sure if this automatically does GPU computation but i think this is fine
+    
+        #raycastText_hello{
+            width:20em;
+        }
     }
 
     p{
-        cursor: pointer;
+        font-family: Helvetica;
+        font-weight: bold;
+        font-size: 1.2em;
 
         :hover{
             font-weight: bold;

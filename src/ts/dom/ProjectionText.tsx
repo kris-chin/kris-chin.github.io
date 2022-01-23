@@ -9,7 +9,11 @@ export default class ProjectionText extends DomText{
     Render(params: DomParams): JSX.Element {
         return(
             <>
-                <p id ="raycastText_hello">Hi There </p>
+                <div id ="raycastText_hello">
+                    <p>This is a whole div</p>
+                    <p>Crazy right?</p>
+                    <button>I'm a button</button>
+                </div>
             </>
         );
     }
@@ -30,7 +34,7 @@ export default class ProjectionText extends DomText{
             if ( (v.x > window.innerWidth - (window.innerWidth * BORDER)) || (v.y > window.innerHeight - (window.innerHeight * BORDER)) ) a.style.display = "none";
             else if ( (v.x < window.innerWidth * BORDER) || (v.y < window.innerHeight * BORDER) ) a.style.display = "none";
             else { 
-                if (a.style.display !== "absolute") a.style.display = "initial"
+                if (a.style.display !== "initial") a.style.display = "initial"
                 a.style.transform = translate3d({x:v.x,y:v.y,z:0},"px");
             }
         }
