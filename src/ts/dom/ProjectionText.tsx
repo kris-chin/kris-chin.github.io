@@ -12,16 +12,15 @@ export default class ProjectionText extends DomText{
     Render(params: DomParams): JSX.Element {
         return(
             <>
-                <div id ="raycastText_hello">
-                    <p>This is a whole div</p>
-                    <p>Crazy right?</p>
-                    <button>I'm a button</button>
-                </div>
+                <p>This is a whole div</p>
+                <p>Crazy right?</p>
+                <button>I'm a button</button>
             </>
         );
     }
 
     Animate(): void {
+        const params = this.parameters as DomParams
         const pos = this.base!.mesh.position
 
         //Create a new Vector at the object position and project it using the camera
@@ -32,7 +31,7 @@ export default class ProjectionText extends DomText{
         v.x = (v.x + 1) / 2 * window.innerWidth + X_OFFSET; 
         v.y = -(v.y - 1) / 2 * window.innerHeight + Y_OFFSET;
              
-        const a = document.getElementById("raycastText_hello")
+        const a = document.getElementById(params.elementId)
         if (a) {
             if ( (v.x > window.innerWidth - (window.innerWidth * BORDER)) || (v.y > window.innerHeight - (window.innerHeight * BORDER)) ) a.style.display = "none";
             else if ( (v.x < window.innerWidth * BORDER) || (v.y < window.innerHeight * BORDER) ) a.style.display = "none";
