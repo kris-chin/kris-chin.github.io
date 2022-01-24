@@ -1,4 +1,4 @@
-import DomText, { DomParams, translate3d, rotate3d} from "../behaviours/DomText";
+import DomText, { DomParams, translate3d} from "../behaviours/DomText";
 
 export default class Links extends DomText{
 
@@ -7,6 +7,9 @@ export default class Links extends DomText{
 
         const testFunc = () => {
             this.base!.world.AddObject('cube',{"pos": {x: 0, y: 0, z: 0}})
+
+            //Change URL
+            window.history.pushState('go','','/test/hello')
             scene.MoveCamera(
                 {
                     "position": {

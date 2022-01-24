@@ -10,13 +10,14 @@
 */
 
 //Imports from JS packages
-import React from 'react';
+//import React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from '../js/OrbitControls';
 import anime from 'animejs';
 
 //THREE imports
 import World from './World';
+import Canvas, { CanvasProps } from './Canvas';
 
 //Non-Class variables used simply for the Window Resize Function that is called on Window Resize.
 var cam : THREE.PerspectiveCamera;
@@ -55,9 +56,9 @@ export class Scene {
     world: World;
 
     //Pointer to the component that the scene rests in
-    canvas : React.Component
+    canvas : Canvas
     
-    constructor(hostComponent: React.Component){
+    constructor(hostComponent: Canvas){
         this.canvas = hostComponent; //point to the host component
         this.scene = new THREE.Scene();
 
@@ -94,6 +95,11 @@ export class Scene {
 
         //Create World
         this.world = new World(this);
+
+        //Load Page State
+        this.LoadPageState( (this.canvas.props as CanvasProps).page )
+
+        //Note: Scene doesn't start rendering until Initialize() is called
     }
 
     //Function to call on resize
@@ -130,8 +136,8 @@ export class Scene {
 
     //Helper Function to Move the Camera to a given angle
     //All you have to do is easily paste the desired camera angle as a parameter provided by CameraDebug.log()
-    MoveCamera(angle : CameraAngle){
-        var timeline = anime.timeline({});
+    MoveCamera(angle : CameraAngle, animeParams : (anime.AnimeParams|undefined)=undefined){
+        var timeline = anime.timeline(animeParams)
         //Then Animate the quaternion
         timeline.add(
             {
@@ -159,6 +165,40 @@ export class Scene {
                 z : angle.orbitTarget.z
             }, 0
         )
+    }
+
+    //Function Responsible for making sure the World is at the desired state
+    LoadPageState(page : string) {
+
+        switch (page){
+            case ('/test/hello'): {
+                this.MoveCamera({
+                    "position": {
+                        "x": 4.796629768409727,
+                        "y": 1.245790639822066,
+                        "z": 2.2894602892092757
+                    },
+                    "quaternion": {
+                        "_x": -0.1328508050039251,
+                        "_y": 0.507118024528828,
+                        "_z": 0.07946001407237957,
+                        "_w": 0.8478608842088454
+                    },
+                    "orbitTarget": {
+                        "x": 0.6025376700085524,
+                        "y": -0.2835554238169669,
+                        "z": 0.037640561131389236
+                    }
+                });
+                break;
+            }
+
+            default: {
+                console.log(`No State for: '${page}', loading default.`)
+            }
+        }
+
+
     }
 
 }

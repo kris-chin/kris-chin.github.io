@@ -17,14 +17,18 @@ import { WEBGL } from '../js/WebGL';
 
 import TextLayer from './TextLayer';
 
-export class Canvas extends React.Component {
+export interface CanvasProps {
+    page : string //"Page" state
+}
+
+export default class Canvas extends React.Component {
 
     textLayer : TextLayer
 
     constructor(props : Object){
         super(props)
         //Create the text layer component and point to it
-        this.textLayer = new TextLayer(this.props)
+        this.textLayer = new TextLayer(this.props) //Pass the Canvas props to the TextLayer
     }
 
     //Run when this component is mounted to the DOM
@@ -71,5 +75,3 @@ export class Canvas extends React.Component {
     }
 
 }
-
-export default Canvas;

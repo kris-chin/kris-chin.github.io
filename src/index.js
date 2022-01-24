@@ -23,8 +23,8 @@ ReactDOM.render(
           <Route path = "/things">
             <Projects />
           </Route>
-          <Route path ="/test">
-            <Canvas />
+          <Route path ="/test"> 
+            <Canvas page= {history.location.pathname} />
           </Route>
         </Switch>
     </Router>
