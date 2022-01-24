@@ -29,7 +29,7 @@ export class KeyObjectLoader {
         var promise = new Promise< Map<string,KeyObject> >( (resolve,reject) => {
             
             //Wait for geometry data and then map it
-            fetch('./json/keyObjects.json5')
+            fetch('/json/keyObjects.json5')
             .then(response => response.text())
             .then(data => {
 

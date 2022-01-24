@@ -29,7 +29,7 @@ export class MaterialLoader {
         var promise = new Promise< Map<string, (THREE.Material | Array<THREE.Material>)> >( (resolve,reject) => {
             
             //Wait for material data and then map it
-            fetch('./json/materials.json5')
+            fetch('/json/materials.json5')
             .then(response => response.text())
             .then(data => {
 
@@ -69,7 +69,7 @@ export class MaterialLoader {
 
     //Creates Skyboxes
     MapSkyboxes(skyboxName: string){
-        const imageDir = './images/skyboxes/';
+        const imageDir = '/images/skyboxes/';
         const filetype = '.png';
         const sides = ['ft','bk','up','dn','rt','lf']; //I'm pretty sure the order of these sides determines where the materials get placed in a material array
 

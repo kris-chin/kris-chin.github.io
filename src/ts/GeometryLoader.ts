@@ -34,7 +34,7 @@ export class GeometryLoader {
         var promise = new Promise< Map<string,THREE.BufferGeometry> >( (resolve,reject) => {
             
             //Wait for geometry data and then map it
-            fetch('./json/geometries.json5')
+            fetch('/json/geometries.json5')
             .then(response => response.text())
             .then(data => {
 
