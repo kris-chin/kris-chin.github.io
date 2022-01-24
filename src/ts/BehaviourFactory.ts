@@ -19,6 +19,7 @@ import DirectionalLight from './behaviours/DirectionalLight'; //note: this share
 import AmbientLight from './behaviours/AmbientLight';
 import Links from './dom/Links';
 import ProjectionText from './dom/ProjectionText';
+import CameraDebug from './dom/CameraDebug';
 
 export class BehaviourFactory {
 
@@ -32,8 +33,9 @@ export class BehaviourFactory {
             case('AmbientLight'): return new AmbientLight(parent, parameters);
             case("Links"): return new Links(parent, parameters);
             case("ProjectionText"): return new ProjectionText(parent, parameters);
+            case("CameraDebug") : return new CameraDebug(parent, parameters);
             default:
-                console.error("Invalid Behaviour: '" + key + "'")
+                console.error(`Invalid Behaviour: '${key}'`)
                 return undefined
         }
     }

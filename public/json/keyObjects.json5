@@ -76,5 +76,13 @@
                 {"name": "ProjectionText", "params":{"elementId":"projectionTextCube"} }
             ]
         }
+    },
+    {
+        "name" : "CameraDebug",
+        "sceneObject":{
+            "geometry" : "",
+            "material" : "",
+            "behaviours" : [{"name": "CameraDebug", "params":{"elementId":"cameraDebug"} }]
+        }
     }
 ]

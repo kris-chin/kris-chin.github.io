@@ -2,10 +2,6 @@
     position: absolute;
     z-index: 100; //Put the text above the canvas
 
-    #projectionTextCube{
-        width:20em;
-    }
-
     div{
         position:absolute;
         transform:translate3d(0,0,0.01); //im not sure if this automatically does GPU computation but i think this is fine
@@ -20,6 +16,10 @@
             font-weight: bold;
             font-size: 2em;
         }
+    }
+
+    #cameraDebug{
+        width: 100vh;
     }
 }
 
