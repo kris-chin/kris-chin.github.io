@@ -13,6 +13,7 @@
 import React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from '../js/OrbitControls';
+import anime from 'animejs';
 
 //THREE imports
 import World from './World';
@@ -20,6 +21,26 @@ import World from './World';
 //Non-Class variables used simply for the Window Resize Function that is called on Window Resize.
 var cam : THREE.PerspectiveCamera;
 var ren : THREE.Renderer;
+
+//Interface for the Camera Angle logged in CameraDebug.tsx
+interface CameraAngle{
+    position : { //Position value of the Camera
+        x : number,
+        y : number,
+        z : number
+    },
+    quaternion : { //Quaternion value of the Camera
+        _x : number,
+        _y : number,
+        _z : number,
+        _w : number
+    },
+    orbitTarget : {  //Target value of the OrbitControls
+        x : number,
+        y : number,
+        z : number
+    }
+}
 
 export class Scene {
 
@@ -105,6 +126,39 @@ export class Scene {
 
         //Start Animations
         Step();
+    }
+
+    //Helper Function to Move the Camera to a given angle
+    //All you have to do is easily paste the desired camera angle as a parameter provided by CameraDebug.log()
+    MoveCamera(angle : CameraAngle){
+        var timeline = anime.timeline({});
+        //Then Animate the quaternion
+        timeline.add(
+            {
+                targets: this.camera.quaternion,
+                _x : angle.quaternion._x,
+                _y : angle.quaternion._y,
+                _z : angle.quaternion._z,
+                _w : angle.quaternion._w
+            }, 0
+        )
+        //First do the Postion And Orbit Target
+        timeline.add(
+            {
+                targets: this.camera.position,
+                x : angle.position.x,
+                y : angle.position.y,
+                z : angle.position.z
+            }, 0
+        )
+        timeline.add(
+            {
+                targets: this.controls.target,
+                x : angle.orbitTarget.x,
+                y : angle.orbitTarget.y,
+                z : angle.orbitTarget.z
+            }, 0
+        )
     }
 
 }
