@@ -64,7 +64,7 @@ export class GeometryLoader {
                     this.map.set(geometry.name, new THREE.BoxGeometry(d.x, d.y, d.z));
                     break;
                 default:
-                    console.error("Invalid Geometry Type: '" + geometry.type + "'")
+                    console.error(`Invalid Geometry Type: '${geometry.type}'`)
                     break;
             }
 

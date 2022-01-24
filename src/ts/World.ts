@@ -150,11 +150,11 @@ export class World extends THREE.Group {
 
                 return object
             } else {
-                console.error("Failed to create mesh", object)
+                console.error("Failed to create mesh: %o", object)
                 return undefined
             }
         } else {
-            console.error("Invalid Object Key: '" + objectKey + "'")
+            console.error(`Invalid Object Key: '${objectKey}'`)
             return undefined
         }
         

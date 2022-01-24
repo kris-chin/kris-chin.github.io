@@ -60,7 +60,7 @@ export class MaterialLoader {
                     this.MapSkyboxes(material.name)
                     break;
                 default:
-                    console.error("Invalid Material Type: '" + material.type + "'")
+                    console.error(`Invalid Material Type: '${material.type}'`)
                     break;
             } 
         }

@@ -50,7 +50,7 @@ export default abstract class DomText extends Behaviour{
                     this.html_element = document.getElementById(params.elementId);
                     if (!this.html_element) console.error("Failed to create HTML Element: %o",this.html_element)
                 } else {
-                    console.error("DOM ElementId: '" + params.elementId + "' already exists. Not creating duplicate DOMElement")
+                    console.error(`DOM ElementId: '${params.elementId}' already exists. Not creating duplicate DOMElement`)
                 }
             } else {
                 console.error("DOM ElementId is required to access DomText. Not Creating DOMElement")
@@ -77,22 +77,22 @@ export default abstract class DomText extends Behaviour{
 
 //Helper Function for CSS animation. Returns String to be added to main transform function
 export function translate3d(args: {x : number, y : number, z: number}, units: string) : string {
-    const output : string = "translate3d(" + args.x.toString() + units + "," + args.y.toString() + units + "," + args.z.toString() + units + ")";
+    const output : string = `translate3d(${args.x}${units},${args.y}${units},${args.z}${units})`;
     return output
 }
 
 //helper Function for CSS animation. Returns String to be added to main transform function
 export function rotate3d(args: {x : number, y: number, z: number, a: number}, angle_units: string) : string {
-    const output : string = "rotate3d(" + args.x.toString()  + "," + args.y.toString() + "," + args.z.toString() + "," + args.a.toString() + angle_units +")";
+    const output : string = `rotate3d(${args.x},${args.y},${args.z},${args.a}${angle_units})`;
     return output
 }
 //Helper Function for CSS animation. Returns String to be added to main transform function
 export function perspective(args:{amt: number, units: string}): string{
-    const output = "perspective(" + args.amt.toString() + args.units + ")";
+    const output = `perspective(${args.amt}${args.units})`;
     return output
 }
 //Helper Function for CSS animation. Returns String to be added to main transform function
 export function scale3d(args: {x : number, y : number, z: number}): string {
-    const output : string = "scale3d(" + args.x.toString() + "," + args.y.toString() + "," + args.z.toString() + ")";
+    const output : string = `scale3d(${args.x},${args.y},${args.z}`;
     return output
 }
