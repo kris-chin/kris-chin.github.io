@@ -1,4 +1,6 @@
 import DomText, { DomParams, translate3d, rotate3d} from "../behaviours/DomText";
+import anime from 'animejs';
+import * as THREE from 'three';
 
 export default class Links extends DomText{
 
@@ -6,12 +8,24 @@ export default class Links extends DomText{
 
         const testFunc = () => this.base!.world.AddObject('cube',{"pos": {x: 0, y: 0, z: 0}})
 
+        const testFunc2 = () => {
+
+            const camera = this.base!.world.scene.camera;
+            let cameraPos : THREE.Vector3 = camera.position;
+
+            anime({
+                targets: cameraPos,
+                x: 10,
+                
+            });
+        }
+
         return(
             <div id ="links_body">
                 <p onClick={testFunc} id = "links_button1">
                     hi
                 </p>
-                <p onClick={testFunc} id = "links_button2">
+                <p onClick={testFunc2} id = "links_button2">
                     son
                 </p>
             </div>
