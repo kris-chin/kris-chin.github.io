@@ -206,16 +206,6 @@ export class World extends THREE.Group {
             this.worldStates.push({worldState: state, sceneObjects: sceneObjects})
         }
         
-        //TODO
-        //Save all states in a seperate Array
-        //Go through states and add their SceneObjects (don't add mesh yet).
-
-        //  Point the sceneObjects to each state (so the state array contains pointers)
-        //If the state is enabled OR the state can be enabled outside, add the mesh.
-        //If not enabled, dont add the mesh.
-        //  Only add the meshes for the associated scene objects on changeState().
-        //  Reset objects accordingly on changeState()
-
             
     }
 
