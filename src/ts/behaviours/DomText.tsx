@@ -19,9 +19,10 @@ export interface DomParams{
 export default abstract class DomText extends Behaviour{
 
     firstRun : boolean = false;
-    jsx_element ?: JSX.Element; //Point to the text element
+    jsx_element !: JSX.Element; //Point to the text element
     html_element ?: (HTMLElement | null);
-    textLayer ?: TextLayer; //pointer to text layer
+    textLayer !: TextLayer; //pointer to text layer
+    INTEXTLAYER !: boolean;
 
     Get(){}
 
@@ -32,42 +33,63 @@ export default abstract class DomText extends Behaviour{
     //Do note that this class checks if "this.base" and "this.base.world" exist already. so feel free to do "!."" assumption code
     abstract Animate() : void;
 
+    //Helper function to pushes Element to TextLayer
+    private PushElement(){
+        const params = this.parameters as DomParams
+        //Add Element to textLayer and point to its domObject
+        if (params.elementId){
+            if (!document.getElementById(params.elementId)){
+                this.textLayer!.AddElement(this.jsx_element!, params.elementId);
+                this.html_element = document.getElementById(params.elementId);
+                if (!this.html_element) console.error("Failed to create HTML Element: %o",this.html_element)
+                else this.INTEXTLAYER = true;
+            } else {
+                console.error(`DOM ElementId: '${params.elementId}' already exists. Not creating duplicate DOMElement`)
+            }
+        } else {
+            console.error("DOM ElementId is required to access DomText. Not Creating DOMElement")
+        }
+    }
+
     //Code that is Only ran on First Run
     Init(){
         if (this.base){
             const params = this.parameters as DomParams
 
             //Point to Text Layer Component
-            this.textLayer = (this.base.world.scene.canvas as Canvas).textLayer
+            this.textLayer = (this.base!.world.scene.canvas as Canvas).textLayer
 
-            //Create Text 
+            //Generate Text Component
             this.jsx_element = this.Render(params);
 
-            //Add Element to textLayer and point to its domObject
-            if (params.elementId){
-                if (!document.getElementById(params.elementId)){
-                    this.textLayer.AddElement(this.jsx_element, params.elementId);
-                    this.html_element = document.getElementById(params.elementId);
-                    if (!this.html_element) console.error("Failed to create HTML Element: %o",this.html_element)
-                } else {
-                    console.error(`DOM ElementId: '${params.elementId}' already exists. Not creating duplicate DOMElement`)
-                }
-            } else {
-                console.error("DOM ElementId is required to access DomText. Not Creating DOMElement")
-            }
+            this.PushElement()
             this.firstRun = true;
         }
     }
 
     //Update Function
     Step(){
+        const params = this.parameters as DomParams
         if (!this.firstRun) this.Init()
-        if (this.html_element){
+
+        //Display text only if the mesh is being rendered
+        if (this.base!.GetRenderState()){ //if rendering
+            if (!this.INTEXTLAYER){ //if text is currently not in the DOM
+                this.PushElement()//push to text layer
+                this.INTEXTLAYER = true;
+            }
+            //Run Animate Function
             try {
                 if (this.base && this.base.world) this.Animate()
                 else console.error("Animate function uncalled")
             }
             catch {}
+
+        } else { //if not rendering 
+            if (this.INTEXTLAYER) { //if text is in the DOM and it shouldn't be
+                this.textLayer.RemoveElement(params.elementId)
+                this.INTEXTLAYER = false;
+            }
         }
     }
 

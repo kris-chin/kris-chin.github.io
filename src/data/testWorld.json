@@ -1,10 +1,60 @@
 [
-    {"name":"cubeCircle"},
-    {"name":"skybox"},
-    {"name":"plane", "args":{"pos": {"x":0,"y":-2.5,"z":0} } },
-    {"name":"DirectionalLight", "args":{"pos":{"x":0,"y":4,"z":2}}},
-    {"name":"AmbientLight"},
-    {"name":"DOM_Links"},
-    {"name":"ProjectionTextCube"},
-    {"name":"CameraDebug"}
+    {
+        "name": "/test",
+        "stateSettings": {"loadOutside" : true, "resetOnEnter" : false},
+        "cameraAngle": {
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 10
+            },
+            "quaternion": {
+                "_x": 0,
+                "_y": 0,
+                "_z": 0,
+                "_w": 0
+            },
+            "orbitTarget": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        },
+        "objects" :
+            [
+                {"name":"cubeCircle"},
+                {"name":"skybox"},
+                {"name":"plane", "args":{"pos": {"x":0,"y":-2.5,"z":0} } },
+                {"name":"DirectionalLight", "args":{"pos":{"x":0,"y":4,"z":2}}},
+                {"name":"AmbientLight"},
+                {"name":"DOM_Links"},
+                {"name":"ProjectionTextCube"},
+                {"name":"CameraDebug"}
+            ]
+    },
+    {
+        "name": "/test/hello",
+        "stateSettings": {"loadOutside" : true, "resetOnEnter" : false},
+        "cameraAngle": {
+            "position": {
+                "x": 4.796629768409727,
+                "y": 1.245790639822066,
+                "z": 2.2894602892092757
+            },
+            "quaternion": {
+                "_x": -0.1328508050039251,
+                "_y": 0.507118024528828,
+                "_z": 0.07946001407237957,
+                "_w": 0.8478608842088454
+            },
+            "orbitTarget": {
+                "x": 0.6025376700085524,
+                "y": -0.2835554238169669,
+                "z": 0.037640561131389236
+            }
+        },
+        "objects" : [
+            {"name":"cubeCircle", "args":{"pos": {"x":10,"y":0,"z":10} } }
+        ]
+    }
 ]

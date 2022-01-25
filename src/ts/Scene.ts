@@ -24,7 +24,7 @@ var cam : THREE.PerspectiveCamera;
 var ren : THREE.Renderer;
 
 //Interface for the Camera Angle logged in CameraDebug.tsx
-interface CameraAngle{
+export interface CameraAngle{
     position : { //Position value of the Camera
         x : number,
         y : number,

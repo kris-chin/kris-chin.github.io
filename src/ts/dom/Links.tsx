@@ -33,8 +33,8 @@ export default class Links extends DomText{
         }
 
         const testFunc2 = () => {
-            //scene.MoveCamera({
-            //})
+            let cube = this.base?.world.sceneObjects.filter((object)=>(object.name === "ProjectionTextCube"))[0]
+            cube?.SetRenderState(!cube.GetRenderState())
         }
 
         return(

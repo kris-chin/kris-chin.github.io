@@ -22,15 +22,26 @@ export class SceneObject {
     private material! : (THREE.Material | Array<THREE.Material> | undefined);
     private behaviours! : Array<Behaviour | undefined>;
 
+    name : string;
+    parent : SceneObject | undefined; //parent SceneObject. we actually set it in AddObject()
+
     //Mesh Object
     mesh! : THREE.Mesh; //Code assumes Mesh will be initalized by the time the class is used
 
     //World Object (contains "Global" variables)
     world!: World;
 
-    constructor(geometryString: string, materialString: string){
+    //State-Related
+    private isRendered : boolean; //set false if the object shouldn't be rendered (ie. mesh shouldn't be added to World)
+    private CHECK_RENDER : boolean; //flag for when checking if the object is rendered already occured
+
+    constructor(name : string, geometryString: string, materialString: string){
+        this.name = name;
+        this.parent = undefined;
         this.key_geometry = geometryString;
         this.key_material = materialString;
+        this.isRendered = true;
+        this.CHECK_RENDER = false;
     }
 
     //Points object to World object and loads in mesh
@@ -59,15 +70,58 @@ export class SceneObject {
 
     }
 
+    //Helper function for when 
+    private meshIsInWorld = () => {
+        let topMesh : THREE.Mesh = this.mesh
+        if (topMesh)
+            while (topMesh.parent)
+            {
+                if (topMesh.parent.type === 'Mesh') topMesh = topMesh.parent as THREE.Mesh
+                else break
+            }
+
+        //now that we have the topMesh, check if the worsld has the topMesh
+        return this.world.children.includes(topMesh)
+    }
+
     //Called every frame
     Step(){
+        //Check if we should be rendering the object
+        if (this.isRendered){
+            if (!this.CHECK_RENDER){ //flag to avoid unecessary computation with .includes()
+                if (!this.meshIsInWorld()) { //if the mesh is not added yet and needs to be added
+                    if (this.parent) this.parent.mesh.add(this.mesh)
+                    else this.world.add(this.mesh)
+                }
+                this.CHECK_RENDER = true;
+            }
 
-        //Go through any custom behaviours and run them
+        } else {
+            if (!this.CHECK_RENDER){ //flag to avoid unecessary computation with .includes()
+                if (this.meshIsInWorld()){ //if the mesh exists and needs to be removed
+                    if (this.parent) this.parent.mesh.remove(this.mesh)
+                    else this.world.remove(this.mesh)
+                }
+                this.CHECK_RENDER = true;
+            }
+        }
+
+        //Go through any custom behaviours and run them Regardeless of Render
         for (let behaviour of this.behaviours){
             if (behaviour){
                 behaviour.Step()
             }
         }
+    }
+
+    SetRenderState(state: boolean){
+        //console.log(`Setting state of '${this.name}' to: ${state}`)
+        this.isRendered = state
+        this.CHECK_RENDER = false; //reset flag
+    }
+
+    GetRenderState(){
+        return this.isRendered
     }
 
 }

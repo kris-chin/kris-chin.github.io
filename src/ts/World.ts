@@ -10,7 +10,7 @@
 //THREE imports
 import * as THREE from 'three';
 import SceneObject from './SceneObject';
-import Scene from './Scene';
+import Scene, { CameraAngle } from './Scene';
 import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
 import { KeyObjectLoader, KeyObject } from './KeyObjectLoader';
@@ -19,22 +19,36 @@ import BehaviourFactory from './BehaviourFactory';
 //Arbitrary import of testWorld JSON 
 import testWorld from '../data/testWorld.json';
 
+//Interface for the Page States in the world
+interface WorldState {
+    name : string, //state name (ie. page location)
+    stateSettings : StateSettings, //settings for the state
+    cameraAngle : CameraAngle, //default camera angle for "page"
+    objects : Array<Object> //array of WorldObjects (we keep this as Object instead of WorldObject for optional args)
+}
+
+//Settings for WorldStates
+interface StateSettings {
+    loadOutside : boolean //does this state load in the world even if it is not the current state? 
+    resetOnEnter : boolean //does the state reset when it is entered?
+}
+
 ///Interface for worldObjects
 interface worldObject {
     name : string,
-    args : args
+    args : args | undefined
 }
 
 //Interface for Optional AddObject Arguments
 interface args{
-    threeParent : THREE.Object3D,
+    parent : SceneObject,
     pos : {x: number, y: number, z: number} //Position
 }
 
 export class World extends THREE.Group {
 
     //Structures to hold all of our 3D information
-    sceneObjects : Array<SceneObject>; //All objects in world
+    sceneObjects : Array<SceneObject>; //All SceneObjects in world (not to be confused with MESHes)
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
     private behaviours : BehaviourFactory;
@@ -47,6 +61,7 @@ export class World extends THREE.Group {
 
     //Respective Scene Object
     scene : Scene;
+    private worldStates : Array<{worldState: WorldState, sceneObjects: (SceneObject | undefined)[]}>; //worldStates and their respective objects stored here
 
     //"Global" Variables
     time : number;
@@ -58,11 +73,12 @@ export class World extends THREE.Group {
         this.time = 0;
 
         //Create our objects list and Maps
-        this.sceneObjects = []
+        this.sceneObjects = [] //Note: this is just an array of ALL sceneobjects. not for state-specific ones
         this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
         this.geometries = new Map<string,THREE.BufferGeometry>();
         this.keyObjects = new Map<string,KeyObject>();
         this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
+        this.worldStates = new Array<{worldState: WorldState, sceneObjects: (SceneObject | undefined)[]}>();
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
@@ -122,7 +138,8 @@ export class World extends THREE.Group {
             }
 
             //Create new Object
-            let object = new SceneObject(geometryKey, materialKey)
+            let object = new SceneObject(objectKey, geometryKey, materialKey)
+            if (args && args.parent) object.parent = args.parent //set the SceneObject parent (NOT the mesh parent)
 
             //Push Object into world array
             this.sceneObjects.push(object)
@@ -136,14 +153,15 @@ export class World extends THREE.Group {
 
             if (object.mesh){
 
-                let parent : THREE.Object3D = this
-                if (args && args.threeParent) parent = args.threeParent //If parent argument is provided, set parent
+                //Set the threeJS mesh parent
+                if (args && args.parent) object.mesh.parent = args.parent.mesh //set object's mesh parent to the parent's mesh
+                else object.mesh.parent = this //set the object's mesh parent to the world
 
-                object.mesh.parent = parent //Set the threeJS parent
+                object.mesh.name = objectKey //Set the mesh name to the object key
                 object.mesh.castShadow = true; //Allow the object to cast a shadow
                 object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
                 
-                object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+                if (object.GetRenderState()) object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
 
                 //If a position argument is provided, set the position
                 if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z)
@@ -161,12 +179,44 @@ export class World extends THREE.Group {
     }
 
     //Helper Method for placing objects given an array
-    private PlaceObjects(worldObjectArray : Array<Object>){
-        for (let o of worldObjectArray){
-            const object = o as worldObject; //Cast as worldObject interface
-            if (object.args) this.AddObject(object.name,object.args)
-            else this.AddObject(object.name)
+    private PlaceObjects(worldStateArray : Array<WorldState>){
+
+        for (let state of worldStateArray){
+            let sceneObjects : Array<SceneObject | undefined> = []; //this state's SceneObject pointers
+            
+            //iterate through the objects of the state
+            for (let o of state.objects) {
+                const object = o as worldObject;
+                let sceneObject : SceneObject | undefined;
+                if (object.args) sceneObject = this.AddObject(object.name,object.args)
+                else sceneObject = this.AddObject(object.name)
+
+                //Stuff for only if the SceneObject was successfully created
+                if (sceneObject){
+                    if (state.stateSettings.loadOutside) sceneObject.SetRenderState(true)
+                    else sceneObject.SetRenderState(false)
+
+                }
+
+                //Push our pointers to the scene object into the array
+                sceneObjects.push(sceneObject)
+            }
+
+            //push into our worldStates array
+            this.worldStates.push({worldState: state, sceneObjects: sceneObjects})
         }
+        
+        //TODO
+        //Save all states in a seperate Array
+        //Go through states and add their SceneObjects (don't add mesh yet).
+
+        //  Point the sceneObjects to each state (so the state array contains pointers)
+        //If the state is enabled OR the state can be enabled outside, add the mesh.
+        //If not enabled, dont add the mesh.
+        //  Only add the meshes for the associated scene objects on changeState().
+        //  Reset objects accordingly on changeState()
+
+            
     }
 
 }

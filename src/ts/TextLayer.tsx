@@ -24,6 +24,14 @@ export default class TextLayer extends Component {
     ReactDOM.render(<>{this.elements}</>, document.getElementById('textLayer'))
   }
 
+  RemoveElement(elementId: string){
+    //Create new elements array that doesn't contain the element
+    const e = this.elements.filter((element)=>{return (element.props.id !== elementId)})
+    this.elements = e
+    //Re-render with removed-element
+    ReactDOM.render(<>{this.elements}</>, document.getElementById('textLayer'))
+  }
+
   ReRender(){ //helper call to re-render component
     ReactDOM.render(<>{this.elements}</>, document.getElementById('textLayer'))
   }
