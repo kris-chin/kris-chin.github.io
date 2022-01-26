@@ -239,8 +239,8 @@ export class World extends THREE.Group {
         this.DestroyObject(sceneObject)
     }
 
-    //Destroys Object from World
-    public DestroyObject(sceneObject : SceneObject){
+    //Destroys Object from World. Returns a boolean if the object was successfully deleted
+    public DestroyObject(sceneObject : SceneObject) {
         
         //Remove this SceneObject from World's sceneObjects list
         const index = this.sceneObjects.indexOf(sceneObject)
@@ -253,9 +253,9 @@ export class World extends THREE.Group {
         if (sceneObject.parent) sceneObject.parent.mesh!.remove(sceneObject.mesh!)
         else this.remove(sceneObject.mesh!)
 
-        //Remove this SceneObject from it's associated state
+        sceneObject.mesh = null //dereference mesh
 
-        //Find Original Object Pointer in state and remove 
+        //Find Original Object Pointer in state and remove from it's associated state
         const state = this.worldStates.filter((state)=>{return (state.worldState.name === sceneObject.state)})
         if (state.length === 1){
 
@@ -271,8 +271,9 @@ export class World extends THREE.Group {
         //Go through the sceneObject's behaviours and call OnDestroy()
         if (sceneObject.behaviours){
             for (let behaviour of sceneObject.behaviours){
-                if (behaviour) behaviour.OnDestroy()
+                if (behaviour)behaviour.OnDestroy()
             }
+            sceneObject.behaviours = null //dereference behaviours
         }
 
     }
@@ -342,8 +343,13 @@ export class World extends THREE.Group {
 
             //if this new state needs to be reset, reset objects
             if (desiredState[0].worldState.stateSettings.resetOnEnter){
-                for (let o of this.currentState.sceneObjects){
-                    if (o) this.ResetObject(o);
+
+                //We don't use an "of" iterator, instead, we loop the length of the array
+                //This is because using javascript's of iterator doesn't work with this function since it modifies the items in the array
+                //It's hella hacky and if you change the Reset() function, you'll need to modify the behaviour here
+                for (let i = 0; i < this.currentState.sceneObjects.length; i++){
+                    const object = this.currentState.sceneObjects[0] //we always get the first object in the array because ResetObject() modifies the array.
+                    this.ResetObject(object);
                 }
             }
         } else {
