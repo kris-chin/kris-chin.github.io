@@ -16,6 +16,7 @@ export class RandomColor extends Behaviour{
     }
 
     Step(){}
+    OnDestroy(){}
 
 }
 

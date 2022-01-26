@@ -6,6 +6,10 @@ interface RotateParameters {
 
 export class Rotate extends Behaviour{
 
+    selfTime : number = 0;
+
+    OnDestroy(){}
+
     Get(){}
 
     Step(){
@@ -15,7 +19,8 @@ export class Rotate extends Behaviour{
 
             this.base.mesh.rotation.x += 0.01 * params.speed;
             this.base.mesh.rotation.y += 0.01 * params.speed;
-            this.base.mesh.position.y += 0.01 * Math.sin((this.base.world).time)
+            this.base.mesh.position.y += 0.01 * Math.sin(this.selfTime)
+            this.selfTime += 0.01
         }
     }
 

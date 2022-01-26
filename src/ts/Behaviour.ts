@@ -20,6 +20,7 @@ export abstract class Behaviour {
 
     abstract Get() : any //If unused, just return null
     abstract Step() : void //if unused, leave blank
+    abstract OnDestroy() : void //if unused, return null
 
 }
 

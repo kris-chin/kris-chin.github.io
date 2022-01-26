@@ -93,6 +93,11 @@ export default abstract class DomText extends Behaviour{
         }
     }
 
+    OnDestroy(){
+        const params = this.parameters as DomParams
+        this.textLayer.RemoveElement(params.elementId)
+    }
+
 }
 
 //These are helper functions to help animation with the css transform property

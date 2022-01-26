@@ -21,7 +21,7 @@ export default class ProjectionText extends DomText{
 
     Animate(): void {
         const params = this.parameters as DomParams
-        const pos = this.base!.mesh.position
+        const pos = this.base!.mesh!.position
 
         //Create a new Vector at the object position and project it using the camera
         const p = new THREE.Vector3(pos.x, pos.y, pos.z);

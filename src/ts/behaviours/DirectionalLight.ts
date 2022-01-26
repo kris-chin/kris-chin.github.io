@@ -11,6 +11,7 @@ export class DirectionalLight extends Behaviour{
     firstRun : boolean = false;
 
     Get(){}
+    OnDestroy(){}
 
     Step(){
         if (!this.firstRun){

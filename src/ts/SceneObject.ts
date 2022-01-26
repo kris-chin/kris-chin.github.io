@@ -8,7 +8,7 @@ Extend your objects from this instead of THREE.Object3D.
 
 import * as THREE from 'three';
 import { Mesh } from 'three';
-import World from './World';
+import World, { args } from './World';
 import Behaviour from './Behaviour';
 
 export class SceneObject {
@@ -20,13 +20,17 @@ export class SceneObject {
     //Actual Geometry and Material
     private geometry! : (THREE.BufferGeometry | undefined);
     private material! : (THREE.Material | Array<THREE.Material> | undefined);
-    private behaviours! : Array<Behaviour | undefined>;
+    public behaviours! : Array<Behaviour | undefined> | null;
 
     name : string;
-    parent : SceneObject | undefined; //parent SceneObject. we actually set it in AddObject()
+    parent : SceneObject | null; //parent SceneObject. we actually set it in AddObject()
+    children : SceneObject[] | null; //array of children. this is also set in AddObject()
+    id : number;
+    state : string; //associated state
 
     //Mesh Object
-    mesh! : THREE.Mesh; //Code assumes Mesh will be initalized by the time the class is used
+    mesh !: THREE.Mesh | null; //Code assumes Mesh will be initalized by the time the class is used
+    initialArgs : args | undefined; //initial args that the object was created with
 
     //World Object (contains "Global" variables)
     world!: World;
@@ -35,13 +39,17 @@ export class SceneObject {
     private isRendered : boolean; //set false if the object shouldn't be rendered (ie. mesh shouldn't be added to World)
     private CHECK_RENDER : boolean; //flag for when checking if the object is rendered already occured
 
-    constructor(name : string, geometryString: string, materialString: string){
-        this.name = name;
-        this.parent = undefined;
+    constructor(info: {name : string, id: number, state: string}, geometryString: string, materialString: string, initialArgs : (Object | undefined)){
+        this.name = info.name;
+        this.id = info.id;
+        this.state = info.state;
+        this.parent = null;
+        this.children = new Array<SceneObject>();
         this.key_geometry = geometryString;
         this.key_material = materialString;
         this.isRendered = true;
         this.CHECK_RENDER = false;
+        this.initialArgs = initialArgs as args; //save initial args in case we want to re-set the object
     }
 
     //Points object to World object and loads in mesh
@@ -72,7 +80,7 @@ export class SceneObject {
 
     //Helper function for when 
     private meshIsInWorld = () => {
-        let topMesh : THREE.Mesh = this.mesh
+        let topMesh : THREE.Mesh = this.mesh!
         if (topMesh)
             while (topMesh.parent)
             {
@@ -90,8 +98,8 @@ export class SceneObject {
         if (this.isRendered){
             if (!this.CHECK_RENDER){ //flag to avoid unecessary computation with .includes()
                 if (!this.meshIsInWorld()) { //if the mesh is not added yet and needs to be added
-                    if (this.parent) this.parent.mesh.add(this.mesh)
-                    else this.world.add(this.mesh)
+                    if (this.parent) this.parent.mesh!.add(this.mesh!)
+                    else this.world.add(this.mesh!)
                 }
                 this.CHECK_RENDER = true;
             }
@@ -99,17 +107,19 @@ export class SceneObject {
         } else {
             if (!this.CHECK_RENDER){ //flag to avoid unecessary computation with .includes()
                 if (this.meshIsInWorld()){ //if the mesh exists and needs to be removed
-                    if (this.parent) this.parent.mesh.remove(this.mesh)
-                    else this.world.remove(this.mesh)
+                    if (this.parent) this.parent.mesh!.remove(this.mesh!)
+                    else this.world.remove(this.mesh!)
                 }
                 this.CHECK_RENDER = true;
             }
         }
 
         //Go through any custom behaviours and run them Regardeless of Render
-        for (let behaviour of this.behaviours){
-            if (behaviour){
-                behaviour.Step()
+        if (this.behaviours){
+            for (let behaviour of this.behaviours!){
+                    if (behaviour){
+                        behaviour.Step()
+                    }
             }
         }
     }

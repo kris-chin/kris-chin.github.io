@@ -84,5 +84,13 @@
             "material" : "",
             "behaviours" : [{"name": "CameraDebug", "params":{"elementId":"cameraDebug"} }]
         }
+    },
+    {
+        "name" : "SlowlyRotatingCube",
+        "sceneObject":{
+            "geometry" : "box",
+            "material" : "white",
+            "behaviours" : [{"name": "Rotate", "params":{"speed":0.1} }]
+        }
     }
 ]

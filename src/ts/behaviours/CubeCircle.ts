@@ -9,6 +9,7 @@ export class CubeCircle extends Behaviour{
     firstRun : boolean = false;
 
     Get(){}
+    OnDestroy(){}
 
     //Code for first run
     Init(){
@@ -19,7 +20,7 @@ export class CubeCircle extends Behaviour{
             //Creates 30 Cubes
             for (let i = 0; i < 30; i++){
 
-                let cuber = this.base.world.AddObject('cube',{'parent':this.base});
+                let cuber = this.base.world.AddObject({key:'cube',state:this.base!.state},{'parent':this.base});
     
                 if (cuber && cuber.mesh){
                     cuber.mesh.position.set( Math.cos(i/30 * 2*Math.PI) * 2, Math.sin(i/30 * 2*Math.PI) * 2, 0)
