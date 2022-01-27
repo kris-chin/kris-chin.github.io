@@ -13,34 +13,27 @@
         "name" : "plane",
         "sceneObject": {
             "geometry" : "plane",
-            "material" : "white",
-            "behaviours": []
+            "material" : "white"
         }
     },
     {
         "name" : "skybox",
         "sceneObject": {
             "geometry" : "skybox",
-            "material" : "skybox0",
-            "behaviours": []
+            "material" : "skybox0"
         }
     },
     {
         "name" : "cubeCircle",
         "sceneObject": {
-            "geometry" : "",
-            "material" : "",
             "behaviours" : [ 
-                {"name":"CubeCircle", "params":{"rotation":0} },
-                {"name": "Rotate", "params": {"speed":1} } 
+                {"name":"CubeCircle", "params":{"rotation":0} }
             ]
         }
     },
     {
         "name" : "DirectionalLight",
         "sceneObject": {
-            "geometry" : "",
-            "material" : "",
             "behaviours" : [ 
                 {"name":"DirectionalLight",
                 "params":{"color":0xffffff,"intensity":1} } 
@@ -50,8 +43,6 @@
     {
         "name" : "AmbientLight",
         "sceneObject": {
-            "geometry" : "",
-            "material" : "",
             "behaviours" : [ 
                 {"name":"AmbientLight", "params":{"color":0xffffff,"intensity":0.25} } 
             ]
@@ -60,8 +51,6 @@
     {
         "name" : "DOM_Links",
         "sceneObject":{
-            "geometry" : "",
-            "material" : "",
             "behaviours" : [
                 {"name": "Links", "params":{"elementId":"links"} }
             ]
@@ -80,8 +69,6 @@
     {
         "name" : "CameraDebug",
         "sceneObject":{
-            "geometry" : "",
-            "material" : "",
             "behaviours" : [{"name": "CameraDebug", "params":{"elementId":"cameraDebug"} }]
         }
     },
@@ -91,6 +78,19 @@
             "geometry" : "box",
             "material" : "white",
             "behaviours" : [{"name": "Rotate", "params":{"speed":0.1} }]
+        }
+    },
+    {
+        "name" : "SplashDOM",
+        "sceneObject":{
+            "geometry" : "box",
+            "behaviours" : [{"name": "Splash", "params":{"elementId": "splashPage"} }]
+        }
+    },
+    {
+        "name" : "statue",
+        "sceneObject":{
+            "mesh" : "statue"
         }
     }
 ]

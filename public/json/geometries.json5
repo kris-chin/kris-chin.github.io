@@ -8,9 +8,10 @@
     },
     {
         "name" : 'plane',
-        "type" : 'box',
+        "type" : 'plane',
         "geometryParameters" : {
-            "size" : {x: 10, y: 0.1, z: 10}
+            "width": 10,
+            "height": 10
         }
     },
     {

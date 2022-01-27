@@ -1,0 +1,11 @@
+[
+    {
+        "name": "statue",
+        "filePath": "/models/statue/statue2.obj",
+        "params":
+            {
+                "defaultScale": {"x":0.01,"y":0.01,"z":0.01},
+                "defaultRotation": {"x":0,"y":0,"z":0}
+            }
+    }
+]

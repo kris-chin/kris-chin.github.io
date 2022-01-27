@@ -4,32 +4,28 @@
         "stateSettings": {"loadOutside" : true, "resetOnEnter" : false},
         "cameraAngle": {
             "position": {
-                "x": 0,
-                "y": 0,
-                "z": 10
+                "x": -3.6356260858784983,
+                "y": 1.222035588734489,
+                "z": 4.177402492529296
             },
             "quaternion": {
-                "_x": 0,
-                "_y": 0,
-                "_z": 0,
-                "_w": 0
+                "_x": 0.006569917698866961,
+                "_y": -0.11548248678223165,
+                "_z": 0.0007638376980886929,
+                "_w": 0.993287495129176
             },
             "orbitTarget": {
-                "x": 0,
-                "y": 0,
-                "z": 0
+                "x": -2.4886031691145027,
+                "y": 1.288175858446346,
+                "z": -0.688803821750932
             }
         },
         "objects" :
             [
-                {"name":"cubeCircle"},
-                {"name":"skybox"},
-                {"name":"plane", "args":{"pos": {"x":0,"y":-2.5,"z":0} } },
                 {"name":"DirectionalLight", "args":{"pos":{"x":0,"y":4,"z":2}}},
                 {"name":"AmbientLight"},
-                {"name":"DOM_Links"},
-                {"name":"ProjectionTextCube"},
-                {"name":"CameraDebug"}
+                {"name":"SplashDOM", "args":{"pos":{"x":-7,"y":0,"z":0} }},
+                {"name":"statue"}
             ]
     },
     {

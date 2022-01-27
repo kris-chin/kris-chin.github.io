@@ -3,28 +3,28 @@
         "name" : "red",
         "type" : "lambert",
         "materialParameters" : {
-            "color" : 0xff4040
+            "color" : 0x9B2226
         }
     },
     {
         "name" : "yellow",
         "type" : "lambert",
         "materialParameters" : {
-            "color" : 0xffec40
+            "color" : 0xEE9B00
         }
     },
     {
         "name" : "green",
         "type" : "lambert",
         "materialParameters" : {
-            "color" : 0x17a64b
+            "color" : 0x94D2BD
         }
     },
     {
         "name" : "blue",
         "type" : "lambert",
         "materialParameters" : {
-            "color" : 0x424bf5
+            "color" : 0x005F73
         }
     },
     {

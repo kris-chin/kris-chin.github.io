@@ -23,6 +23,8 @@ import Canvas from './Canvas';
 var cam : THREE.PerspectiveCamera;
 var ren : THREE.Renderer;
 
+const CONTROLS = true; //shorthand const to enable or disable controls + debug
+
 //Interface for the Camera Angle logged in CameraDebug.tsx
 export interface CameraAngle{
     position : { //Position value of the Camera
@@ -51,6 +53,7 @@ export class Scene {
     renderer: THREE.WebGLRenderer;
 
     controls: OrbitControls;
+    CONTROLS : boolean = CONTROLS; //toggle orbit controls
 
     //World for this Scene
     world: World;
@@ -61,14 +64,14 @@ export class Scene {
     constructor(hostComponent: Canvas){
         this.canvas = hostComponent; //point to the host component
         this.scene = new THREE.Scene();
+        this.scene.background= new THREE.Color(0xEE9B00)
 
         this.camera = new THREE.PerspectiveCamera(
             75, //FOV
-            window.innerWidth/window.innerHeight, //Resolution
+            16/9, //Aspect Ratio
             0.01, //Near Clipping Plane
-            30000 //Far Clipping Plane
+            100 //Far Clipping Plane
         );
-        this.camera.position.set(0, 0, 0); //move the camera a bit out
 
         //add the helper camera to debug the light
         //this.scene.add(new THREE.CameraHelper(this.camera));
@@ -80,14 +83,19 @@ export class Scene {
 
         //Setup Controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.controls.enabled = true;
+        this.controls.enabled = this.CONTROLS;
+
+        //allow to click through the text layer if controls is enabled
+        const textLayer = document.getElementById('textLayer')
+        if (this.CONTROLS) textLayer!.style.pointerEvents = 'none';
+
+        //more controls configuration
         this.controls.enableDamping = true;
         this.controls.minDistance = 5;
-        this.camera.position.set(0,0,10); //readjust camera
+        this.controls.listenToKeyEvents(window); //Window listens to keypress events
 
         //Add event listeners
         window.addEventListener('resize', this.OnWindowResize, false); //Adjust to window resize
-        this.controls.listenToKeyEvents(window); //Window listens to keypress events
         
         //Set outside variables that can be accessed later outside of context
         cam = this.camera;
@@ -101,9 +109,8 @@ export class Scene {
 
     //Function to call on resize
     private OnWindowResize(){
-        cam.aspect = window.innerWidth/window.innerHeight;
         cam.updateProjectionMatrix(); //need to call this whenever updating config
-        ren.setSize(window.innerWidth, window.innerHeight);
+        ren.setSize(window.innerWidth, window.innerHeight); //resize the renderer (canvas)
     }
 
     //Start the scene
@@ -122,6 +129,7 @@ export class Scene {
 
             //Update Controls
             this.controls.update();
+            //if (this.controls.enabled !== CONTROLS) this.controls.enabled = CONTROLS // change according to if controls are enabled
 
             //Render
             this.renderer.render(this.scene, this.camera);

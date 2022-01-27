@@ -14,8 +14,9 @@ import Behaviour from './Behaviour';
 export class SceneObject {
 
     //Proposed Key Values for instantiation
-    private key_geometry : string;
-    private key_material : string;
+    private key_geometry : string | undefined;
+    private key_material : string | undefined;
+    private key_mesh : string | undefined; //key used for if we want to load an entire mesh
 
     //Actual Geometry and Material
     private geometry! : (THREE.BufferGeometry | undefined);
@@ -29,7 +30,7 @@ export class SceneObject {
     state : string; //associated state
 
     //Mesh Object
-    mesh !: THREE.Mesh | null; //Code assumes Mesh will be initalized by the time the class is used
+    mesh !: THREE.Mesh | null | undefined; //Code assumes Mesh will be initalized by the time the class is used
     initialArgs : args | undefined; //initial args that the object was created with
 
     //World Object (contains "Global" variables)
@@ -39,14 +40,15 @@ export class SceneObject {
     private isRendered : boolean; //set false if the object shouldn't be rendered (ie. mesh shouldn't be added to World)
     private CHECK_RENDER : boolean; //flag for when checking if the object is rendered already occured
 
-    constructor(info: {name : string, id: number, state: string}, geometryString: string, materialString: string, initialArgs : (Object | undefined)){
+    constructor(info: {name : string, id: number, state: string}, meshInfo: {geometryString: string, materialString: string, meshString: string}, initialArgs : (Object | undefined)){
         this.name = info.name;
         this.id = info.id;
         this.state = info.state;
         this.parent = null;
         this.children = new Array<SceneObject>();
-        this.key_geometry = geometryString;
-        this.key_material = materialString;
+        this.key_geometry = meshInfo.geometryString;
+        this.key_material = meshInfo.materialString;
+        this.key_mesh = meshInfo.meshString;
         this.isRendered = true;
         this.CHECK_RENDER = false;
         this.initialArgs = initialArgs as args; //save initial args in case we want to re-set the object
@@ -55,25 +57,39 @@ export class SceneObject {
     //Points object to World object and loads in mesh
     Initialize(world: World, behaviours: Array<Behaviour | undefined>){
         this.world = world;
-        this.behaviours = behaviours;
+        if (behaviours) this.behaviours = behaviours;
+        else this.behaviours = new Array<Behaviour | undefined>();
 
         //get geometry and material
-        this.geometry = this.world.geometries.get(this.key_geometry)
-        this.material = this.world.materials.get(this.key_material)
+        this.geometry = this.world.geometries.get(this.key_geometry!)
+        this.material = this.world.materials.get(this.key_material!)
         
         //Flag for when we want to assign a "none" geometry or material
         let assignAnyways : boolean = false;
 
         //Report invalid keys if they don't exist. Allow blank keys to go through as "not assigning"
-        if (this.key_geometry === "" ) {assignAnyways = true;}
+        if (this.key_geometry === undefined) {assignAnyways = true;}
         else if (!this.geometry) {console.error(`Invalid Geometry: '${this.key_geometry}'`)}
 
-        if (this.key_material === "" ) {assignAnyways = true;}
+        if (this.key_material === undefined ) {assignAnyways = true;}
         else if (!this.material) {console.error(`Invalid Material: '${this.key_material}'`)}
 
         //initialize mesh
         if ( (this.geometry && this.material) || (assignAnyways) ){
-            this.mesh = new Mesh(this.geometry,this.material)
+
+            //This is where we load our external mesh
+            if (this.key_mesh !== undefined){
+                //attempt to get mesh
+                this.mesh = this.world.externalMeshes.get(this.key_mesh)
+
+                if (!this.mesh) {
+                    console.error(`Invalid External Mesh: '${this.key_mesh}'`)
+                    //set mesh to nothing
+                    this.mesh = new Mesh(this.geometry, this.material)
+                }
+            } else {
+                this.mesh = new Mesh(this.geometry,this.material)
+            }
         }
 
     }

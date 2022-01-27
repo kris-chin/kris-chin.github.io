@@ -1,28 +1,86 @@
+//Colorscheme variales
+$mainText : #001219;
+$highlightText1: #0A9396;
+$highlightText2: #9B2226;
+
 #textLayer{
     position: absolute;
     z-index: 100; //Put the text above the canvas
+    
+    //set width and height of the textLayer div to the body, which is the size of the canvas
+    //this way we can properly overflow any text elements on smaller screens
+    width:100%; //100% of body
+    height:100%; //100% of body
+    overflow:hidden; 
 
+    //any div will be absolute
     div{
         position:absolute;
         transform:translate3d(0,0,0.01); //im not sure if this automatically does GPU computation but i think this is fine
     }
 
     p{
-        font-family: Helvetica;
         font-weight: bold;
-        font-size: 1.2em;
+        display:inline-block;
+        margin: 0;
+        color: $mainText;
 
-        :hover{
-            font-weight: bold;
-            font-size: 2em;
+        //colored emphasis text
+        .highlight1{
+            color:$highlightText1
         }
+        .highlight2{
+            color: $highlightText2;
+        }
+
     }
+
+    h1{
+        color: $mainText;
+    }
+
+    //===============================COMPONENT STYLES================================================
 
     #cameraDebug{
         width: 100vh;
+    }
+
+    //Splash Page Styling
+    #splashPage {
+
+        #splashPage_div_tagline{
+            width:15em;
+
+            //Name on splash page
+            #splashPage_h1_1{
+                width: 10em;
+                font-size: 6em;
+                font-family: 'Archivo Black', arial; //custom font is defined in index.html
+                margin:0px;
+            }
+
+            //The set of text underneath my name
+            #splashPage_div_caption{
+                width: 25em;
+                font-size: 2em;
+                text-transform: uppercase;
+                font-family: 'Archivo Black', 'Times New Roman';
+
+                //The smaller part of the caption
+                #splashPage_p_2{
+                    font-size:0.7em;
+                }
+            }
+        }
+        
     }
 }
 
 body{
     overflow: hidden; //keep the window the same size
+    margin: 0; 
+}
+
+button{
+    pointer-events:all;
 }

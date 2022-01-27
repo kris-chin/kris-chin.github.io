@@ -11,14 +11,20 @@ import JSON5 from 'json5';
 interface Geometry {
     name : string,
     type : string,
-    geometryParameters : { //refactor this later. this is wrong
-        size :
-        {
-            x : number,
-            y : number,
-            z : number
-        }
+    geometryParameters : Object
+}
+
+interface BoxParams{
+    size: {
+        x: number,
+        y: number,
+        z: number
     }
+}
+
+interface PlaneParams{
+    width: number,
+    height: number
 }
 
 export class GeometryLoader {
@@ -60,8 +66,13 @@ export class GeometryLoader {
 
             switch (geometry.type){
                 case "box":
-                    const d = geometry.geometryParameters.size;
+                    const boxParams = geometry.geometryParameters as BoxParams;
+                    const d = boxParams.size;
                     this.map.set(geometry.name, new THREE.BoxGeometry(d.x, d.y, d.z));
+                    break;
+                case "plane":
+                    const planeParams = geometry.geometryParameters as PlaneParams;
+                    this.map.set(geometry.name, new THREE.PlaneGeometry(planeParams.width,planeParams.height))
                     break;
                 default:
                     console.error(`Invalid Geometry Type: '${geometry.type}'`)

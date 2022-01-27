@@ -20,6 +20,7 @@ import AmbientLight from './behaviours/AmbientLight';
 import Links from './dom/Links';
 import ProjectionText from './dom/ProjectionText';
 import CameraDebug from './dom/CameraDebug';
+import Splash from './dom/Splash';
 
 export class BehaviourFactory {
 
@@ -34,6 +35,7 @@ export class BehaviourFactory {
             case("Links"): return new Links(parent, parameters);
             case("ProjectionText"): return new ProjectionText(parent, parameters);
             case("CameraDebug") : return new CameraDebug(parent, parameters);
+            case("Splash") : return new Splash(parent, parameters);
             default:
                 console.error(`Invalid Behaviour: '${key}'`)
                 return undefined

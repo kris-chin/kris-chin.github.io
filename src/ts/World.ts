@@ -16,6 +16,8 @@ import GeometryLoader from './GeometryLoader';
 import MaterialLoader from './MaterialLoader';
 import { KeyObjectLoader, KeyObject } from './KeyObjectLoader';
 import BehaviourFactory from './BehaviourFactory';
+import Behaviour from './Behaviour';
+import ExternalMeshLoader from './ExternalMeshLoader';
 
 //Arbitrary import of testWorld JSON 
 import testWorld from '../data/testWorld.json';
@@ -55,12 +57,14 @@ export class World extends THREE.Group {
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
     behaviours : BehaviourFactory;
-    private keyObjects : Map<string,KeyObject> //placeable objects. used for keys
+    private keyObjects : Map<string,Object> //placeable objects. used for keys
+    externalMeshes : Map<string, THREE.Mesh>;
 
     //Loaders for 3D information
     private loader_geometries : GeometryLoader;
     private loader_materials : MaterialLoader;
     private loader_keyObjects : KeyObjectLoader;
+    private loader_externalMeshes : ExternalMeshLoader;
 
     //Respective Scene Object
     scene : Scene;
@@ -82,25 +86,29 @@ export class World extends THREE.Group {
         this.sceneObjects = [] //Note: this is just an array of ALL sceneobjects. not for state-specific ones
         this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
         this.geometries = new Map<string,THREE.BufferGeometry>();
-        this.keyObjects = new Map<string,KeyObject>();
+        this.keyObjects = new Map<string,Object>();
         this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
         this.worldStates = new Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>();
+        this.externalMeshes = new Map<string, THREE.Mesh>();
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
         this.loader_geometries = new GeometryLoader(this.geometries);
         this.loader_keyObjects = new KeyObjectLoader(this.keyObjects);
+        this.loader_externalMeshes = new ExternalMeshLoader(this.externalMeshes);
 
         //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
         Promise.all([
             this.loader_materials.LoadMaterials(),
             this.loader_geometries.LoadGeometries(),
-            this.loader_keyObjects.LoadKeyObjects()]
+            this.loader_keyObjects.LoadKeyObjects(),
+            this.loader_externalMeshes.LoadExternalMeshes()]
         )
             .then(data => {
                 this.materials = data[0] //set material map
                 this.geometries = data[1] //set geometry map
                 this.keyObjects = data[2]
+                this.externalMeshes = data[3]
 
                 this.PlaceObjects(testWorld) //place objects. arbitrarily places based on testWorld
 
@@ -138,6 +146,9 @@ export class World extends THREE.Group {
                     }
                 }
 
+                //If controls are enabled, add a CameraDebug
+                if (this.scene.CONTROLS) this.AddObject({key:'CameraDebug',state:this.GetState()})
+
                 console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
             })
     }
@@ -157,7 +168,7 @@ export class World extends THREE.Group {
         const args = arg as args //Cast our Arguments as our args interface. This allows for optional arguments
 
         //First look for the object key in our map
-        const keyObject = this.keyObjects.get(info.key)
+        const keyObject = this.keyObjects.get(info.key) as KeyObject
 
         //If the keyObject is inside our map
         if (keyObject){
@@ -165,21 +176,22 @@ export class World extends THREE.Group {
             let materialKey = keyObject.sceneObject.material;
             let geometryKey = keyObject.sceneObject.geometry;
             let behaviourKeys = keyObject.sceneObject.behaviours;
+            let meshKey = keyObject.sceneObject.mesh;
 
             //Determine if Material or Geometry have behaviours
             //NOTE: these behaviours are not appened to the "behaviours" list
-            if (materialKey.startsWith("behaviour:")){
+            if (materialKey && materialKey.startsWith("behaviour:")){
                 const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
                 materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
             }
 
-            if (geometryKey.startsWith("behaviour:")){
+            if (geometryKey && geometryKey.startsWith("behaviour:")){
                 const geoBehaviour = geometryKey.split(":")[1]
                 geometryKey = this.behaviours.GetBehaviour(geoBehaviour)?.Get()
             }
 
             //Create new Object
-            let object = new SceneObject({name: info.key, id: this.totalIDs, state: info.state} , geometryKey, materialKey, arg)
+            let object = new SceneObject({name: info.key, id: this.totalIDs, state: info.state}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
             this.totalIDs += 1; //increment total IDs
             if (args && args.parent){
                 object.parent = args.parent //set the SceneObject parent (NOT the mesh parent)
@@ -190,11 +202,15 @@ export class World extends THREE.Group {
             this.sceneObjects.push(object)
 
             //Generate behaviours and apply to object
-            let behaviours = behaviourKeys.map(key=>{
-                return this.behaviours.GetBehaviour(key.name,object,key.params)
-            })
+            let behaviours : (Array<Behaviour | undefined> | undefined) = undefined;
+            if (behaviourKeys){
+                behaviours = behaviourKeys.map(key=>{
+                    return this.behaviours.GetBehaviour(key.name,object,key.params)
+                })
+            }
+            
 
-            object.Initialize(this,behaviours); //Point the Object to the World and create mesh with behaviours
+            object.Initialize(this, behaviours!); //Point the Object to the World and create mesh with behaviours
 
             if (object.mesh){
 
@@ -210,6 +226,7 @@ export class World extends THREE.Group {
 
                 //If a position argument is provided, set the position
                 if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z)
+                if (args && args.rot) object.mesh.rotation.set(args.rot.x,args.rot.y,args.rot.z)
 
                 return object
             } else {

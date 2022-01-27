@@ -12,21 +12,22 @@ export interface KeyObject {
     sceneObject: {
         geometry : string,
         material : string,
+        mesh: string,
         behaviours : Array<{ name:string,params:Object} >
     }
 }
 
 export class KeyObjectLoader {
 
-    map : Map<string,KeyObject>
+    map : Map<string,Object>
 
-    constructor(map: Map<string,KeyObject>){
+    constructor(map: Map<string,Object>){
         this.map = map
     }
 
     //Asynchronous call to load geometries. Promises a Map of the geometries
-    LoadKeyObjects() : Promise< Map<string,KeyObject> > {
-        var promise = new Promise< Map<string,KeyObject> >( (resolve,reject) => {
+    LoadKeyObjects() : Promise< Map<string,Object> > {
+        var promise = new Promise< Map<string,Object> >( (resolve,reject) => {
             
             //Wait for geometry data and then map it
             fetch('/json/keyObjects.json5')
@@ -34,7 +35,7 @@ export class KeyObjectLoader {
             .then(data => {
 
                 //Parse the JSON5 file
-                const KeyObjects : Array<KeyObject> = JSON5.parse(data)
+                const KeyObjects : Array<Object> = JSON5.parse(data)
 
                 //Start mapping geometries to map
                 this.MapKeyObjects(KeyObjects)
@@ -49,9 +50,10 @@ export class KeyObjectLoader {
     }
 
     //Maps keyObjects to map
-    MapKeyObjects(keyObjects: Array<KeyObject>){
-        for (let keyObject of keyObjects){
-            this.map.set(keyObject.name, keyObject)
+    MapKeyObjects(keyObjects: Array<Object>){
+        for ( let keyObject of keyObjects){
+            const k = keyObject as KeyObject
+            this.map.set(k.name, keyObject)
         }
     }
     
