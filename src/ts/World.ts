@@ -19,6 +19,7 @@ import BehaviourFactory from './BehaviourFactory';
 import Behaviour from './Behaviour';
 import ExternalMeshLoader from './ExternalMeshLoader';
 import ObjectDebug from './dom/ObjectDebug';
+import StartingAnimation from './StartingAnimation';
 
 //Arbitrary import of testWorld JSON 
 import testWorld from '../data/testWorld.json';
@@ -36,6 +37,7 @@ interface WorldState {
 interface StateSettings {
     loadOutside : boolean //does this state load in the world even if it is not the current state? 
     resetOnEnter : boolean //does the state reset when it is entered?
+    hasStartingAnimation : boolean //does the state have a special animation on run? (if so, pass state key into animation object and run animation)
 }
 
 ///Interface for worldObjects
@@ -73,6 +75,7 @@ export class World extends THREE.Group {
     scene : Scene;
     private worldStates : Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>; //worldStates and their respective objects stored here
     currentState !: {worldState : WorldState, sceneObjects: (SceneObject)[]}
+    startingAnimation : StartingAnimation;
 
     //"Global" Variables
     time : number;
@@ -93,12 +96,13 @@ export class World extends THREE.Group {
         this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
         this.worldStates = new Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>();
         this.externalMeshes = new Map<string, THREE.Mesh>();
+        this.startingAnimation = new StartingAnimation();
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
         this.loader_geometries = new GeometryLoader(this.geometries);
         this.loader_keyObjects = new KeyObjectLoader(this.keyObjects);
-        this.loader_externalMeshes = new ExternalMeshLoader(this.externalMeshes);
+        this.loader_externalMeshes = new ExternalMeshLoader(this.externalMeshes, this);
 
         //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
         Promise.all([
@@ -165,6 +169,9 @@ export class World extends THREE.Group {
                     }
 
                 }
+
+                //Call Canvas to load
+                this.scene.canvas.OnLoadCompete();
 
                 console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
             })
@@ -389,6 +396,12 @@ export class World extends THREE.Group {
                     this.ResetObject(object);
                 }
             }
+
+            //Play state's starting animation
+            if (this.currentState.worldState.stateSettings.hasStartingAnimation)
+                this.startingAnimation.PlayStartingAnimation(this.currentState.worldState.name)
+
+
         } else {
             console.error(`Invalid State: '${state}' \nKeeping Original State: '${this.currentState.worldState.name}'`)
         }

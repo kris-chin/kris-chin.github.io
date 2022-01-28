@@ -1,7 +1,7 @@
 [
     {
         "name": "/test",
-        "stateSettings": {"loadOutside" : true, "resetOnEnter" : false},
+        "stateSettings": {"loadOutside" : true, "resetOnEnter" : false, "hasStartingAnimation" : true},
         "cameraAngle": {
             "position": {
                 "x": -3.6356260858784983,
@@ -48,7 +48,7 @@
     },
     {
         "name": "/test/hello",
-        "stateSettings": {"loadOutside" : false, "resetOnEnter" : true},
+        "stateSettings": {"loadOutside" : false, "resetOnEnter" : true, "hasStartingAnimation" : false},
         "cameraAngle": {
             "position": {
                 "x": 13.511487707308197,

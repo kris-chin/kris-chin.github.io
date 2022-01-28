@@ -2,10 +2,12 @@
 $mainText : #001219;
 $highlightText1: #0A9396;
 $highlightText2: #9B2226;
+$backgroundColor: #EE9B00;
 
 #textLayer{
     position: absolute;
     z-index: 100; //Put the text above the canvas
+    background-color: $backgroundColor;
     
     //set width and height of the textLayer div to the body, which is the size of the canvas
     //this way we can properly overflow any text elements on smaller screens
@@ -39,6 +41,17 @@ $highlightText2: #9B2226;
         color: $mainText;
     }
 
+    #textLayer_progressInfo{
+        font-family: arial;
+        //The following code sets the text-alignment to center, and then moves it to the center of the screen
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%) translate(50vw,50vh);
+        //
+        
+        font-size: 10em;
+    }
+
     //===============================COMPONENT STYLES================================================
 
     #cameraDebug{
@@ -62,7 +75,7 @@ $highlightText2: #9B2226;
             #splashPage_h1_1{
                 width: 10em;
                 font-size: 6em;
-                font-family: 'Archivo Black', arial; //custom font is defined in index.html
+                font-family: arial;  //custom font is defined in index.html 'Archivo Black'
                 margin:0px;
             }
 
@@ -70,12 +83,12 @@ $highlightText2: #9B2226;
             #splashPage_div_caption{
                 width: 25em;
                 font-size: 2em;
-                text-transform: uppercase;
-                font-family: 'Archivo Black', 'Times New Roman';
+                font-family: arial, 'Times New Roman';
 
                 //The smaller part of the caption
                 #splashPage_p_2{
-                    font-size:0.7em;
+                    text-transform: lowercase;
+                    font-size: 0.7em;
                 }
             }
         }
@@ -86,6 +99,7 @@ $highlightText2: #9B2226;
 body{
     overflow: hidden; //keep the window the same size
     margin: 0; 
+    background: $backgroundColor;
 }
 
 button{

@@ -17,6 +17,8 @@ import { WEBGL } from '../js/WebGL';
 
 import TextLayer from './TextLayer';
 
+import anime from 'animejs';
+
 export interface CanvasProps {
     page : string //"Page" state
 }
@@ -24,6 +26,7 @@ export interface CanvasProps {
 export default class Canvas extends React.Component {
 
     textLayer : TextLayer
+    scene !: Scene;
 
     constructor(props : Object){
         super(props)
@@ -33,35 +36,39 @@ export default class Canvas extends React.Component {
 
     //Run when this component is mounted to the DOM
     componentDidMount(): void {
+        //Create the Scene Object and wait for World to call onLoadComplete();
+        this.scene = new Scene(this); //World loads when this is created
+    }
 
-        //Create the Scene Object and point it to this element
-        const scene = new Scene(this);
-
-        //Get the DIV Element that this Class Exports
-        const element : (HTMLElement | null) = document.getElementById('canvas');
+    //Called once the world properly loads
+    OnLoadCompete(){
+         //Get the DIV Element that this Class Exports
+         const element : (HTMLElement | null) = document.getElementById('canvas');
         
-        //If canvas was successsfully grabbed
-        if (element && element.parentNode){
+         //If canvas was successsfully grabbed
+         if (element && element.parentNode){
+ 
+             //Check if WebGL is available
+             if (WEBGL.isWebGLAvailable() ) {
+                 //Replace the DIV element with a canvas element
+                 element.parentNode.replaceChild(this.scene.renderer.domElement, element);
+ 
+                //Start animations and then initialze scene as a callback
+                this.PageLoadAnimation()
 
-            //Check if WebGL is available
-            if (WEBGL.isWebGLAvailable() ) {
-                //Replace the DIV element with a canvas element
-                element.parentNode.replaceChild(scene.renderer.domElement, element);
-
-                //Start the scene
-                scene.Initialize()
-            } else {
-                
-                //Display WebGL Warning
-                const warning = WEBGL.getWebGLErrorMessage();
-                const container : (HTMLElement | null) = document.getElementById( 'container' );
-
-                if (container){
-	                container.appendChild( warning );
-                }
-            }
-        }
-           
+                 //Add the world for it to render
+                 //this.scene.Initialize();
+             } else {
+                 
+                 //Display WebGL Warning
+                 const warning = WEBGL.getWebGLErrorMessage();
+                 const container : (HTMLElement | null) = document.getElementById( 'container' );
+ 
+                 if (container){
+                     container.appendChild( warning );
+                 }
+             }
+         }
     }
 
     //Return the Div
@@ -72,6 +79,33 @@ export default class Canvas extends React.Component {
                 <div id='canvas' />
             </>
         )
+    }
+
+    //Animation that is called once page is loaded
+    PageLoadAnimation(){
+
+        //Call animation
+        anime({
+            targets: '#textLayer_upperProgressInfo',
+            translateY: [
+                    {value: 0, duration: 1000}, //stay in place and avoid any initial jumpiness
+                    {value: '-100vh', duration: 1000}
+                ],
+            easing: 'easeInBack',
+            complete: ()=>{
+                //Set background color to none so the canvas below the text layer can display
+                const textLayer = document.getElementById("textLayer")
+                if (textLayer) textLayer.style.backgroundColor = 'transparent';
+            
+                //Start Scene
+                this.scene.Initialize()
+
+                //Call the current state's Starting Animation
+                if (this.scene.world.currentState.worldState.stateSettings.hasStartingAnimation)
+                    this.scene.world.startingAnimation.PlayStartingAnimation(this.scene.world.currentState.worldState.name)
+            }
+        })
+
     }
 
 }

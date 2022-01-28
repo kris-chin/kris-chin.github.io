@@ -4,8 +4,8 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
 //Pages
-import Splash from './components/Splash';
-import Projects from './components/Projects';
+//import Splash from './components/Splash';
+//import Projects from './components/Projects';
 
 //Testing THREE
 import Canvas from './ts/Canvas';
@@ -17,12 +17,12 @@ ReactDOM.render(
 
     <Router history={history}>
       <Switch>
-          <Route exact path="/">
+          {/* <Route exact path="/">
             <Splash />
           </Route>
           <Route path = "/things">
             <Projects />
-          </Route>
+          </Route> */}
           <Route path ="/test"> 
             <Canvas page= {history.location.pathname} />
           </Route>

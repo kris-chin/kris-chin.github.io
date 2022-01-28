@@ -9,7 +9,7 @@ export default class Splash extends ProjectionText {
                 <div id={`${params.elementId}_div_tagline`}>
                     <h1 id={`${params.elementId}_h1_1`}>KRISCHIN LAYON</h1>
                     <div id={`${params.elementId}_div_caption`}>
-                        <p id={`${params.elementId}_p_1`}>22-year-old software engineer based in <p className="highlight1">Redlands, CA.</p></p>
+                        <p id={`${params.elementId}_p_1`}>22yr. old software engineer based in <p className="highlight1">Southern California</p>.</p>
                         <p id={`${params.elementId}_p_2`}><p className="highlight2">Full-Stack Development</p>, <p className="highlight2">Game Development</p>, and <p className="highlight2">Data Engineering</p></p>
                     </div>
                 </div>
@@ -27,7 +27,6 @@ export default class Splash extends ProjectionText {
         const iW = window.innerWidth; //width of viewport
         const iH = window.innerHeight; //height of viewport
         
-
         //Get all of our objects
         const div_tagline = document.getElementById(`${params.elementId}_div_tagline`)
         //const h1_1 = document.getElementById(`${params.elementId}_h1_1`)

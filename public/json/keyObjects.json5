@@ -83,7 +83,7 @@
     {
         "name" : "SplashDOM",
         "sceneObject":{
-            //"geometry" : "box",
+            // "geometry" : "box",
             "behaviours" : [{"name": "Splash", "params":{"elementId": "splashPage"} }]
         }
     },

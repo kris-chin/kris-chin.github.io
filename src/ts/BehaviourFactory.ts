@@ -1,5 +1,5 @@
 /*
-    BehaviourFactory.ts
+BehaviourFactory.ts
 
     Since Behaviours must be linked to actual classes, we can't dynamically link them to JSON
     All Behaviours are instantiated in this file and have a "name" value associated with them

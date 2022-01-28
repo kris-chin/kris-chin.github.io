@@ -36,7 +36,20 @@ export default class TextLayer extends Component {
     ReactDOM.render(<>{this.elements}</>, document.getElementById('textLayer'))
   }
 
+  //This text will dissapear once the textLayer properly starts running
+  //This function is called every time there is new loading progress
+  UpdateProgress(progress: number){
+    const progressInfo = document.getElementById("textLayer_progressInfo");
+    if (progressInfo) progressInfo.innerText = `${ (progress * 100).toFixed(0) }%`;
+  }
+
   render() {
-    return (<div id = 'textLayer'></div>);
+    return (
+      <div id = 'textLayer'>
+        <div id = 'textLayer_upperProgressInfo'>
+          <p id = "textLayer_progressInfo"></p> 
+        </div>
+      </div>
+      );
   }
 }

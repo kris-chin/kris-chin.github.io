@@ -11,6 +11,7 @@
 import * as THREE from 'three'
 import {OBJLoader} from '../js/OBJLoader';
 import models from '../data/models.json'
+import World from './World';
 
 interface ModelParams{
     defaultScale:  {
@@ -34,9 +35,11 @@ interface ModelInterface {
 export default class ExternalMeshLoader {
 
     map : Map<string, THREE.Mesh>
+    world : World; //pointer to world so we can access the textLayer
 
-    constructor(map: Map<string, THREE.Mesh>){
+    constructor(map: Map<string, THREE.Mesh>, parentWorld: World){
         this.map = map;
+        this.world = parentWorld;
     }
 
     LoadExternalMeshes() : Promise< Map<string, THREE.Mesh> >{
@@ -45,15 +48,25 @@ export default class ExternalMeshLoader {
             const loader = new OBJLoader();
 
             var promiseList = new Array<Promise<{name: string,mesh: THREE.Mesh, params: Object} >>();
+            
+            var currentTotalProgress = 0; //every time a loader loads a model. add to this
+            const neededTotalProgress = models.length; //all models total up to this value when fully loaded
+
+            //Define some getters and setters for the promises to use to avoid resource issues
+            const incrementProgress = (amt: number) => currentTotalProgress += amt;
+            const getProgress = () => {return currentTotalProgress;}
 
             //Go through models json and load each file. when done map it to our map
             for (let m of models){
                 const model = m as ModelInterface;
-                var inGroup : boolean = false;
+                const textLayer = this.world.scene.canvas.textLayer;
 
                 //Push promises for every single mesh
                 promiseList.push(
                     new Promise< {name: string, mesh: THREE.Mesh, params: Object} >( (resolve,reject)=>{
+                        var inGroup : boolean = false;
+                        var previousLoaded : number = 0;
+
                         loader.load(
                             model.filePath,
                             (object: THREE.Object3D) =>{
@@ -66,6 +79,11 @@ export default class ExternalMeshLoader {
                                     inGroup = true;
                                 }
                                 console.log(`${(xhr.loaded/xhr.total * 100)}% loaded`)
+
+                                //Send info to TextLayer
+                                incrementProgress( (xhr.loaded/xhr.total) - previousLoaded) //calculate amount added
+                                previousLoaded = (xhr.loaded/xhr.total);
+                                textLayer.UpdateProgress(getProgress()/neededTotalProgress)
                             },
                             ()=>{
                                 console.error(`Error loading '${model.name}'`)

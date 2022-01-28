@@ -40,9 +40,9 @@ export interface CameraAngle{
         _w : number
     },
     orbitTarget : {  //Target value of the OrbitControls
-        x : number,
         y : number,
         z : number
+        x : number,
     }
 }
 
