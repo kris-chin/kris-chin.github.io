@@ -18,6 +18,7 @@ import { KeyObjectLoader, KeyObject } from './KeyObjectLoader';
 import BehaviourFactory from './BehaviourFactory';
 import Behaviour from './Behaviour';
 import ExternalMeshLoader from './ExternalMeshLoader';
+import ObjectDebug from './dom/ObjectDebug';
 
 //Arbitrary import of testWorld JSON 
 import testWorld from '../data/testWorld.json';
@@ -48,6 +49,8 @@ export interface args{
     parent : SceneObject,
     pos : {x: number, y: number, z: number} //Position
     rot : {x: number, y: number, z:number} //Rotation
+    sca : {x: number, y: number, z: number} //Scale
+    debug : boolean //is debug enabled?
 }
 
 export class World extends THREE.Group {
@@ -149,6 +152,20 @@ export class World extends THREE.Group {
                 //If controls are enabled, add a CameraDebug
                 if (this.scene.CONTROLS) this.AddObject({key:'CameraDebug',state:this.GetState()})
 
+                //If object debug mode is enabled. add a ObjectDebug and all desired debug objects
+                if (this.scene.DEBUG_MODE){
+                    const objectDebug : (SceneObject | null)= this.AddObject({key: 'ObjectDebug', state:this.GetState()})
+
+                    //This is kinda hacky but our Debug KeyObject only has 1 behaviour, so we know that it is the debug behaviour
+                    const debug : (ObjectDebug | undefined) = objectDebug!.behaviours![0] as ObjectDebug
+
+                    //go through objects and add if debug is enabled
+                    for (let o of this.sceneObjects){
+                        if (o && o.debug) debug!.AddDebugObject(o) //point object to our debug object
+                    }
+
+                }
+
                 console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
             })
     }
@@ -177,6 +194,8 @@ export class World extends THREE.Group {
             let geometryKey = keyObject.sceneObject.geometry;
             let behaviourKeys = keyObject.sceneObject.behaviours;
             let meshKey = keyObject.sceneObject.mesh;
+            let debugEnabled : boolean = false;
+            if (args && args.debug) debugEnabled = true
 
             //Determine if Material or Geometry have behaviours
             //NOTE: these behaviours are not appened to the "behaviours" list
@@ -191,7 +210,7 @@ export class World extends THREE.Group {
             }
 
             //Create new Object
-            let object = new SceneObject({name: info.key, id: this.totalIDs, state: info.state}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
+            let object = new SceneObject({name: info.key, id: this.totalIDs, state: info.state, debug: debugEnabled}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
             this.totalIDs += 1; //increment total IDs
             if (args && args.parent){
                 object.parent = args.parent //set the SceneObject parent (NOT the mesh parent)
@@ -225,8 +244,9 @@ export class World extends THREE.Group {
                 if (object.GetRenderState()) object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
 
                 //If a position argument is provided, set the position
-                if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z)
-                if (args && args.rot) object.mesh.rotation.set(args.rot.x,args.rot.y,args.rot.z)
+                if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z);
+                if (args && args.rot) object.mesh.rotation.set(args.rot.x,args.rot.y,args.rot.z);
+                if (args && args.sca) object.mesh.scale.set(args.sca.x, args.sca.y, args.sca.z);
 
                 return object
             } else {

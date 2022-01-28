@@ -28,6 +28,7 @@ export class SceneObject {
     children : SceneObject[] | null; //array of children. this is also set in AddObject()
     id : number;
     state : string; //associated state
+    debug : boolean; //is debug enabled?
 
     //Mesh Object
     mesh !: THREE.Mesh | null | undefined; //Code assumes Mesh will be initalized by the time the class is used
@@ -40,10 +41,11 @@ export class SceneObject {
     private isRendered : boolean; //set false if the object shouldn't be rendered (ie. mesh shouldn't be added to World)
     private CHECK_RENDER : boolean; //flag for when checking if the object is rendered already occured
 
-    constructor(info: {name : string, id: number, state: string}, meshInfo: {geometryString: string, materialString: string, meshString: string}, initialArgs : (Object | undefined)){
+    constructor(info: {name : string, id: number, state: string, debug: boolean}, meshInfo: {geometryString: string, materialString: string, meshString: string}, initialArgs : (Object | undefined)){
         this.name = info.name;
         this.id = info.id;
         this.state = info.state;
+        this.debug = info.debug; //Set debug mode based on arg
         this.parent = null;
         this.children = new Array<SceneObject>();
         this.key_geometry = meshInfo.geometryString;

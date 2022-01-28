@@ -21,6 +21,7 @@ import Links from './dom/Links';
 import ProjectionText from './dom/ProjectionText';
 import CameraDebug from './dom/CameraDebug';
 import Splash from './dom/Splash';
+import ObjectDebug from './dom/ObjectDebug';
 
 export class BehaviourFactory {
 
@@ -36,6 +37,7 @@ export class BehaviourFactory {
             case("ProjectionText"): return new ProjectionText(parent, parameters);
             case("CameraDebug") : return new CameraDebug(parent, parameters);
             case("Splash") : return new Splash(parent, parameters);
+            case("ObjectDebug") : return new ObjectDebug(parent,parameters);
             default:
                 console.error(`Invalid Behaviour: '${key}'`)
                 return undefined

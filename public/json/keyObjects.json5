@@ -83,14 +83,21 @@
     {
         "name" : "SplashDOM",
         "sceneObject":{
-            "geometry" : "box",
+            //"geometry" : "box",
             "behaviours" : [{"name": "Splash", "params":{"elementId": "splashPage"} }]
         }
     },
     {
         "name" : "statue",
         "sceneObject":{
-            "mesh" : "statue"
+            "mesh" : "statue",
+            "behaviours" : [{"name": "Rotate", "params":{"speed": 0.01} }]
+        }
+    },
+    {
+        "name" : "ObjectDebug",
+        "sceneObject":{
+            "behaviours" : [{"name": "ObjectDebug", "params":{"elementId": "objectDebug"} }]
         }
     }
 ]
