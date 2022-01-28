@@ -13,10 +13,10 @@ export class Rotate extends Behaviour{
     Get(){}
 
     Step(){
-        if (this.base && this.base.mesh){
+        if (this.base && this.base.innerMesh){
             let params = this.parameters as RotateParameters;
 
-            this.base.mesh.rotateY(params.speed);
+            this.base.innerMesh.rotateY(params.speed);
             //this.selfTime += 0.01
         }
     }

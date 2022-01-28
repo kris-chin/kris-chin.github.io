@@ -86,8 +86,12 @@ export default class ExternalMeshLoader {
                     if (params.defaultScale) object.mesh.scale.set(params.defaultScale.x, params.defaultScale.y, params.defaultScale.z)
                     if (params.defaultRotation) object.mesh.rotation.set(params.defaultRotation.x,params.defaultRotation.y,params.defaultRotation.z)
                     
+                    //when an external mesh is loaded, it is loaded as a group.
+                    //because all of our objects are one mesh, we are going to automatically take the first child
+                    const mesh = object.mesh.children[0]
+
                     //Map a reusable clone of our mesh
-                    this.map.set(object.name, object.mesh.clone())
+                    this.map.set(object.name, mesh.clone() as THREE.Mesh)
                 }
                 resolve(this.map)
             })

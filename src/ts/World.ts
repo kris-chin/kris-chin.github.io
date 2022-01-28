@@ -231,15 +231,15 @@ export class World extends THREE.Group {
 
             object.Initialize(this, behaviours!); //Point the Object to the World and create mesh with behaviours
 
-            if (object.mesh){
+            if (object.mesh && object.innerMesh){
 
                 //Set the threeJS mesh parent (NOT SCENEOBJECT PARENT)
                 if (args && args.parent) object.mesh.parent = args.parent.mesh as THREE.Object3D //set object's mesh parent to the parent's mesh
                 else object.mesh.parent = this //set the object's mesh parent to the world
 
                 object.mesh.name = info.key //Set the mesh name to the object key
-                object.mesh.castShadow = true; //Allow the object to cast a shadow
-                object.mesh.receiveShadow = true; //Allow the object to recieve shdadows
+                object.innerMesh.castShadow = true; //Allow the object to cast a shadow
+                object.innerMesh.receiveShadow = true; //Allow the object to recieve shdadows
                 
                 if (object.GetRenderState()) object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
 

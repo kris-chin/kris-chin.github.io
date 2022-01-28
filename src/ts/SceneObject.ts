@@ -31,7 +31,8 @@ export class SceneObject {
     debug : boolean; //is debug enabled?
 
     //Mesh Object
-    mesh !: THREE.Mesh | null | undefined; //Code assumes Mesh will be initalized by the time the class is used
+    mesh !: THREE.Object3D | null | undefined; //The outer mesh used for position and rotation computation
+    innerMesh !: THREE.Mesh | null | undefined; //This is the inner mesh for actual rotation manipulation
     initialArgs : args | undefined; //initial args that the object was created with
 
     //World Object (contains "Global" variables)
@@ -82,23 +83,29 @@ export class SceneObject {
             //This is where we load our external mesh
             if (this.key_mesh !== undefined){
                 //attempt to get mesh
-                this.mesh = this.world.externalMeshes.get(this.key_mesh)
+                this.innerMesh = this.world.externalMeshes.get(this.key_mesh)
 
-                if (!this.mesh) {
+                if (!this.innerMesh) {
                     console.error(`Invalid External Mesh: '${this.key_mesh}'`)
                     //set mesh to nothing
-                    this.mesh = new Mesh(this.geometry, this.material)
+                    this.innerMesh = new Mesh(this.geometry, this.material)
                 }
+
             } else {
-                this.mesh = new Mesh(this.geometry,this.material)
+                this.innerMesh = new Mesh(this.geometry,this.material)
             }
+
+            //Nest the mesh within another Object3D for easier computation of positions when things are rotating
+            this.mesh = new THREE.Group()
+            this.mesh.add(this.innerMesh)
+            //this.mesh = this.innerMesh;
         }
 
     }
 
     //Helper function for when 
     private meshIsInWorld = () => {
-        let topMesh : THREE.Mesh = this.mesh!
+        let topMesh : THREE.Object3D = this.mesh!
         if (topMesh)
             while (topMesh.parent)
             {
@@ -118,6 +125,7 @@ export class SceneObject {
                 if (!this.meshIsInWorld()) { //if the mesh is not added yet and needs to be added
                     if (this.parent) this.parent.mesh!.add(this.mesh!)
                     else this.world.add(this.mesh!)
+                    console.log(`Added ${this.name}`)
                 }
                 this.CHECK_RENDER = true;
             }
@@ -127,6 +135,7 @@ export class SceneObject {
                 if (this.meshIsInWorld()){ //if the mesh exists and needs to be removed
                     if (this.parent) this.parent.mesh!.remove(this.mesh!)
                     else this.world.remove(this.mesh!)
+                    console.log(`Removed ${this.name}`)
                 }
                 this.CHECK_RENDER = true;
             }
