@@ -43,7 +43,7 @@ export default class StartingAnimation{
                     easing: 'easeInOutQuart'
                 },0)
                 .add({ //KRISCHIN
-                    targets: `.staggerText`,
+                    targets: `#${id}_div_name .staggerText`,
                     translateY: ['-200vh', 0],
                     easing: 'easeInOutQuart',
                     delay: anime.stagger(100)
@@ -60,7 +60,30 @@ export default class StartingAnimation{
                     z: [0, 0.014],
                     easing: 'easeInOutQuart'
                 },800*3)
-               
+                .add({ //Scroll to enter - Turn on opacity
+                    targets: `#${id2}_div_scrollMessage .staggerText`,
+                    opacity: [0, 1],
+                    translateY: [
+                        {value: '-0.25em', easing: 'easeInOutCubic'},
+                        {value: '0', easing: 'easeInOutCubic'}
+                    ],
+                    delay: anime.stagger(100),
+                    complete: ()=>{ //Looping ScrollMessage Animation
+                        anime({ //Scroll to enter - Bounce characters
+                            targets: `#${id2}_div_scrollMessage .staggerText`,
+                            translateY: [
+                                {value: '-0.25em', duration: 500}, //time to go up
+                                {value: '0', duration: 300} //time to go down
+                            ],
+                            loop: true,
+                            delay: anime.stagger(100, {start: 500}),
+                            easing: 'easeInOutCubic'
+                        })
+                        
+                    }
+                }, 800*4)
+                
+                
                 break;
 
             default:
