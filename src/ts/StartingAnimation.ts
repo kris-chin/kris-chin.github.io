@@ -52,12 +52,12 @@ export default class StartingAnimation{
                     targets: `#${id}_p_1`,
                     translateY: ['100vh', 0],
                     easing: 'easeInOutQuart'
-                },'+=0')
+                },'-=500')
                 .add({ //CAPTION P2
                     targets: `#${id}_p_2`,
                     translateY: ['100vh', 0],
                     easing: 'easeInOutQuart'
-                },'+=5')
+                },'+=0')
                 .add({ //Statue
                     targets: statue!.mesh!.scale,
                     x: [0, 0.014],
@@ -86,7 +86,7 @@ export default class StartingAnimation{
                         })
                         
                     }
-                }, '+=0')
+                }, '-=100')
                 
                 
                 break;

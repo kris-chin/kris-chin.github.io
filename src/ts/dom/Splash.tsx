@@ -30,8 +30,8 @@ export default class Splash extends ProjectionText {
                         <div id={`${params.elementId}_div_lastName`}> {StaggerText("LAYON")}</div>
                     </div>
                     <div id={`${params.elementId}_div_caption`}>
-                        <p id={`${params.elementId}_p_1`}>22yr. old software engineer based in <p className="highlight1">Southern California</p>.</p>
-                        <p id={`${params.elementId}_p_2`}><p className="highlight2">Full-Stack Development</p>, <p className="highlight2">Game Development</p>, and <p className="highlight2">Data Engineering</p></p>
+                        <p id={`${params.elementId}_p_1`}>22yr. old software engineer based in <span className="highlight1">southern california</span>.</p>
+                        <p id={`${params.elementId}_p_2`}><span className="highlight2">Full-Stack Development</span>, <span className="highlight2">Game Development</span>, and <span className="highlight2">Data Engineering</span></p>
                     </div>
                 </div>
             </>
