@@ -12,8 +12,9 @@
 //Imports from JS packages
 //import React from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from '../js/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import anime from 'animejs';
+import config from '../config';
 
 //THREE imports
 import World from './World';
@@ -23,8 +24,8 @@ import Canvas from './Canvas';
 var cam : THREE.PerspectiveCamera;
 var ren : THREE.Renderer;
 
-const CONTROLS = false; //shorthand const to enable or disable controls + debug
-const DEBUG_MODE = false; //shorthand const to enable or disable object debug mode
+const CONTROLS = config.CONTROLS; //shorthand const to enable or disable controls + debug
+const DEBUG_MODE = config.DEBUG_MODE; //shorthand const to enable or disable object debug mode
 
 //Interface for the Camera Angle logged in CameraDebug.tsx
 export interface CameraAngle{
@@ -96,7 +97,7 @@ export class Scene {
         //more controls configuration
         this.controls.enableDamping = true;
         this.controls.minDistance = 5;
-        this.controls.listenToKeyEvents(window); //Window listens to keypress events
+        this.controls.listenToKeyEvents(window as any); //Window listens to keypress events
 
         //Add event listeners
         window.addEventListener('resize', this.OnWindowResize, false); //Adjust to window resize

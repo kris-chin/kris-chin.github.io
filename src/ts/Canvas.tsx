@@ -13,7 +13,7 @@ import React from 'react';
 import Scene from './Scene'
 
 //Determine if WebGL is even avaiable
-import { WEBGL } from '../js/WebGL';
+import { WEBGL } from 'three/examples/jsm/WebGL';
 
 import TextLayer from './TextLayer';
 

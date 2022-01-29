@@ -9,8 +9,8 @@
 */
 
 import * as THREE from 'three'
-import {OBJLoader} from '../js/OBJLoader';
-import {MTLLoader} from '../js/MTLLoader';
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
+import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader';
 import models from '../data/models.json'
 import World from './World';
 
