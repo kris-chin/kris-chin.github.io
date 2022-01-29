@@ -27,6 +27,7 @@ export class SceneObject {
     parent : SceneObject | null; //parent SceneObject. we actually set it in AddObject()
     children : SceneObject[] | null; //array of children. this is also set in AddObject()
     id : number;
+    uniqueId: string | null; //CSS-like identifier of object. optional
     state : string; //associated state
     debug : boolean; //is debug enabled?
 
@@ -42,9 +43,10 @@ export class SceneObject {
     private isRendered : boolean; //set false if the object shouldn't be rendered (ie. mesh shouldn't be added to World)
     private CHECK_RENDER : boolean; //flag for when checking if the object is rendered already occured
 
-    constructor(info: {name : string, id: number, state: string, debug: boolean}, meshInfo: {geometryString: string, materialString: string, meshString: string}, initialArgs : (Object | undefined)){
+    constructor(info: {name : string, id: number, uniqueId : string | null, state: string, debug: boolean}, meshInfo: {geometryString: string, materialString: string, meshString: string}, initialArgs : (Object | undefined)){
         this.name = info.name;
         this.id = info.id;
+        this.uniqueId = info.uniqueId;
         this.state = info.state;
         this.debug = info.debug; //Set debug mode based on arg
         this.parent = null;

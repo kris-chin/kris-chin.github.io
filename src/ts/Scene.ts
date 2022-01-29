@@ -23,8 +23,8 @@ import Canvas from './Canvas';
 var cam : THREE.PerspectiveCamera;
 var ren : THREE.Renderer;
 
-const CONTROLS = true; //shorthand const to enable or disable controls + debug
-const DEBUG_MODE = true; //shorthand const to enable or disable object debug mode
+const CONTROLS = false; //shorthand const to enable or disable controls + debug
+const DEBUG_MODE = false; //shorthand const to enable or disable object debug mode
 
 //Interface for the Camera Angle logged in CameraDebug.tsx
 export interface CameraAngle{

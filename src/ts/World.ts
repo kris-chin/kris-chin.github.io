@@ -53,12 +53,14 @@ export interface args{
     rot : {x: number, y: number, z:number} //Rotation
     sca : {x: number, y: number, z: number} //Scale
     debug : boolean //is debug enabled?
+    uniqueId: string //has a unique id
 }
 
 export class World extends THREE.Group {
 
     //Structures to hold all of our 3D information
     sceneObjects : Array<SceneObject | null>; //All SceneObjects in world (not to be confused with MESHes)
+    private uniqueObjectMap : Map<string, SceneObject> //A map of all unique objects. 
     geometries : Map<string,THREE.BufferGeometry>; //Map of all geometries used
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
     behaviours : BehaviourFactory;
@@ -90,13 +92,14 @@ export class World extends THREE.Group {
 
         //Create our objects list and Maps
         this.sceneObjects = [] //Note: this is just an array of ALL sceneobjects. not for state-specific ones
+        this.uniqueObjectMap = new Map<string, SceneObject>();
         this.materials = new Map<string,(THREE.Material | Array<THREE.Material>)>();
         this.geometries = new Map<string,THREE.BufferGeometry>();
         this.keyObjects = new Map<string,Object>();
         this.behaviours = new BehaviourFactory(); //Behaviours are added to sceneobjects in AddObject()
         this.worldStates = new Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>();
         this.externalMeshes = new Map<string, THREE.Mesh>();
-        this.startingAnimation = new StartingAnimation();
+        this.startingAnimation = new StartingAnimation(this);
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
@@ -203,6 +206,8 @@ export class World extends THREE.Group {
             let meshKey = keyObject.sceneObject.mesh;
             let debugEnabled : boolean = false;
             if (args && args.debug) debugEnabled = true
+            let uniqueId : string | null = null;
+            if (args && args.uniqueId) uniqueId = args.uniqueId;
 
             //Determine if Material or Geometry have behaviours
             //NOTE: these behaviours are not appened to the "behaviours" list
@@ -217,7 +222,7 @@ export class World extends THREE.Group {
             }
 
             //Create new Object
-            let object = new SceneObject({name: info.key, id: this.totalIDs, state: info.state, debug: debugEnabled}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
+            let object = new SceneObject({name: info.key, id: this.totalIDs, uniqueId: uniqueId, state: info.state, debug: debugEnabled}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
             this.totalIDs += 1; //increment total IDs
             if (args && args.parent){
                 object.parent = args.parent //set the SceneObject parent (NOT the mesh parent)
@@ -254,6 +259,9 @@ export class World extends THREE.Group {
                 if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z);
                 if (args && args.rot) object.mesh.rotation.set(args.rot.x,args.rot.y,args.rot.z);
                 if (args && args.sca) object.mesh.scale.set(args.sca.x, args.sca.y, args.sca.z);
+
+                //Lastly, if the object has a unique id, map it to the uniqueIdMap
+                if (args && object.uniqueId) this.uniqueObjectMap.set(object.uniqueId, object);
 
                 return object
             } else {
@@ -410,6 +418,11 @@ export class World extends THREE.Group {
     //Returns State Name
     GetState(){
         return this.currentState.worldState.name
+    }
+
+    //Returns a pointer to a SceneObject given it's unique ID
+    GetSceneObjectById(uniqueId: string): SceneObject| undefined{
+        return this.uniqueObjectMap.get(uniqueId);
     }
 
 }

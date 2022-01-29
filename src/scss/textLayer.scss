@@ -70,13 +70,35 @@ $backgroundColor: #EE9B00;
 
         #splashPage_div_tagline{
             width:15em;
+            height:15em;
+            display: flex;
+            flex-direction: column;
 
             //Name on splash page
-            #splashPage_h1_1{
-                width: 10em;
-                font-size: 6em;
+            #splashPage_div_name{
                 font-family: arial;  //custom font is defined in index.html 'Archivo Black'
-                margin:0px;
+                width: 100em;
+                display: inline-flex; //make all h1 in this inline
+                position:static; //enable regular positioning
+                
+                //Settings for the div to look the same
+                div {
+                    display: inline-flex;
+                    position:static;
+                }
+
+                #splashPage_div_firstName{
+                    padding-right: 3em;
+                }
+
+                h1{
+                    font-size: 6em;
+                    .staggerText{
+                        margin: 0em;
+                        padding: 0em;
+                    }
+                }
+
             }
 
             //The set of text underneath my name
@@ -84,6 +106,8 @@ $backgroundColor: #EE9B00;
                 width: 25em;
                 font-size: 2em;
                 font-family: arial, 'Times New Roman';
+                display: inline-block;
+                position: static; //enable regular positioning
 
                 //The smaller part of the caption
                 #splashPage_p_2{

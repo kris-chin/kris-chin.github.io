@@ -106,6 +106,7 @@ export default class name extends DomText{
         const log = () =>{
             console.log({
                 debug: true, //keep debug on just in case
+                uniqueId : this.co.uniqueId,
                 pos: {
                     x: this.co.mesh!.position.x,
                     y: this.co.mesh!.position.y,

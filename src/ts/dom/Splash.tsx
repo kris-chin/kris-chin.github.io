@@ -1,13 +1,32 @@
 import ProjectionText from './ProjectionText';
 import { DomParams, translate3d } from '../behaviours/DomText';
 
+//Helper function that applies a class to every character in a given string
+const StaggerText = (text: string) : JSX.Element => {
+    var elementArray = new Array<JSX.Element>()
+    const className : string = 'staggerText'
+
+    for (let c of text){
+        elementArray.push(<h1 className={className}>{c}</h1>)
+    }
+
+    return (
+        <>
+            {elementArray}
+        </>
+    );
+}
+
 export default class Splash extends ProjectionText {
 
     Render(params : DomParams) : JSX.Element {
         return(
             <>
                 <div id={`${params.elementId}_div_tagline`}>
-                    <h1 id={`${params.elementId}_h1_1`}>KRISCHIN LAYON</h1>
+                    <div id={`${params.elementId}_div_name`}>
+                        <div id={`${params.elementId}_div_firstName`}> {StaggerText("KRISCHIN")}</div>
+                        <div id={`${params.elementId}_div_lastName`}> {StaggerText("LAYON")}</div>
+                    </div>
                     <div id={`${params.elementId}_div_caption`}>
                         <p id={`${params.elementId}_p_1`}>22yr. old software engineer based in <p className="highlight1">Southern California</p>.</p>
                         <p id={`${params.elementId}_p_2`}><p className="highlight2">Full-Stack Development</p>, <p className="highlight2">Game Development</p>, and <p className="highlight2">Data Engineering</p></p>
@@ -35,7 +54,7 @@ export default class Splash extends ProjectionText {
 
         //Align our objects
         //NOTE: using sX and sY is good for being responsive for mobile but this has to be a different value once you are moving
-        if (div_tagline) div_tagline.style.transform = translate3d({x:0,y:-200,z:0},"px")
+        if (div_tagline) div_tagline.style.transform = translate3d({x:0,y:-250,z:0},"px")
     }
 
 }
