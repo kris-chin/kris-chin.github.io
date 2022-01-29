@@ -22,7 +22,7 @@ const StaggerText = (text: string) : JSX.Element => {
 }
 
 
-export default class Overlay extends DomText{
+export default class SplashOverlay extends DomText{
 
     Render(params: DomParams): JSX.Element {
         return(

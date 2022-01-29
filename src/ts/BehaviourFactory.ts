@@ -22,7 +22,7 @@ import ProjectionText from './dom/ProjectionText';
 import CameraDebug from './dom/CameraDebug';
 import Splash from './dom/Splash';
 import ObjectDebug from './dom/ObjectDebug';
-import Overlay from './dom/Overlay';
+import SplashOverlay from './dom/SplashOverlay';
 
 export class BehaviourFactory {
 
@@ -39,7 +39,7 @@ export class BehaviourFactory {
             case("CameraDebug") : return new CameraDebug(parent, parameters);
             case("Splash") : return new Splash(parent, parameters);
             case("ObjectDebug") : return new ObjectDebug(parent,parameters);
-            case("Overlay") : return new Overlay(parent, parameters)
+            case("SplashOverlay") : return new SplashOverlay(parent, parameters)
             default:
                 console.error(`Invalid Behaviour: '${key}'`)
                 return undefined

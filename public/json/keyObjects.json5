@@ -86,7 +86,7 @@
             // "geometry" : "box",
             "behaviours" : [
                 {"name": "Splash", "params":{"elementId": "splashPage"} },
-                {"name":"Overlay", "params":{"elementId": "splashOverlay"}}
+                {"name":"SplashOverlay", "params":{"elementId": "splashOverlay"}}
             ]
         }
     },
