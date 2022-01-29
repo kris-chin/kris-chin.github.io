@@ -251,7 +251,7 @@ export class World extends THREE.Group {
 
                 object.mesh.name = info.key //Set the mesh name to the object key
                 object.innerMesh.castShadow = true; //Allow the object to cast a shadow
-                object.innerMesh.receiveShadow = true; //Allow the object to recieve shdadows
+                if (keyObject.sceneObject.recieveShadows) object.innerMesh.receiveShadow = true; //Allow the object to recieve shdadows
                 
                 if (object.GetRenderState()) object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
 

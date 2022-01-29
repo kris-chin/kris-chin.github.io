@@ -5,9 +5,11 @@ import { DomParams, translate3d } from '../behaviours/DomText';
 const StaggerText = (text: string) : JSX.Element => {
     var elementArray = new Array<JSX.Element>()
     const className : string = 'staggerText'
+    var keyCount = 0;
 
     for (let c of text){
-        elementArray.push(<h1 className={className}>{c}</h1>)
+        elementArray.push(<h1 className={className} key = {keyCount}>{c}</h1>)
+        keyCount++;
     }
 
     return (

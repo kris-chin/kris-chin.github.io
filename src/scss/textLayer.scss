@@ -65,7 +65,23 @@ $backgroundColor: #EE9B00;
         }
     }
 
-    //Splash Page Styling
+    //Overlay that spawns alongside splashPage
+    #splashOverlay {
+        position: absolute;
+
+        svg {
+            position: absolute;
+        }
+
+        #splashOverlay_svg_topLine{
+            transform: translateY(5vh);
+        }
+        #splashOverlay_svg_bottomLine{
+            transform: translateY(95vh);
+        }
+    }
+
+    //Projection Text Splash Page Styling
     #splashPage {
 
         #splashPage_div_tagline{

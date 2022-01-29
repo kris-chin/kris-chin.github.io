@@ -13,6 +13,7 @@ export interface KeyObject {
         geometry : string,
         material : string,
         mesh: string,
+        recieveShadows: boolean,
         behaviours : Array<{ name:string,params:Object} >
     }
 }
