@@ -42,24 +42,29 @@ export default class StartingAnimation{
                     x1: [window.innerWidth, 0],
                     easing: 'easeInOutQuart'
                 },0)
-                .add({ //KRISCHIN
+                .add({ //KRISCHIN LAYON
                     targets: `#${id}_div_name .staggerText`,
                     translateY: ['-200vh', 0],
                     easing: 'easeInOutQuart',
                     delay: anime.stagger(100)
-                },300)
-                .add({ //CAPTION
-                    targets: `#${id}_div_caption`,
+                },0)
+                .add({ //CAPTION P1
+                    targets: `#${id}_p_1`,
                     translateY: ['100vh', 0],
                     easing: 'easeInOutQuart'
-                },1600)
+                },'+=0')
+                .add({ //CAPTION P2
+                    targets: `#${id}_p_2`,
+                    translateY: ['100vh', 0],
+                    easing: 'easeInOutQuart'
+                },'+=5')
                 .add({ //Statue
                     targets: statue!.mesh!.scale,
                     x: [0, 0.014],
                     y: [0, 0.014],
                     z: [0, 0.014],
                     easing: 'easeInOutQuart'
-                },800*3)
+                },'+=5')
                 .add({ //Scroll to enter - Turn on opacity
                     targets: `#${id2}_div_scrollMessage .staggerText`,
                     opacity: [0, 1],
@@ -81,7 +86,7 @@ export default class StartingAnimation{
                         })
                         
                     }
-                }, 800*4)
+                }, '+=0')
                 
                 
                 break;
