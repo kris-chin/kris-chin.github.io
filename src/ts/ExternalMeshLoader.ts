@@ -10,6 +10,7 @@
 
 import * as THREE from 'three'
 import {OBJLoader} from '../js/OBJLoader';
+import {MTLLoader} from '../js/MTLLoader';
 import models from '../data/models.json'
 import World from './World';
 
@@ -28,7 +29,8 @@ interface ModelParams{
 
 interface ModelInterface {
     name : string,
-    filePath : string,
+    filePath_obj : string,
+    filePath_mtl : string,
     params: Object
 }
 
@@ -45,7 +47,8 @@ export default class ExternalMeshLoader {
     LoadExternalMeshes() : Promise< Map<string, THREE.Mesh> >{
         var promise = new Promise< Map<string, THREE.Mesh> >( (resolve,reject) =>{
 
-            const loader = new OBJLoader();
+            const obj_loader = new OBJLoader();
+            const mtl_loader = new MTLLoader();
 
             var promiseList = new Array<Promise<{name: string,mesh: THREE.Mesh, params: Object} >>();
             
@@ -67,27 +70,41 @@ export default class ExternalMeshLoader {
                         var inGroup : boolean = false;
                         var previousLoaded : number = 0;
 
-                        loader.load(
-                            model.filePath,
-                            (object: THREE.Object3D) =>{
-                                console.groupEnd()
-                                resolve({name: model.name, mesh: object as THREE.Mesh, params: model.params})
-                            },
-                            (xhr : any)=>{ //I cant seem to find the type for XMLHTTPRequest that has .loaded and .total
-                                if (!inGroup){
-                                    console.groupCollapsed(`Loading Mesh: '${model.name}'`)
-                                    inGroup = true;
-                                }
-                                console.log(`${(xhr.loaded/xhr.total * 100)}% loaded`)
+                        //We will first the MTL, then laod the OBJ.
+                        mtl_loader.load(
+                            model.filePath_mtl,
+                            (materialCreator : any ) =>{
+                                //Now that we loaded our MTL, set our materials and load our OBJ
+                                obj_loader.setMaterials(materialCreator) //Set our materials before we load
+                                obj_loader.load(
+                                    model.filePath_obj,
+                                    (object: THREE.Object3D) =>{ //Finished loading mesh
+                                        console.groupEnd()
 
-                                //Send info to TextLayer
-                                incrementProgress( (xhr.loaded/xhr.total) - previousLoaded) //calculate amount added
-                                previousLoaded = (xhr.loaded/xhr.total);
-                                textLayer.UpdateProgress(getProgress()/neededTotalProgress)
+                                        resolve({name: model.name, mesh: object as THREE.Mesh, params: model.params})
+                                    },
+                                    (xhr : any)=>{ //I cant seem to find the type for XMLHTTPRequest that has .loaded and .total
+                                        if (!inGroup){
+                                            console.groupCollapsed(`Loading Mesh: '${model.name}'`)
+                                            inGroup = true;
+                                        }
+                                        console.log(`${(xhr.loaded/xhr.total * 100)}% loaded`)
+        
+                                        //Send info to TextLayer
+                                        incrementProgress( (xhr.loaded/xhr.total) - previousLoaded) //calculate amount added
+                                        previousLoaded = (xhr.loaded/xhr.total);
+                                        textLayer.UpdateProgress(getProgress()/neededTotalProgress)
+                                    },
+                                    ()=>{
+                                        console.error(`Error loading OBJ of '${model.name}'`)
+                                        console.groupEnd()
+                                        reject()
+                                    }
+                                )
                             },
-                            ()=>{
-                                console.error(`Error loading '${model.name}'`)
-                                console.groupEnd()
+                            (xhr : any) => {}, //don't do anything for onProgress
+                            () => {
+                                console.error(`Error loading MTL of '${model.name}'`)
                                 reject()
                             }
                         )

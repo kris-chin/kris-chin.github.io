@@ -1,7 +1,8 @@
 [
     {
         "name": "statue",
-        "filePath": "/models/statue/statue2.obj",
+        "filePath_obj": "/models/statue/statue2.obj",
+        "filePath_mtl": "/models/statue/statue2.mtl",
         "params":
             {
                 "defaultScale": {"x":0.01,"y":0.01,"z":0.01}
