@@ -17,9 +17,8 @@ $mainFont : arial;
     height:100%; //100% of body
 
     //Scroll-related settings
-    overflow: hidden; //this gets disabled once scroll is enabled
-    //top:0; //this gets set when scoll is enabled
-    position:absolute; //this gets set to 'sticky' when scoll is enabled
+    overflow: hidden; 
+    position:absolute; 
 
     //any div will be absolute
     div{

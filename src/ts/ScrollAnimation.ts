@@ -30,11 +30,11 @@ export default class ScrollAniamation {
             window.onwheel = this.OnScroll;
 
             //Set Sticky styling to create our smooth illusion
-            let stickyDiv = document.getElementById('sticky');
+            let stickyDiv = document.getElementById('site-wrapper');
             if (stickyDiv){
                 stickyDiv.style.overflow = 'visible';
                 stickyDiv.style.top = '0';
-                stickyDiv.style.position = 'sticky';
+                stickyDiv.style.position = 'fixed';
             }
         }
 
