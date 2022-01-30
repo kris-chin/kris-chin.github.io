@@ -45,11 +45,13 @@ export default class TextLayer extends Component {
 
   render() {
     return (
-      <div id = 'textLayer'>
-        <div id = 'textLayer_upperProgressInfo'>
-          <p id = "textLayer_progressInfo"></p> 
+      <>
+        <div id = 'textLayer'>
+          <div id = 'textLayer_upperProgressInfo'>
+            <p id = "textLayer_progressInfo"></p> 
+          </div>
         </div>
-      </div>
+      </>
       );
   }
 }

@@ -84,7 +84,9 @@ export default class StartingAnimation{
                             delay: anime.stagger(100, {start: 500}),
                             easing: 'easeInOutCubic'
                         })
-                        
+                        //Activate scroll trigger
+                        this.world.scrollAnimation.ToggleTrigger();
+
                     }
                 }, '-=100')
                 

@@ -8,7 +8,6 @@ $backgroundColor: #EE9B00;
 $mainFont : arial;
 
 #textLayer{
-    position: absolute;
     z-index: 100; //Put the text above the canvas
     background-color: $backgroundColor;
     
@@ -16,7 +15,11 @@ $mainFont : arial;
     //this way we can properly overflow any text elements on smaller screens
     width:100%; //100% of body
     height:100%; //100% of body
-    overflow:hidden; 
+
+    //Scroll-related settings
+    overflow: hidden; //this gets disabled once scroll is enabled
+    //top:0; //this gets set when scoll is enabled
+    position:absolute; //this gets set to 'sticky' when scoll is enabled
 
     //any div will be absolute
     div{
@@ -163,7 +166,7 @@ $mainFont : arial;
 }
 
 body{
-    overflow: hidden; //keep the window the same size
+    overflow-x: hidden; //keep the window the same width
     margin: 0; 
     background: $backgroundColor;
 }

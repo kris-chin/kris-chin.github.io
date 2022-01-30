@@ -20,6 +20,7 @@ import Behaviour from './Behaviour';
 import ExternalMeshLoader from './ExternalMeshLoader';
 import ObjectDebug from './dom/ObjectDebug';
 import StartingAnimation from './StartingAnimation';
+import ScrollAnimation from './ScrollAnimation';
 
 //Arbitrary import of testWorld JSON 
 import testWorld from '../data/testWorld.json';
@@ -78,6 +79,7 @@ export class World extends THREE.Group {
     private worldStates : Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>; //worldStates and their respective objects stored here
     currentState !: {worldState : WorldState, sceneObjects: (SceneObject)[]}
     startingAnimation : StartingAnimation;
+    scrollAnimation : ScrollAnimation;
 
     //"Global" Variables
     time : number;
@@ -100,6 +102,7 @@ export class World extends THREE.Group {
         this.worldStates = new Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>();
         this.externalMeshes = new Map<string, THREE.Mesh>();
         this.startingAnimation = new StartingAnimation(this);
+        this.scrollAnimation = new ScrollAnimation(this);
 
         //Setup Loaders and pass our maps into them for loading
         this.loader_materials = new MaterialLoader(this.materials);
@@ -185,7 +188,7 @@ export class World extends THREE.Group {
         for (let obj of this.sceneObjects){
             if (obj) obj.Step();
         }
-
+        
         this.time += 0.01
     }
 

@@ -75,8 +75,10 @@ export default class Canvas extends React.Component {
     render(){
         return(
             <>
-                {this.textLayer.render()}
-                <div id='canvas' />
+                <div id='sticky'>
+                    {this.textLayer.render()}
+                    <div id='canvas' />
+                </div>
             </>
         )
     }
