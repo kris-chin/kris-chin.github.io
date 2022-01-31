@@ -4,8 +4,15 @@
     Handles Computations for scroll interpolation
 */
 
+interface ScrollSceneParams{
+    onStart: Function, //callback when starting the scroll
+    onEnd: Function, //callback when reaching the end of the scroll
+    onPercent: { [percentage : number] : unknown } //callbacks for on certain percent. Maxes at 2 decimal places
+}
+
 interface Timeline {
     target: any,
+    params ?: Object,
     //This represents any new property.We treat it as a string.
     //As a note, I just learned that you can reference object propetries like a map/dict. that's crazy.
     [ numericKeys : string ] : unknown
@@ -28,10 +35,24 @@ const CSSTransformFunctionNames = ['translateX','translateY','translateZ','rotat
 //  ScrollScenes pre-bake their interpolation on construction
 export default class ScrollScene {
 
-    timelines : Array<Timeline>
+    private timelines : Array<Timeline>
+    private onEnd : (Function | undefined) = undefined;
+    private onStart : (Function | undefined) = undefined;
+    private onPercent : (Map<number, Function> | undefined) = undefined;
 
-    constructor(){
+    constructor(scrollSceneParams?: Object){
         this.timelines = new Array<Timeline>();
+        //Handle params
+        const params = scrollSceneParams as ScrollSceneParams;
+        if (params && params.onEnd) this.onEnd = params.onEnd;
+        if (params && params.onStart) this.onStart = params.onStart;
+        if (params && params.onPercent){ //onpercent
+            const percentages = Object.keys(params.onPercent)
+            this.onPercent = new Map<number, Function>();
+            for (let percent of percentages) {
+                this.onPercent.set(Number(percent), (params.onPercent[Number(Number(percent).toFixed(2))] as Function),)
+            }
+        }
     }
 
     //Adds a timeline
@@ -41,11 +62,22 @@ export default class ScrollScene {
     }
 
     //Interpolates keyframes for every timeline in the ScrollScene
-    //Note: it's best to pass a scrollPercent that briefly passes 1.
     public ApplyAnimations(scrollPercent: number){
 
+        //Go through every timeline and applt interpolation
         for (let timeline of this.timelines){
             this.InterpolateKeyframes(timeline, scrollPercent);
+        }
+
+        //ScrollScene-Specific params
+        if ( (scrollPercent === 0) && (this.onStart !== undefined)) this.onStart();
+        if ( (scrollPercent === 1) && (this.onEnd !== undefined) ) this.onEnd();
+        if ( this.onPercent !== undefined ){
+            (() => { //use arrow syntax so we can use return in if blocks
+                const percent = this.onPercent!.get( Number(scrollPercent.toFixed(2)) )
+                if (percent === undefined) return;
+                percent.call(this)
+            })();
         }
 
     }

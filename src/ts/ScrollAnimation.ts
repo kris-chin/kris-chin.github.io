@@ -14,8 +14,18 @@ export default class ScrollAnimation {
         this.world = world;
         this.trigger = false;
 
+        const log = () => console.log('End is called')
+        const log1 = () => console.log('Start is called')
+        const log2 = () => console.log('Percent is called')
+
         //Instantiate and test something lol
-        this.s = new ScrollScene()
+        this.s = new ScrollScene({
+            onEnd: log,
+            onStart : log1,
+            onPercent: {
+                0.25: log2 
+            }
+        })
         .AddTimeline({
             target: this.world.scene.camera.position,
             x: [-3.6356260858784983, -1.7327148167343331, 1.5502732522091098, -4.246041765496115], 
@@ -44,18 +54,14 @@ export default class ScrollAnimation {
             target: '#splashOverlay_svg_topLine line',
             x1: {
                 keyframes: ['0px', `${window.innerWidth.toString()}px`],
-                params: {
-                    duration: {startPercent: 0, endPercent: 0.5}
-                }
+                duration: {startPercent: 0, endPercent: 0.5}
             }
         })
         .AddTimeline({
             target: '#splashOverlay_svg_bottomLine line',
             x2: {
                 keyframes: [`${window.innerWidth.toString()}px`, '0px'],
-                params: {
-                    duration: {startPercent: 0, endPercent: 0.5}
-                }
+                duration: {startPercent: 0, endPercent: 0.5}
             }
         })
         
