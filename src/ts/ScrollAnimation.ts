@@ -8,6 +8,8 @@ export default class ScrollAnimation {
     world: World;
     trigger : boolean; //extend this to a bunch of different values
 
+    called : boolean = false;
+
     s : ScrollScene; //test scene
 
     constructor(world: World){ //
@@ -16,14 +18,16 @@ export default class ScrollAnimation {
 
         const log = () => console.log('End is called')
         const log1 = () => console.log('Start is called')
-        const log2 = () => console.log('Percent is called')
+        const log2 = () => {if (!this.called){ console.log('Percent is called'); this.called = true} }
 
         //Instantiate and test something lol
         this.s = new ScrollScene({
             onEnd: log,
             onStart : log1,
             onPercent: {
-                0.25: log2 
+                0.9: log2,
+                0.25: log2,
+                0.7: log2
             }
         })
         .AddTimeline({

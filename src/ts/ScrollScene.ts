@@ -38,7 +38,9 @@ export default class ScrollScene {
     private timelines : Array<Timeline>
     private onEnd : (Function | undefined) = undefined;
     private onStart : (Function | undefined) = undefined;
-    private onPercent : (Map<number, Function> | undefined) = undefined;
+
+    //onPercent's kinda funny, we store a map of maps. The first map is the first decimal while the second map is the second decimal.
+    private onPercent : (Array< {value: number, function: Function} > | undefined) = undefined;
 
     constructor(scrollSceneParams?: Object){
         this.timelines = new Array<Timeline>();
@@ -48,10 +50,18 @@ export default class ScrollScene {
         if (params && params.onStart) this.onStart = params.onStart;
         if (params && params.onPercent){ //onpercent
             const percentages = Object.keys(params.onPercent)
-            this.onPercent = new Map<number, Function>();
-            for (let percent of percentages) {
-                this.onPercent.set(Number(percent), (params.onPercent[Number(Number(percent).toFixed(2))] as Function),)
+            this.onPercent = new Array<{value: number, function: Function}>();
+            for (let percent of percentages){
+                const p = {value: Number(percent), function: params.onPercent[Number(percent)] as Function }
+                this.onPercent.push(p) //pushin' p
             }
+            //Sort our onPercent so we can exit early if necessarily
+            //Sorts from least to greatest
+            this.onPercent.sort( (firstEl, secondEl)=>{
+                if (firstEl.value > secondEl.value) return 1; //sort the first value before the second value
+                if (firstEl.value < secondEl.value) return -1; //sort the second value before the first value
+                return 0; //sort order stays the same
+            })
         }
     }
 
@@ -74,9 +84,13 @@ export default class ScrollScene {
         if ( (scrollPercent === 1) && (this.onEnd !== undefined) ) this.onEnd();
         if ( this.onPercent !== undefined ){
             (() => { //use arrow syntax so we can use return in if blocks
-                const percent = this.onPercent!.get( Number(scrollPercent.toFixed(2)) )
-                if (percent === undefined) return;
-                percent.call(this)
+                
+                //Go through all of our percentages and determine if we should call our percent
+                for (let entry of this.onPercent){
+                    if (scrollPercent > entry.value)entry.function.call(this)
+                    else break; //exit the for loop early
+                }
+
             })();
         }
 
