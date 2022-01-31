@@ -28,3 +28,4 @@ yarn-error.log*
 #Etc
 NOTES.md
 .vscode
+tools/angleList
