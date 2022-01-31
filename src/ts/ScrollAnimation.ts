@@ -9,6 +9,8 @@ interface Timeline {
     params?: Object
 }
 
+const CSSTransformFunctionNames = ['translateX','translateY','translateZ','rotateX','rotateY','rotateZ','scaleX','scaleY','scaleZ']
+
 //Class that manages scroll and keyframe interpolation
 //  Every ScrollScene contains multiple timelines
 //  Each timeline controls a target and interpolates from a set of keyframes
@@ -51,18 +53,48 @@ export class ScrollScene {
             //Skip known keys
             if (keyName === 'target') continue; //not an unknown key
             if (keyName === 'params') continue; //not an unknown key
-            
-            //Point to the actual property of the object
-            const property = timeline.target[keyName];
-            //Point to the array of keyframes provided in the argument
-            const keyframes = timeline[keyName] as number[];
 
+            //Flags for property type
+            var IS_ELEMENT = false; //flag for if we are working with a selected element
+            var IS_TRANSFORM = false; //flag for if we are working with a css transform
+            var IS_SVG = false; //flag for if we are working with a SVG
+
+            //Point target for now. (if this is a css selector, we re-point this)
+            var target : any = timeline.target;
+
+            //If target is css selector, we need to get it's object
+            if (typeof target === 'string'){
+                //Get target based on css selector
+                target = document.querySelector(target)
+                if (target === null) {console.error(`Failed to get element with selector: '${timeline.target}'`); continue; }
+                IS_ELEMENT = true; //set flag to signfiy that we are working with a style
+
+                //Set targetting depending on the type of target
+                if (target instanceof SVGElement ) {
+                    IS_SVG = true;
+                }
+                //If A transform function was provided as a property
+                else if (CSSTransformFunctionNames.some((testString)=>{ return(testString === keyName)} ) ) {
+                    IS_TRANSFORM = true; //set flag
+                    target = (target as HTMLElement).style //point to style for now
+                } 
+                else {
+                    target = (target as HTMLElement).style //get style
+                }
+            }
+            
+            //Point to the array of keyframes provided in the argument
+            const keyframes = timeline[keyName] as any[];
+            var keyframeType : string;
+            
+            //Type guard AND an early check to see if every value is a number or string
+            if (!keyframes.every( (keyframe)=> {return ( (typeof keyframe === "number") || (typeof keyframe === "string")) }) ) {console.error(`Keyframe array must all be numbers or strings`); continue;}
+            else keyframeType = typeof keyframes[0]; //Since all values are homogenous, we can just take the type of the first value for study.
+                
             //Guards
-            //Note: this first one should eventually work with CSS strings. I just don't wanna bother with that rn though.
-            if (!keyframes.every( (keyframe)=> {return (typeof keyframe === "number")}) ) {console.error(`Keyframe array must all be numbers`); continue;}
             if (keyframes.length < 2) {console.error(`Timeline for '${keyName}' must have more than 1 keyframe`); continue;}
-            if (timeline.target === undefined) {console.error(`Target for '${keyName}' may not exist`); continue;}
-            if (property === undefined) {console.error(`Property '${keyName}' may not exist on %o`, timeline.target); continue;}
+            if (target === undefined) {console.error(`Target for '${keyName}' may not exist`); continue;}
+            if (target[keyName] === undefined && (!IS_TRANSFORM) ) {console.error(`Property '${keyName}' may not exist on %o`, target); continue;}
 
             //Evenly split the distance of keyframes
             //Round upwards so we can actually reach 1 when you add them all together
@@ -87,18 +119,79 @@ export class ScrollScene {
                 //Get the position relative to the two keys
                 const relative_percent = ( (frameNumber - index0) /  ( index1 - index0) );
 
-                //Commence Interpolation
-                const distance = keyframes[index1] - keyframes[index0]
-                amt = keyframes[index0] + distance*relative_percent
-            }
-            
-            //Now for the good stuff. Set our target's property to the interpolated value
-            timeline.target[keyName] = amt;
-        }
-        
-    }
-    
+                //We do interpolation depending on if the values are strings or numbers
+                if (IS_ELEMENT){
 
+                    //Declare our units (this is set later)
+                    var units : string;
+
+                    //Because we are working with a css style value, which may or may/not have their values in strings, we have to account for that
+                    switch(keyframeType){
+                        case "number":
+                            console.warn('I didn\'t build handling for pure numbers with CSS units. I know it\ts doable, but please use an array of strings.')
+                            continue;
+                        case "string":
+                            //We may or may not have units attached to this string, so we should split it
+                            const regex : RegExp = /(-?\d+)|(\D+)/gi;
+                            
+                            //Get string arrays
+                            var i0 = (keyframes[index0] as string).match(regex); 
+                            var i1 = (keyframes[index1] as string).match(regex); 
+
+                            //These string arrays should contain exactly 2 strings (or one if you're not specifying a unit)
+                            if (!(i0 && i0.length <= 2 && i0.length > 0)) {console.error(`Invalid CSS Unit input: '${keyframes[index0]}'`); continue;}
+                            if (!(i1 && i1.length <= 2 && i1.length > 0)) {console.error(`Invalid CSS Unit input: '${keyframes[index1]}'`); continue;}
+
+                            //Handling for if the units don't match
+                            if ( (i0[1] !== i1[1]) ) {console.warn(`Units don't match for '${keyName}'.\nI didn't build conversion code for CSS units. Please just use the same units.`); continue;}
+                            
+                            //Assign our units
+                            units = (i0[1] ?? "");
+
+                            //Convert strings to numbers
+                            const k0 = Number(i0[0])
+                            const k1 = Number(i1[0])
+
+                            //Do interpolation
+                            const distance = k1 - k0;
+                            amt = k0 + distance*relative_percent;
+
+                            break;
+                        default: continue;
+                    }
+
+                    //Set the target's property to the interpolated value
+                    if (IS_TRANSFORM){
+                        //Check if the transform was already applied prior
+                        if ( (target.transform as string).includes(keyName) )  { //since target points to transform (a string), we can check it for our property
+                            //Since the transform already contains our property, we need to replace it
+                            const transformRegex : RegExp = new RegExp(`((${keyName})\\((.*?)\\))` ); //Selects the first occurance of the CSStransform
+
+                            //Replace the transform
+                            target['transform'] = (target.transform as string).replace(transformRegex, `${keyName}(${amt.toString() + units})`)
+                        }
+                        else {
+                            //Since the transform doesn't contain our property, we can just append it
+                            target['transform'] += ` ${keyName}(${amt.toString() + units})`
+                        }
+                    }
+                    else if (IS_SVG) (target as SVGElement).setAttribute(keyName, amt.toString() + units)
+                    else target[keyName] = amt.toString() + units
+
+                } else {
+
+                    //Commence Interpolation
+                    const distance = keyframes[index1] - keyframes[index0]
+                    amt = keyframes[index0] + distance*relative_percent
+
+                    //Now for the good stuff. Set our target's property to the interpolated value
+                    target[keyName] = amt;
+
+                }
+
+            }
+        }
+    }
 }
 
 //World Class that manages the actual events
@@ -127,6 +220,19 @@ export default class ScrollAnimation {
             _y: [-0.11548248678223165, 0.07580696892721868, 0.4594405797173721, 0.6855137742591262], 
             _z: [0.0007638376980886929, 1.1845257206307469e-06, -0.03650327054684794, 0.4608436985237482], 
             _w: [0.993287495129176, 0.9971225116393221, 0.8846702220206762, -0.46776858074009514] 
+        })
+        .AddTimeline({
+             target: '#splashOverlay_div_scrollMessage',
+             translateY: ['0px', '-200px'],
+             opacity: ['1','0']
+        })
+        .AddTimeline({
+            target: '#splashOverlay_svg_topLine line',
+            x1: ['0px', `${window.innerWidth.toString()}px`]
+        })
+        .AddTimeline({
+            target: '#splashOverlay_svg_bottomLine line',
+            x2: [`${window.innerWidth.toString()}px`, '0px']
         })
         
 

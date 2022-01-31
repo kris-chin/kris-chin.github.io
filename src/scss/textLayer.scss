@@ -89,28 +89,33 @@ $mainFont : arial;
         #splashOverlay_svg_bottomLine{
             transform: translateY(95vh);
         }
+
         
         //Scroll to enter text
-        #splashOverlay_div_scrollMessage{
-            display: flex;
-            font-family: $mainFont;
-
+        #splashOverlay_div_scrollMessage_wrapper{
             //Position at center-bottom
             top:50%;
             left:50%;
             transform: translate(-50%,-50%) translate(50vw, 93vh);
 
-            //per-character styles 
-            p {
-                margin: 0em;
-                padding: 0em;
-                font-size: 1.5em;
-            }
-
-            .staggerText_space{
-                padding-right: 0.5em;
+            #splashOverlay_div_scrollMessage{
+                position: relative;
+                display: flex;
+                font-family: $mainFont;
+    
+                //per-character styles 
+                p {
+                    margin: 0em;
+                    padding: 0em;
+                    font-size: 1.5em;
+                }
+    
+                .staggerText_space{
+                    padding-right: 0.5em;
+                }
             }
         }
+        
     }
 
     //Projection Text Splash Page Styling
