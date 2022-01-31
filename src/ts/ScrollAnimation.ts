@@ -31,16 +31,36 @@ export default class ScrollAnimation {
         })
         .AddTimeline({
              target: '#splashOverlay_div_scrollMessage',
-             translateY: ['0px', '-200px'],
-             opacity: ['1','0']
+             translateY: {
+                    keyframes: ['0px', '-20px'],
+                    params: {
+                        duration: {startPercent: 0, endPercent: 0.1}
+                    }
+            },
+             opacity: {
+                    keyframes: ['1','0'],
+                    params: {
+                        duration: {startPercent: 0, endPercent: 0.1}
+                    }
+             }
         })
         .AddTimeline({
             target: '#splashOverlay_svg_topLine line',
-            x1: ['0px', `${window.innerWidth.toString()}px`]
+            x1: {
+                keyframes: ['0px', `${window.innerWidth.toString()}px`],
+                params: {
+                    duration: {startPercent: 0, endPercent: 0.5}
+                }
+            }
         })
         .AddTimeline({
             target: '#splashOverlay_svg_bottomLine line',
-            x2: [`${window.innerWidth.toString()}px`, '0px']
+            x2: {
+                keyframes: [`${window.innerWidth.toString()}px`, '0px'],
+                params: {
+                    duration: {startPercent: 0, endPercent: 0.5}
+                }
+            }
         })
         
 

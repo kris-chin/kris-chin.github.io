@@ -12,6 +12,15 @@ interface Timeline {
     params?: Object
 }
 
+interface Keyframes {
+    keyframes: any[],
+    params?: Object //casted as KeyframesParams
+}
+
+interface KeyframesParams {
+    duration: {startPercent: number, endPercent: number} //determines the duration of the animation during scroll
+}
+
 const CSSTransformFunctionNames = ['translateX','translateY','translateZ','rotateX','rotateY','rotateZ','scaleX','scaleY','scaleZ']
 
 //Class that manages scroll and keyframe interpolation
@@ -61,6 +70,7 @@ export default class ScrollScene {
             var IS_ELEMENT = false; //flag for if we are working with a selected element
             var IS_TRANSFORM = false; //flag for if we are working with a css transform
             var IS_SVG = false; //flag for if we are working with a SVG
+            var localPercent = scrollPercent; //we use this for key-by-key animation
 
             //Point target for now. (if this is a css selector, we re-point this)
             var target : any = timeline.target;
@@ -87,7 +97,19 @@ export default class ScrollScene {
             }
             
             //Point to the array of keyframes provided in the argument
-            const keyframes = timeline[keyName] as any[];
+            var keyframes : (Array<any> | Keyframes); 
+            var params : KeyframesParams | undefined;
+
+            if (timeline[keyName] instanceof Array) keyframes = timeline[keyName] as any[]; //if only an array was inputted
+            else { //if an array wasn't inputted, we assume it's the Keyframes object
+                //Cast our input and get params
+                keyframes = (timeline[keyName] as Keyframes).keyframes;
+                params = (timeline[keyName] as Keyframes).params as KeyframesParams;
+
+                if (params === undefined){
+                    console.warn(`Params for '${keyName}' are not defined. If this was intentional, just use an array.`)
+                }
+            }
             var keyframeType : string;
             
             //Type guard AND an early check to see if every value is a number or string
@@ -99,11 +121,26 @@ export default class ScrollScene {
             if (target === undefined) {console.error(`Target for '${keyName}' may not exist`); continue;}
             if (target[keyName] === undefined && (!IS_TRANSFORM) ) {console.error(`Property '${keyName}' may not exist on %o`, target); continue;}
 
+            
+            //If we set the duration of the animation, we need to modify the scrollPercent
+            if (params && params.duration){
+                if (params.duration.startPercent === undefined) {console.error(`[${keyName}] startPercent is undefined`); continue;}
+                if (params.duration.endPercent === undefined) {console.error(`[${keyName}] endPercent is undefined`); continue;}
+
+                //Set scrollPercent relative to duration, only if we are past the start percent
+                if (scrollPercent >= params.duration.startPercent){
+                    localPercent = Math.min( ( (scrollPercent - params.duration.startPercent) / (params.duration.endPercent - params.duration.startPercent) ), 1);
+                }
+                else{ //if we are not past the scroll percent, we just keep the percent at 0
+                    localPercent = 0;
+                }
+            }
+
             //Evenly split the distance of keyframes
             //Round upwards so we can actually reach 1 when you add them all together
             const keyFrameDistance : number = Number((1/( keyframes.length - 1)).toFixed(5));
             //Get the current frame of the animation. We keep the decimals 
-            const frameNumber : number = scrollPercent/keyFrameDistance;
+            const frameNumber : number = localPercent/keyFrameDistance;
             const frameIndex : number = Math.floor(Number(frameNumber));
 
             //Declare the 'interpolated amount that we want to return
@@ -130,6 +167,7 @@ export default class ScrollScene {
                         case "number":
                             console.warn('I didn\'t build handling for pure numbers with CSS units. I know it\ts doable, but please use an array of strings.')
                             continue;
+                            break;
                         case "string":
                             //We may or may not have units attached to this string, so we should split it
                             const regex : RegExp = /(-?\d+)|(\D+)/gi;
