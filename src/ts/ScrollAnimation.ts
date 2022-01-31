@@ -24,7 +24,7 @@ export default class ScrollAnimation {
         this.s = new ScrollScene({
             onEnd: log,
             onStart : log1,
-            onPercent: {
+            abovePercent: {
                 0.9: log2,
                 0.25: log2,
                 0.7: log2

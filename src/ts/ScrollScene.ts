@@ -7,7 +7,7 @@
 interface ScrollSceneParams{
     onStart: Function, //callback when starting the scroll
     onEnd: Function, //callback when reaching the end of the scroll
-    onPercent: { [percentage : number] : unknown } //callbacks for on certain percent. Maxes at 2 decimal places
+    abovePercent: { [percentage : number] : unknown } //callbacks for on certain percent. Maxes at 2 decimal places
 }
 
 interface Timeline {
@@ -39,8 +39,7 @@ export default class ScrollScene {
     private onEnd : (Function | undefined) = undefined;
     private onStart : (Function | undefined) = undefined;
 
-    //onPercent's kinda funny, we store a map of maps. The first map is the first decimal while the second map is the second decimal.
-    private onPercent : (Array< {value: number, function: Function} > | undefined) = undefined;
+    private abovePercent : (Array< {value: number, function: Function} > | undefined) = undefined;
 
     constructor(scrollSceneParams?: Object){
         this.timelines = new Array<Timeline>();
@@ -48,16 +47,16 @@ export default class ScrollScene {
         const params = scrollSceneParams as ScrollSceneParams;
         if (params && params.onEnd) this.onEnd = params.onEnd;
         if (params && params.onStart) this.onStart = params.onStart;
-        if (params && params.onPercent){ //onpercent
-            const percentages = Object.keys(params.onPercent)
-            this.onPercent = new Array<{value: number, function: Function}>();
+        if (params && params.abovePercent){ //abovePercent
+            const percentages = Object.keys(params.abovePercent)
+            this.abovePercent = new Array<{value: number, function: Function}>();
             for (let percent of percentages){
-                const p = {value: Number(percent), function: params.onPercent[Number(percent)] as Function }
-                this.onPercent.push(p) //pushin' p
+                const p = {value: Number(percent), function: params.abovePercent[Number(percent)] as Function }
+                this.abovePercent.push(p) //pushin' p
             }
-            //Sort our onPercent so we can exit early if necessarily
+            //Sort our abovePercent so we can exit early if necessarily
             //Sorts from least to greatest
-            this.onPercent.sort( (firstEl, secondEl)=>{
+            this.abovePercent.sort( (firstEl, secondEl)=>{
                 if (firstEl.value > secondEl.value) return 1; //sort the first value before the second value
                 if (firstEl.value < secondEl.value) return -1; //sort the second value before the first value
                 return 0; //sort order stays the same
@@ -82,11 +81,11 @@ export default class ScrollScene {
         //ScrollScene-Specific params
         if ( (scrollPercent === 0) && (this.onStart !== undefined)) this.onStart();
         if ( (scrollPercent === 1) && (this.onEnd !== undefined) ) this.onEnd();
-        if ( this.onPercent !== undefined ){
+        if ( this.abovePercent !== undefined ){
             (() => { //use arrow syntax so we can use return in if blocks
                 
                 //Go through all of our percentages and determine if we should call our percent
-                for (let entry of this.onPercent){
+                for (let entry of this.abovePercent){
                     if (scrollPercent > entry.value)entry.function.call(this)
                     else break; //exit the for loop early
                 }
