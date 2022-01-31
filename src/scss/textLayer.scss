@@ -61,6 +61,10 @@ $mainFont : arial;
 
     #cameraDebug{
         width: 100vh;
+
+        #cameraDebug_warn{
+            color:red;
+        }
     }
 
     #objectDebug{

@@ -14,6 +14,7 @@ export default class CameraDebug extends DomText{
 
         return(
             <>
+                <p id = "cameraDebug_warn">CAMERA DEBUG MODE (mouseWheel is remapped)</p>
                 <p id = "cameraDebug_pos"></p>
                 <p id = "cameraDebug_qua"></p>
                 <p id = "cameraDebug_target"></p>
