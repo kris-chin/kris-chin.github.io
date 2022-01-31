@@ -9,7 +9,7 @@ export default class CameraDebug extends DomText{
         const target = this.base!.world.scene.controls.target;
 
         const log = () => {
-            console.log("%c Camera Position, Quaternion, & OrbitTarget: %o", "color: DarkOrchid", {"position": camera.position, "quaternion": camera.quaternion, "orbitTarget": target})
+            console.log("%c Camera Position, Quaternion, & OrbitTarget: %o", "color: DarkOrchid", JSON.parse(JSON.stringify({"position": camera.position, "quaternion": camera.quaternion, "orbitTarget": target})) )
         }
 
         return(

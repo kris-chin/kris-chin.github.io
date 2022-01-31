@@ -104,7 +104,7 @@ export default class name extends DomText{
     Render(params: DomParams): JSX.Element {
 
         const log = () =>{
-            console.log({
+            console.log(JSON.parse(JSON.stringify({
                 debug: true, //keep debug on just in case
                 uniqueId : this.co.uniqueId,
                 pos: {
@@ -122,7 +122,7 @@ export default class name extends DomText{
                     y: this.co.mesh!.scale.y,
                     z: this.co.mesh!.scale.z
                 }
-            })
+            })))
         }
 
         return(
