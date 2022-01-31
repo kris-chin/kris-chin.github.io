@@ -98,19 +98,16 @@ export class ScrollScene {
 
             //Evenly split the distance of keyframes
             //Round upwards so we can actually reach 1 when you add them all together
-            const keyFrameDistance : number = Number((1/( keyframes.length - 1)).toFixed(2));
+            const keyFrameDistance : number = Number((1/( keyframes.length - 1)).toFixed(5));
             //Get the current frame of the animation. We keep the decimals 
             const frameNumber : number = scrollPercent/keyFrameDistance;
             const frameIndex : number = Math.floor(Number(frameNumber));
 
             //Declare the 'interpolated amount that we want to return
-            var amt : number;
-
-            //Interpolate our value
-            if (frameIndex >= (keyframes.length - 1) ) amt = keyframes[frameIndex]; //if on last frame, just don't do calculations and use the last frame
-            else { 
-                //Guards
-                if (keyframes[frameIndex + 1 ] === undefined) continue; //Just-in-case error handling for valid array access
+            var amt : any = null;
+                
+            //Base-Case for calculating our Amount 
+            if (keyframes[frameIndex + 1 ] !== undefined){
 
                 //Get our two keys to interpolate from
                 const index0 = frameIndex;
@@ -154,42 +151,47 @@ export class ScrollScene {
 
                             //Do interpolation
                             const distance = k1 - k0;
-                            amt = k0 + distance*relative_percent;
+                            amt = (k0 + distance*relative_percent).toString() + units;
 
                             break;
                         default: continue;
                     }
 
-                    //Set the target's property to the interpolated value
-                    if (IS_TRANSFORM){
-                        //Check if the transform was already applied prior
-                        if ( (target.transform as string).includes(keyName) )  { //since target points to transform (a string), we can check it for our property
-                            //Since the transform already contains our property, we need to replace it
-                            const transformRegex : RegExp = new RegExp(`((${keyName})\\((.*?)\\))` ); //Selects the first occurance of the CSStransform
-
-                            //Replace the transform
-                            target['transform'] = (target.transform as string).replace(transformRegex, `${keyName}(${amt.toString() + units})`)
-                        }
-                        else {
-                            //Since the transform doesn't contain our property, we can just append it
-                            target['transform'] += ` ${keyName}(${amt.toString() + units})`
-                        }
-                    }
-                    else if (IS_SVG) (target as SVGElement).setAttribute(keyName, amt.toString() + units)
-                    else target[keyName] = amt.toString() + units
-
-                } else {
-
+                } else { //If we are just dealing with a number amount
                     //Commence Interpolation
                     const distance = keyframes[index1] - keyframes[index0]
                     amt = keyframes[index0] + distance*relative_percent
-
-                    //Now for the good stuff. Set our target's property to the interpolated value
-                    target[keyName] = amt;
-
                 }
-
+            } else {
+                //Edge-case for reaching the end of the animation
+                amt = keyframes[keyframes.length - 1] //assign to last keyframe
             }
+
+            //Now for the good stuff. Set our target's property to the interpolated value
+            if (IS_ELEMENT) {
+
+                //Set the target's property to the interpolated value
+                if (IS_TRANSFORM){
+                    //Check if the transform was already applied prior
+                    if ( (target.transform as string).includes(keyName) )  { //since target points to transform (a string), we can check it for our property
+                        //Since the transform already contains our property, we need to replace it
+                        const transformRegex : RegExp = new RegExp(`((${keyName})\\((.*?)\\))` ); //Selects the first occurance of the CSStransform
+
+                        //Replace the transform
+                        target['transform'] = (target.transform as string).replace(transformRegex, `${keyName}(${amt})`)
+                    }
+                    else {
+                        //Since the transform doesn't contain our property, we can just append it
+                        target['transform'] += ` ${keyName}(${amt})`
+                    }
+                }
+                else if (IS_SVG) (target as SVGElement).setAttribute(keyName, amt)
+                else target[keyName] = amt
+
+            } else { //if our amt was a number
+                target[keyName] = amt;
+            }
+
         }
     }
 }
