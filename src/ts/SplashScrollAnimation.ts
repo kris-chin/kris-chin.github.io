@@ -3,7 +3,7 @@ import World from './World'
 import ScrollScene from './ScrollScene';
 
 //World Class that manages the actual events
-export default class ScrollAnimation {
+export default class SplashScrollAnimation {
 
     world: World;
     trigger : boolean; //extend this to a bunch of different values
@@ -17,18 +17,10 @@ export default class ScrollAnimation {
         this.trigger = false;
 
         const log = () => console.log('End is called')
-        const log1 = () => console.log('Start is called')
-        const log2 = () => {if (!this.called){ console.log('Percent is called'); this.called = true} }
 
         //Instantiate and test something lol
         this.s = new ScrollScene({
             onEnd: log,
-            onStart : log1,
-            abovePercent: {
-                0.9: log2,
-                0.25: log2,
-                0.7: log2
-            }
         })
         .AddTimeline({
             target: this.world.scene.camera.position,
@@ -81,7 +73,7 @@ export default class ScrollAnimation {
         if (this.trigger){
 
             //Set the height of the root element, which enables the scrollbar
-            const heightValue = '200vh';
+            const heightValue = '800vh';
             let root = document.getElementById('root');
             if (root) root.style.height = heightValue
 
