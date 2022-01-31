@@ -8,13 +8,12 @@ interface Timeline {
     target: any,
     //This represents any new property.We treat it as a string.
     //As a note, I just learned that you can reference object propetries like a map/dict. that's crazy.
-    [ numericKeys : string ] : unknown, 
-    params?: Object
+    [ numericKeys : string ] : unknown
 }
 
 interface Keyframes {
     keyframes: any[],
-    params?: Object //casted as KeyframesParams
+    [ params : string ]: unknown, //casted as KeyframesParams
 }
 
 interface KeyframesParams {
@@ -64,8 +63,10 @@ export default class ScrollScene {
         for (let keyName of keys){
             //Skip known keys
             if (keyName === 'target') continue; //not an unknown key
-            if (keyName === 'params') continue; //not an unknown key
-
+            if (keyName === 'params') { //build timeline params
+                continue; //not an unknown key 
+            }
+                
             //Flags for property type
             var IS_ELEMENT = false; //flag for if we are working with a selected element
             var IS_TRANSFORM = false; //flag for if we are working with a css transform
@@ -98,13 +99,22 @@ export default class ScrollScene {
             
             //Point to the array of keyframes provided in the argument
             var keyframes : (Array<any> | Keyframes); 
-            var params : KeyframesParams | undefined;
+            var params : any | undefined;
 
             if (timeline[keyName] instanceof Array) keyframes = timeline[keyName] as any[]; //if only an array was inputted
             else { //if an array wasn't inputted, we assume it's the Keyframes object
                 //Cast our input and get params
                 keyframes = (timeline[keyName] as Keyframes).keyframes;
-                params = (timeline[keyName] as Keyframes).params as KeyframesParams;
+                params = new Object;
+
+                //Go through new keys and build params object
+                for (let paramName of Object.keys( (timeline[keyName] as Keyframes)) ){
+                    if (paramName === 'values') continue;
+                    params[paramName] = (timeline[keyName] as Keyframes)[paramName]
+                }
+
+                //Cast params as Keyframesparams
+                params = params as KeyframesParams;
 
                 if (params === undefined){
                     console.warn(`Params for '${keyName}' are not defined. If this was intentional, just use an array.`)

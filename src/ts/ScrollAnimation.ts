@@ -33,15 +33,11 @@ export default class ScrollAnimation {
              target: '#splashOverlay_div_scrollMessage',
              translateY: {
                     keyframes: ['0px', '-20px'],
-                    params: {
-                        duration: {startPercent: 0, endPercent: 0.1}
-                    }
+                    duration: {startPercent: 0, endPercent: 0.1}
             },
              opacity: {
                     keyframes: ['1','0'],
-                    params: {
-                        duration: {startPercent: 0, endPercent: 0.1}
-                    }
+                    duration: {startPercent: 0, endPercent: 0.1}
              }
         })
         .AddTimeline({
