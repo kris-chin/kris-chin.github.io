@@ -1,3 +1,10 @@
+/*
+    config.ts
+
+    configuration for the desktop code.
+    we access the engine's world object via the Animation function
+*/
+
 import anime from 'animejs'; 
 import Canvas from '../engine/Canvas'
 
@@ -41,7 +48,7 @@ var desktop = {
     behaviours: new Array<{name:string,factory:Function}>().concat(
         b1.behaviours, b2.behaviours, b3.behaviours),
     state_startingAnimations: {
-        '/test' : Animation //play this animation when on state '/
+        '/test' : Animation //play this animation when on state.
     }
 }
 

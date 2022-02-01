@@ -79,8 +79,8 @@ export default class ScrollScene {
         }
 
         //ScrollScene-Specific params
-        if ( (scrollPercent === 0) && (this.onStart !== undefined)) this.onStart();
-        if ( (scrollPercent === 1) && (this.onEnd !== undefined) ) this.onEnd();
+        if ( (scrollPercent <= 0) && (this.onStart !== undefined)) this.onStart();
+        if ( (scrollPercent >= 1) && (this.onEnd !== undefined) ) this.onEnd();
         if ( this.abovePercent !== undefined ){
             (() => { //use arrow syntax so we can use return in if blocks
                 
@@ -150,7 +150,7 @@ export default class ScrollScene {
             else { //if an array wasn't inputted, we assume it's the Keyframes object
                 //Cast our input and get params
                 keyframes = (timeline[keyName] as Keyframes).keyframes;
-                params = new Object;
+                params = {};
 
                 //Go through new keys and build params object
                 for (let paramName of Object.keys( (timeline[keyName] as Keyframes)) ){
@@ -222,7 +222,6 @@ export default class ScrollScene {
                         case "number":
                             console.warn('I didn\'t build handling for pure numbers with CSS units. I know it\ts doable, but please use an array of strings.')
                             continue;
-                            break;
                         case "string":
                             //We may or may not have units attached to this string, so we should split it
                             const regex : RegExp = /(-?\d+)|(\D+)/gi;

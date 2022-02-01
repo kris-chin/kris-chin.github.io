@@ -6,7 +6,7 @@
 import anime from 'animejs'
 import World from '../../../engine/World';
 
-import SplashScrollAnimation from './splash/SplashScrollAnimation';
+import ScrollAnimation from './ScrollAnimation';
 
 
 export function Animation(world: World){
@@ -15,7 +15,7 @@ export function Animation(world: World){
     var timeline = anime.timeline();
     const statue = world.GetSceneObjectById("splashStatue")
 
-    const ani = new SplashScrollAnimation(world); //create a new object that points to scroll
+    const ani = new ScrollAnimation(world); //create a new object that points to scroll
 
     timeline
     .add({ //Top Line
