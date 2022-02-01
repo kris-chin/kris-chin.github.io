@@ -1,0 +1,105 @@
+//Colorscheme variales
+$mainText : #001219;
+$highlightText1: #0A9396;
+$highlightText2: #9B2226;
+$backgroundColor: #EE9B00;
+
+//Font Vriables
+$mainFont : arial;
+
+//Overlay that spawns alongside splashPage
+#splashOverlay {
+    position: absolute;
+
+    svg {
+        position: absolute;
+    }
+
+    //These are the initial Y positions of our SVG Lines
+    #splashOverlay_svg_topLine{
+        transform: translateY(5vh);
+    }
+    #splashOverlay_svg_bottomLine{
+        transform: translateY(95vh);
+    }
+
+    
+    //Scroll to enter text
+    #splashOverlay_div_scrollMessage_wrapper{
+        //Position at center-bottom
+        top:50%;
+        left:50%;
+        transform: translate(-50%,-50%) translate(50vw, 93vh);
+
+        #splashOverlay_div_scrollMessage{
+            position: relative;
+            display: flex;
+            font-family: $mainFont;
+
+            //per-character styles 
+            p {
+                margin: 0em;
+                padding: 0em;
+                font-size: 1.5em;
+            }
+
+            .staggerText_space{
+                padding-right: 0.5em;
+            }
+        }
+    }
+    
+}
+
+//Projection Text Splash Page Styling
+#splashPage {
+
+    #splashPage_div_tagline{
+        width:15em;
+        height:15em;
+        display: flex;
+        flex-direction: column;
+
+        //Name on splash page
+        #splashPage_div_name{
+            font-family: $mainFont;  //custom font is defined in index.html 'Archivo Black'
+            width: 100em;
+            display: inline-flex; //make all h1 in this inline
+            position:static; //enable regular positioning
+            
+            //Settings for the div to look the same
+            div {
+                display: inline-flex;
+                position:static;
+            }
+
+            #splashPage_div_firstName{
+                padding-right: 3em;
+            }
+
+            h1{
+                font-size: 6em;
+                .staggerText{
+                    margin: 0em;
+                    padding: 0em;
+                }
+            }
+
+        }
+
+        //The set of text underneath my name
+        #splashPage_div_caption{
+            width: 25em;
+            font-size: 2em;
+            font-family: $mainFont, 'Times New Roman';
+            display: inline-block;
+            position: static; //enable regular positioning
+
+            //The smaller part of the caption
+            #splashPage_p_2{
+                text-transform: lowercase;
+                font-size: 0.7em;
+            }
+        }
+    }
+}
