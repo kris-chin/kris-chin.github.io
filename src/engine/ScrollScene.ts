@@ -129,16 +129,16 @@ export default class ScrollScene {
                 IS_ELEMENT = true; //set flag to signfiy that we are working with a style
 
                 //Set targetting depending on the type of target
-                if (target instanceof SVGElement ) {
+                if (target instanceof SVGElement ) { 
                     IS_SVG = true;
                 }
                 //If A transform function was provided as a property
-                else if (CSSTransformFunctionNames.some((testString)=>{ return(testString === keyName)} ) ) {
+                if (CSSTransformFunctionNames.some((testString)=>{ return(testString === keyName)} ) ) {
                     IS_TRANSFORM = true; //set flag
                     target = (target as HTMLElement).style //point to style for now
                 } 
                 else {
-                    target = (target as HTMLElement).style //get style
+                    if (!IS_SVG) target = (target as HTMLElement).style //get style
                 }
             }
             
