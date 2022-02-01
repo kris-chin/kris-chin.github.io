@@ -139,6 +139,14 @@ export default class ScrollScene {
                 } 
                 else {
                     if (!IS_SVG) target = (target as HTMLElement).style //get style
+                    else {
+                        //If we have an SVG and we provided a valid CSS proprety?
+                        if (target.style[keyName] !== undefined){
+                            target = (target as HTMLElement).style
+                            IS_SVG = false; //unset SVG
+                        }
+                        
+                    }
                 }
             }
             
