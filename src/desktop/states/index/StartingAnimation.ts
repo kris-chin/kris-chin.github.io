@@ -20,14 +20,14 @@ export function Animation(world: World){
     timeline
     .add({ //Top Line
         targets: `#${id2}_svg_topLine line`,
-        x1: [0, 0],
-        x2: [0, window.innerWidth], //NOTE: there's a bug where if you start the screen small and then resize, this doesn't update
+        x1: [window.innerWidth*0.05, window.innerWidth*0.05],
+        x2: [window.innerWidth*0.05, window.innerWidth*0.95], //NOTE: there's a bug where if you start the screen small and then resize, this doesn't update
         easing: 'easeInOutQuart'
     },0)
     .add({ //Bottom Line
         targets: `#${id2}_svg_bottomLine line`,
-        x2: [window.innerWidth, window.innerWidth], //Do be aware that this doesn't update when you resize from small to big
-        x1: [window.innerWidth, 0],
+        x2: [window.innerWidth*0.95, window.innerWidth*0.95], //Do be aware that this doesn't update when you resize from small to big
+        x1: [window.innerWidth*0.95, window.innerWidth*0.05],
         easing: 'easeInOutQuart'
     },0)
     .add({ //KRISCHIN LAYON

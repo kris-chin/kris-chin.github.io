@@ -27,8 +27,8 @@ export default class SplashOverlay extends DomText{
     Render(params: DomParams): JSX.Element {
         return(
             <>
-                <Line id={`${params.elementId}_svg_topLine`} width={window.innerWidth} />
-                <Line id={`${params.elementId}_svg_bottomLine`} width={window.innerWidth} />
+                <Line id={`${params.elementId}_svg_topLine`} width={window.innerWidth} height={window.innerHeight} />
+                <Line id={`${params.elementId}_svg_bottomLine`} width={window.innerWidth} height={window.innerHeight}/>
                 <div id={`${params.elementId}_div_scrollMessage_wrapper`}>
                     <div id={`${params.elementId}_div_scrollMessage`}>
                         {StaggerText("scroll to enter")}
