@@ -12,19 +12,24 @@ import Canvas from '../engine/Canvas'
 import desktop_world from './desktop_world.json';
 import models from './models.json';
 
-//Behaviours:
-import * as b1 from './globalBehaviours/_behaviours'
-import * as b2 from './states/index/genericBehaviours/_behaviours'
-import * as b3 from './states/index/splash/_behaviours'
-import * as b4 from './states/index/showcase/_behaviours';
-
 //Animations:
 import { Animation } from './states/index/StartingAnimation'
 
-//Concat Behaviours
+//Import behaviours, this part is updated with a script.
+//################################################################
+//[BEGIN_BEHAVIOURS]
+import * as b1 from './globalBehaviours/_behaviours';
+import * as b2 from './states/index/genericBehaviours/_behaviours';
+import * as b3 from './states/index/splash/_behaviours';
+import * as b4 from './states/index/showcase/_behaviours';
 const behaviours = new Array<{name:string,factory:Function}>().concat(
-    b1.behaviours, b2.behaviours, b3.behaviours, b4.behaviours
+    b1.behaviours,
+    b2.behaviours,
+    b3.behaviours,
+    b4.behaviours
 )
+//[END_BEHAVIOURS]
+//################################################################
  
 //Export stuff for index.js to pass into engine
 var desktop = {

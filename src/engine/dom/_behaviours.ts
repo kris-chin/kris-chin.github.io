@@ -1,8 +1,12 @@
+/*
+    THIS CODE IS GENERATED WITH A SCRIPT. DO NOT EDIT.
+*/
 import SceneObject from '../SceneObject'
-
+//[BEGIN_BEHAVIOURS]
 import CameraDebug from './CameraDebug';
 import ProjectionText from './ProjectionText';
 import ObjectDebug from './ObjectDebug';
+//[END_BEHAVIOURS]
 
 var behaviours : {name:string, factory: Function}[] = [
     { 
