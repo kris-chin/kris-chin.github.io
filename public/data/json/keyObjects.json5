@@ -103,5 +103,14 @@
         "sceneObject":{
             "behaviours" : [{"name": "ObjectDebug", "params":{"elementId": "objectDebug"} }]
         }
+    },
+    {
+        "name" : "showcase_Website",
+        "sceneObject":{
+            "geometry" : "box",
+            "behaviours" : [
+                {"name": "showcase_Website", "params":{"elementId": "showcase_Website"} },
+            ]
+        }
     }
 ]
