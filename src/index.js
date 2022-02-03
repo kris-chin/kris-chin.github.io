@@ -10,6 +10,7 @@ import './engine/scss/textLayer.scss';
 //Desktop Imports
 import { desktop } from './desktop/config';
 import './desktop/scss/splashPage.scss';
+import './desktop/scss/showcase.scss'
 
 //General config
 import config from './config';

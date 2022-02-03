@@ -5,7 +5,9 @@ import SceneObject from '../../engine/SceneObject'
 //[BEGIN_BEHAVIOURS]
 import AmbientLight from './AmbientLight';
 import DirectionalLight from './DirectionalLight';
+import DebugScroll from './DebugScroll';
 //[END_BEHAVIOURS]
+
 
 var behaviours : {name:string, factory: Function}[] = [
     { 
@@ -15,6 +17,10 @@ var behaviours : {name:string, factory: Function}[] = [
     { 
         name: 'DirectionalLight',
         factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new DirectionalLight(parent,params)}
+    },
+    {
+	name: 'DebugScroll',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new DebugScroll(parent,params)}
     }
 ]
 

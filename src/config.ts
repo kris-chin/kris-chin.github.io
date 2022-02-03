@@ -7,6 +7,7 @@
 var config = {
     CONTROLS : false, //enable full orbit controls?
     DEBUG_MODE: false, //enable object debug mode?
+    SHOW_SCROLL: true //for desktop, shows scroll percent
 }
 
 export default config;

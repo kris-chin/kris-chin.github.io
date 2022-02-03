@@ -1,0 +1,25 @@
+//Colorscheme variales
+$mainText : #001219;
+$highlightText1: #0A9396;
+$highlightText2: #9B2226;
+$backgroundColor: #EE9B00;
+
+//Font Vriables
+$mainFont : arial;
+
+//Keep all text regarding the showcase transparent when not in animation
+.showcaseText {
+    opacity: 0;
+}
+
+//Debug Scroll Text
+#DebugScroll {
+
+    p{
+        display:block;
+    }
+
+    #DebugScroll_warn{
+        color: red
+    }
+}

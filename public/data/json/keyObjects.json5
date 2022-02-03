@@ -93,5 +93,18 @@
             geometry: "box",
             behaviours: [{name:"showcase_Website",params:{elementId:"showcase_Website",},},],
         },
-    }
+    },
+    {
+        name: "showcase_MCMC",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_MCMC",params:{elementId:"showcase_MCMC",},},],
+        },
+    },
+    {
+        name: "DebugScroll",
+        sceneObject: {
+            behaviours: [{name:"DebugScroll",params:{elementId:"DebugScroll",},},],
+        },
+    },
 ]

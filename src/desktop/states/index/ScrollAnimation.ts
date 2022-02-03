@@ -8,12 +8,17 @@
 
 import World from '../../../engine/World'
 import ScrollScene from '../../../engine/ScrollScene';
+import DebugScroll from '../../globalBehaviours/DebugScroll'
+
+//Entire source config
+import config from '../../../config'
 
 //World Class that manages the actual events
 export default class ScrollAnimation {
 
     world: World;
     private trigger : boolean; //Trigger to determine when to enable scroll. Access with ToggleTrigger()
+    private debug : DebugScroll | null = null;
 
     //Scroll Animations
     private splash : ScrollScene; //Splash Screne
@@ -32,6 +37,12 @@ export default class ScrollAnimation {
     constructor(world: World){ //
         this.world = world;
         this.trigger = false;
+
+        //Add a debug object if enabled
+        if (config.SHOW_SCROLL) {
+            const debugObject = this.world.AddObject({key:'DebugScroll', state: this.world.GetState()})
+            if (debugObject) this.debug = debugObject.behaviours![0] as DebugScroll
+        }
 
         //Point to different scroll Animiations
         this.splash = this.SplashScreen(this.splashLength);
@@ -72,32 +83,33 @@ export default class ScrollAnimation {
 
         //First get the percent of the document scrolled
         var scroll_percent = (window.scrollY / (document.body.clientHeight - window.innerHeight) );
+        var local_percent = 1;
 
         //Next, determine the current scene and determine relative percent
         if (!this.splash_reachedEnd) { //if in splash animation
             //Calculate Relative percent
             const startPercent = 0;
             const endPercent = this.splashLength/this.heightValue;
-            scroll_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
+            local_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
 
             //Apply splash animation
-            this.splash.ApplyAnimations( scroll_percent )
+            this.splash.ApplyAnimations( local_percent )
         }
         else if (!this.showcase_reachedEnd) { //if in showcase
             //Calculate relative percent 
             const startPercent = this.splashLength/this.heightValue;
             const endPercent = 0.75; //leave at 0.75 for now so we can see the scene without messing up camera movement
-            scroll_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
+            local_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
 
             //Apply showcase animation
-            this.showcase.ApplyAnimations( scroll_percent )
+            this.showcase.ApplyAnimations( local_percent )
 
         }
         else { //if at the end
             console.log('youre at the end')
         }
     
-
+        if (this.debug) this.debug.Update_Text(scroll_percent, local_percent)
     }
 
     //Animations
@@ -243,7 +255,7 @@ export default class ScrollAnimation {
             this.splash_reachedEnd = false;
         }
 
-        return new ScrollScene({
+        var scene = new ScrollScene({
             onStart: toggleStart,
             onEnd: toggleEnd
         })
@@ -266,8 +278,33 @@ export default class ScrollAnimation {
             y: [1.5082746433802394, 1.7738653148592478], 
             z: [7.9505219613602955, 25.18551143720863]
         })
+
+        //Decorate with all of our showcases
+        const Website = (scrollScene: ScrollScene) => {
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_Website div",
+                opacity: ['0', '1']
+            });
+
+            return scrollScene
+        }
+
+        const MCMC = (scrollScene: ScrollScene) => {
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_MCMC div",
+                opacity: ['0', '1']
+            })
+            return scrollScene
+        }
+
+
+        //Add all of our showscases to the scene
+        scene = Website(scene)
+        scene = MCMC(scene)
+
+        return scene;
     }
-
-
 
 }
