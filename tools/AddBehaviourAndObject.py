@@ -90,7 +90,7 @@ if match == None:
 
 #With our import list, add our new class in the import spot
 raw_match = match.group(1).replace('\n','') #remove newlines
-raw_match += "import " + className + " from './" + className + "';"
+raw_match += "import " + className + " from './" + fileName.split('.')[0] + "';"
 raw_match = raw_match.replace(';',';\n') #add newlines
 raw_match = "//[BEGIN_BEHAVIOURS]\n" + raw_match + "//[END_BEHAVIOURS]\n" #re-add formatting to beginning of string
 data_behaviours = data_behaviours.replace(match.group(0), raw_match) #Finish our change by replacing the section in the original file
