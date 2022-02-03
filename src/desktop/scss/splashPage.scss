@@ -53,6 +53,7 @@ $mainFont : arial;
 
 //Projection Text Splash Page Styling
 #splashPage {
+    z-index: 100; //The splash page text isn't selectable unless you chnage this
 
     #splashPage_div_tagline{
         width:15em;
