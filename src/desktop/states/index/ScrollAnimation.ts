@@ -236,7 +236,13 @@ export default class ScrollAnimation {
                 duration: {startPercent: 0, endPercent: 0.25}
             }
         })
-        
+        .AddTimeline({
+            target: '#showcase_Website div', //The first part of the showcase
+            opacity: {
+                keyframes: ['0', '1'],
+                duration: {startPercent: 0.5, endPercent: 1}
+            }
+        })
     }
 
     private Showcase(valueIncrement: number) : ScrollScene {
@@ -284,7 +290,10 @@ export default class ScrollAnimation {
             scrollScene
             .AddTimeline({
                 target: "#showcase_Website div",
-                opacity: ['0', '1']
+                opacity: {
+                    keyframes: ['1', '0'],
+                    duration: {startPercent: 0.5, endPercent: 1}
+                }
             });
 
             return scrollScene
@@ -294,7 +303,10 @@ export default class ScrollAnimation {
             scrollScene
             .AddTimeline({
                 target: "#showcase_MCMC div",
-                opacity: ['0', '1']
+                opacity: {
+                    keyframes: ['0', '1'],
+                    duration: {startPercent: 0.5, endPercent: 1}
+                }
             })
             return scrollScene
         }
