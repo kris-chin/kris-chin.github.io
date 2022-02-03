@@ -208,9 +208,12 @@ export default class ScrollScene {
 
             //Declare the 'interpolated amount that we want to return
             var amt : any = null;
+
+            //Not sure why, but this happens sometimes. Might be a consequence of having a negative frameIndex from a different scrollscene?
+            if (keyframes[frameIndex] === undefined) continue;
                 
             //Base-Case for calculating our Amount 
-            if ((keyframes[frameIndex] !== undefined) && (keyframes[frameIndex + 1 ] !== undefined)){
+            if (keyframes[frameIndex + 1 ] !== undefined){
 
                 //Get our two keys to interpolate from
                 const index0 = frameIndex;
