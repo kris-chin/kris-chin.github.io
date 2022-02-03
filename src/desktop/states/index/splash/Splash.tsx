@@ -43,20 +43,16 @@ export default class Splash extends ProjectionText {
         super.Animate(); //Call the Projection text Animation
 
         //shorthand consts
-        //const sX = this.screenX; //x position on screen
-        //const sY = this.screenY; //y position on screen
+        const sX = this.screenX; //x position on screen
+        const sY = this.screenY; //y position on screen
         const iW = window.innerWidth; //width of viewport
         const iH = window.innerHeight; //height of viewport
         
         //Get all of our objects
         const div_tagline = document.getElementById(`${params.elementId}_div_tagline`)
-        //const h1_1 = document.getElementById(`${params.elementId}_h1_1`)
-        //const p_1 = document.getElementById(`${params.elementId}_p_1`)
-        //const p2_2 = document.getElementById(`${params.elementId}_p2_2`)
-
         //Align our objects
         //NOTE: using sX and sY is good for being responsive for mobile but this has to be a different value once you are moving
-        if (div_tagline) div_tagline.style.transform = translate3d({x:0,y:-250,z:0},"px")
+        if (div_tagline) div_tagline.style.transform = translate3d({x:(iW * 0.05) - sX, y: (iH*0.4) - sY,z:0},"px")
     }
 
 }
