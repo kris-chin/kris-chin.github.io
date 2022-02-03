@@ -71,11 +71,11 @@ export default class ScrollScene {
     }
 
     //Interpolates keyframes for every timeline in the ScrollScene
-    public ApplyAnimations(scrollPercent: number){
+    public ApplyAnimations(scrollPercent: number, snap?: boolean){
 
         //Go through every timeline and applt interpolation
         for (let timeline of this.timelines){
-            this.InterpolateKeyframes(timeline, scrollPercent);
+            this.InterpolateKeyframes(timeline, scrollPercent, snap);
         }
 
         //ScrollScene-Specific params
@@ -99,7 +99,7 @@ export default class ScrollScene {
     //  1. Figure out which keyframe range the percent is in.
     //  2. Determine the Relative position that the percent is between the two keyframes
     //  3. Interpolate the two keyframes and then apply to the timeline's parameters
-    private InterpolateKeyframes(timeline: Timeline, scrollPercent : number){
+    private InterpolateKeyframes(timeline: Timeline, scrollPercent : number, snap?: boolean){
 
         //Get the timeline object keys
         const keys = Object.keys(timeline)
@@ -203,7 +203,8 @@ export default class ScrollScene {
             //Round upwards so we can actually reach 1 when you add them all together
             const keyFrameDistance : number = Number((1/( keyframes.length - 1)).toFixed(5));
             //Get the current frame of the animation. We keep the decimals 
-            const frameNumber : number = localPercent/keyFrameDistance;
+            var frameNumber : number = localPercent/keyFrameDistance;
+            if (snap) frameNumber = Math.floor(frameNumber)
             const frameIndex : number = Math.floor(Number(frameNumber));
 
             //Declare the 'interpolated amount that we want to return

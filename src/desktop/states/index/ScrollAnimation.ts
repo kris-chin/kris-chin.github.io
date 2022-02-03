@@ -93,7 +93,7 @@ export default class ScrollAnimation {
             local_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
 
             //Apply splash animation
-            this.splash.ApplyAnimations( local_percent )
+            this.splash.ApplyAnimations( local_percent, config.SCROLL_SNAP)
         }
         else if (!this.showcase_reachedEnd) { //if in showcase
             //Calculate relative percent 
@@ -102,7 +102,7 @@ export default class ScrollAnimation {
             local_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
 
             //Apply showcase animation
-            this.showcase.ApplyAnimations( local_percent )
+            this.showcase.ApplyAnimations( local_percent, config.SCROLL_SNAP)
 
         }
         else { //if at the end
