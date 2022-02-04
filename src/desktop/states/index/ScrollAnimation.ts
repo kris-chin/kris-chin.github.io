@@ -237,10 +237,69 @@ export default class ScrollAnimation {
             }
         })
         .AddTimeline({
+            target: '#ShowcaseOverlay_p_sectionTitle',
+            translateY: {
+                keyframes: ['-1em', '0em'],
+                duration: {startPercent: 0.5, endPercent: 1}
+            }
+        })
+        .AddTimeline({
             target: '#showcase_Website div', //The first part of the showcase
             opacity: {
                 keyframes: ['0', '1'],
                 duration: {startPercent: 0.5, endPercent: 1}
+            }
+        })
+        .AddTimeline({
+            target: '.ShowcaseOverlay_div_property p',
+            translateX: {
+                keyframes: ['5em', '0em'],
+                duration: {startPercent: 0.5, endPercent: 1}
+            }
+        })
+        .AddTimeline({
+            target: '#ShowcaseOverlay_svg_a',
+            translateX: ['-3em', '-3em'],
+            translateY: {
+                keyframes: ['100vh', '80vh', '0vh'],
+                duration: {startPercent:0.3, endPercent:0.7}
+            }
+        })
+        .AddTimeline({
+            target: '#ShowcaseOverlay_svg_b',
+            translateX: ['-3em', '-3em'],
+            translateY: {
+                keyframes: ['100vh', '80vh', '0vh'],
+                duration: {startPercent:0.4, endPercent:0.8}
+            }
+        })
+        .AddTimeline({
+            target: '#ShowcaseOverlay_svg_c',
+            translateX: ['-3em', '-3em'],
+            translateY: {
+                keyframes: ['100vh', '80vh', '0vh'],
+                duration: {startPercent:0.5, endPercent:0.9}
+            }
+        })
+        .AddTimeline({
+            target: '#ShowcaseOverlay_a_a',
+            opacity: {
+                keyframes: ['0', '1'],
+                duration: {startPercent:0.7, endPercent:0.8}
+            }
+        })
+        .AddTimeline({
+            target: '#ShowcaseOverlay_a_b',
+            opacity: {
+                keyframes: ['0', '1'],
+                duration: {startPercent:0.8, endPercent:0.9}
+            }
+        })
+        .AddTimeline({
+            target: '#ShowcaseOverlay_a_c',
+            opacity: {
+                keyframes: ['0', '1'],
+                duration: {startPercent:0.9, endPercent:1}
             }
         })
     }

@@ -42,13 +42,17 @@ $mainFont : arial;
             font-size: 1.75em;
             padding-bottom: 0.1em;
             font-weight: bold;
+
+            a{
+                opacity: 0; //updated with animation
+            }
             
             //Standardize the sizes of the icons and move them
             svg{
                 width: 1em;
                 height: 1em;
                 padding-left: 1em;
-                transform: translateX(-3em);
+                transform: translate(-3em, 100vh);
                 position:absolute;
             }
         }
@@ -62,12 +66,21 @@ $mainFont : arial;
         text-align:right;
         transform: translate(calc(95vw - $width - 1vw), 5vh);
 
-        #ShowcaseOverlay_p_sectionTitle{
+        #ShowcaseOverlay_div_sectionTitleWrapper{
             display:block;
             position:relative;
-            width:10em;
-            font-size:4em;
+            overflow:hidden;
+            width:30em;
             float:right;
+
+            
+            #ShowcaseOverlay_p_sectionTitle{
+                width:100%;
+                font-size:4em;
+                float:right;
+
+                transform: translateY(-1em); //start hidden
+            }
         }
 
 
@@ -82,8 +95,23 @@ $mainFont : arial;
                 width:20em;
                 display:block;
                 float:right; //get these elements within the div to align right
+                overflow:hidden;
+                
+                //Wrapper for the "overwrite" effect
+                div {
+                    position:relative;
+                    display:inline-block;
+                    padding-left: 0.5em;
+                    width: 0%; //we ALSO modify this value aalongside the P for an "overwrite" effect
 
+                    //This is the value that is "overwritten"
+                    .ShowcaseOverlay_p_overWrite{
+                        width:0%; //We modify this value to give a "overwrite" effect
+                        padding-left: 0em; //We don't want extra padding
+                    }
+                }
                 p {
+                    transform: translateX(5em); //start hidden
                     display:inline-block;
                     padding-left: 0.5em;
                 }
