@@ -12,6 +12,7 @@ import DebugScroll from '../../globalBehaviours/DebugScroll'
 
 //Entire source config
 import config from '../../../config'
+import ShowcaseOverlay, {ProjectData} from './showcase/ShowcaseOverlay';
 
 //World Class that manages the actual events
 export default class ScrollAnimation {
@@ -19,6 +20,7 @@ export default class ScrollAnimation {
     world: World;
     private trigger : boolean; //Trigger to determine when to enable scroll. Access with ToggleTrigger()
     private debug : DebugScroll | null = null;
+    private showcaseOverlay : ShowcaseOverlay; //we instantiate a showcase overlay on construction and point to it
 
     //Scroll Animations
     private splash : ScrollScene; //Splash Screne
@@ -43,6 +45,9 @@ export default class ScrollAnimation {
             const debugObject = this.world.AddObject({key:'DebugScroll', state: this.world.GetState()})
             if (debugObject) this.debug = debugObject.behaviours![0] as DebugScroll
         }
+
+        //Create a showcase overlay object and point to it for later
+        this.showcaseOverlay = this.world.AddObject({key: 'ShowcaseOverlay', state: this.world.GetState()})?.behaviours![0] as ShowcaseOverlay
 
         //Point to different scroll Animiations
         this.splash = this.SplashScreen(this.splashLength);
@@ -123,7 +128,7 @@ export default class ScrollAnimation {
         }
 
         return new ScrollScene({
-            onEnd: toggleEnd,
+            onEnd: {enter: toggleEnd},
         })
         .AddTimeline({
             target: this.world.scene.camera.position,
@@ -307,22 +312,28 @@ export default class ScrollAnimation {
     private Showcase(valueIncrement: number) : ScrollScene {
         //Allocate space for our page
         this.heightValue += valueIncrement;
-
-        //If we reached the end, we reached the end
-        const toggleEnd = () => {
-            // if (this.showcase_reachedEnd) return;
-            // this.showcase_reachedEnd = true;
+        const websiteData : ProjectData = {
+            name: 'krischinlayon.com',
+            year: '2022',
+            categories: ['frontend']
         }
 
-        //HACK: If you wanna make this scalable, you cant be doing this and referring to the splash var
-        const toggleStart = () => {
-            if (!this.splash_reachedEnd) return;
-            this.splash_reachedEnd = false;
+        const mcmcData : ProjectData = {
+            name: 'MCMCSE',
+            year: '2021',
+            categories: ['backend']
         }
+
+        const moveToSplash = () => {
+            this.showcaseOverlay.Clear()   
+            this.splash_reachedEnd = false;   
+        }
+        
+        //FIXME: If you enter the second update, and then JUMP back to the start, the wrong function is called
 
         var scene = new ScrollScene({
-            onStart: toggleStart,
-            onEnd: toggleEnd
+            onStart: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(websiteData)},leave: moveToSplash},
+            onEnd: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(mcmcData)}, leave: ()=>{this.showcaseOverlay.UpdateSectionData(websiteData)}}
         })
         .AddTimeline({
             target: this.world.scene.camera.position,

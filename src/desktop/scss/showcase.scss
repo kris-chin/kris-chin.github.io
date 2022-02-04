@@ -101,21 +101,29 @@ $mainFont : arial;
                 div {
                     position:relative;
                     display:inline-block;
-                    padding-left: 0.5em;
-                    width: 0%; //we ALSO modify this value aalongside the P for an "overwrite" effect
-
-                    //This is the value that is "overwritten"
-                    .ShowcaseOverlay_p_overWrite{
-                        width:0%; //We modify this value to give a "overwrite" effect
-                        padding-left: 0em; //We don't want extra padding
-                    }
                 }
                 p {
                     transform: translateX(5em); //start hidden
                     display:inline-block;
-                    padding-left: 0.5em;
+                    //padding-left: 0.5em;
                 }
             }
         }
     }
+}
+
+//class for overwrite animation
+.overwrite {
+    width: 0%;
+    white-space: nowrap;
+}
+
+//label in overlay
+.label {
+    padding-right: 0.5em;
+}
+
+//the upper div for the proprty value
+.propertyValue {
+    width: 0%;
 }
