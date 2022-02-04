@@ -5,7 +5,9 @@ import SceneObject from '../../../../engine/SceneObject'
 //[BEGIN_BEHAVIOURS]
 import showcase_Website from './showcase_Website';
 import showcase_MCMC from './showcase_MCMCSE';
+import ShowcaseOverlay from './ShowcaseOverlay';
 //[END_BEHAVIOURS]
+
 
 
 
@@ -18,6 +20,10 @@ var behaviours : {name:string, factory: Function}[] = [
     {
 	name: 'showcase_MCMC',
 	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new showcase_MCMC(parent,params)}
+    },
+    {
+	name: 'ShowcaseOverlay',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new ShowcaseOverlay(parent,params)}
     }
 ]
 

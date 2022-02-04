@@ -107,4 +107,10 @@
             behaviours: [{name:"DebugScroll",params:{elementId:"DebugScroll",},},],
         },
     },
+    {
+        name: "ShowcaseOverlay",
+        sceneObject: {
+            behaviours: [{name:"ShowcaseOverlay",params:{elementId:"ShowcaseOverlay",},},],
+        },
+    },
 ]

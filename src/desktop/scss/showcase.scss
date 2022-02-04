@@ -23,3 +23,71 @@ $mainFont : arial;
         color: red
     }
 }
+
+//Overlay shown in showcase
+#ShowcaseOverlay {
+    font-family: $mainFont;
+
+    //Left side of the overlay
+    #ShowcaseOverlay_div_links {
+        $width: 10em;
+        width: $width;
+
+        transform: translate(5vw + 0.5vw, 5vh);
+
+        .ShowcaseOverlay_div_link{
+            display: block;
+            position:relative;
+            width: 10em;
+            font-size: 1.75em;
+            padding-bottom: 0.1em;
+            font-weight: bold;
+            
+            //Standardize the sizes of the icons and move them
+            svg{
+                width: 1em;
+                height: 1em;
+                padding-left: 1em;
+                transform: translateX(-3em);
+                position:absolute;
+            }
+        }
+    }
+
+    //Right side of the overlay
+    #ShowcaseOverlay_div_sectionInfo {
+        $width: 10em;
+
+        width: $width;
+        text-align:right;
+        transform: translate(calc(95vw - $width - 1vw), 5vh);
+
+        #ShowcaseOverlay_p_sectionTitle{
+            display:block;
+            position:relative;
+            width:10em;
+            font-size:4em;
+            float:right;
+        }
+
+
+        #ShowcaseOverlay_div_sectionData {
+            width:100%;
+            display:block;
+            position:relative;
+            font-size:1.5em;
+
+            .ShowcaseOverlay_div_property{
+                position:relative;
+                width:20em;
+                display:block;
+                float:right; //get these elements within the div to align right
+
+                p {
+                    display:inline-block;
+                    padding-left: 0.5em;
+                }
+            }
+        }
+    }
+}
