@@ -4,10 +4,16 @@
     Handles Computations for scroll interpolation
 */
 
+//Simple interface for an enter and leave funcion
+interface doubleFunction {
+    enter: Function | undefined,
+    leave: Function | undefined
+}
+
 interface ScrollSceneParams{
-    onStart: Function, //callback when starting the scroll
-    onEnd: Function, //callback when reaching the end of the scroll
-    abovePercent: { [percentage : number] : unknown } //callbacks for on certain percent. Maxes at 2 decimal places
+    onStart: doubleFunction, //callback when starting the scroll
+    onEnd: doubleFunction, //callback when reaching the end of the scroll
+    onPercent: { [percentage : number] : unknown }, //callbacks for on certain percent. Maxes at 2 decimal places
 }
 
 interface Timeline {
@@ -27,6 +33,20 @@ interface KeyframesParams {
     duration: {startPercent: number, endPercent: number} //determines the duration of the animation during scroll
 }
 
+enum CallbackState {
+    NOT_PLAYED,
+    PASSED,
+    RETRACTED
+}
+
+//Interface for function callbacks
+interface Callback {
+
+    functions: doubleFunction,
+    state : CallbackState
+
+}
+
 const CSSTransformFunctionNames = ['translateX','translateY','translateZ','rotateX','rotateY','rotateZ','scaleX','scaleY','scaleZ']
 
 //Class that manages scroll and keyframe interpolation
@@ -36,32 +56,34 @@ const CSSTransformFunctionNames = ['translateX','translateY','translateZ','rotat
 export default class ScrollScene {
 
     private timelines : Array<Timeline>
-    private onEnd : (Function | undefined) = undefined;
-    private onStart : (Function | undefined) = undefined;
-
-    private abovePercent : (Array< {value: number, function: Function} > | undefined) = undefined;
+    private onPercent : (Array< {value: number, callback: Callback} > | undefined) = undefined; //handling for all percents
 
     constructor(scrollSceneParams?: Object){
         this.timelines = new Array<Timeline>();
         //Handle params
         const params = scrollSceneParams as ScrollSceneParams;
-        if (params && params.onEnd) this.onEnd = params.onEnd;
-        if (params && params.onStart) this.onStart = params.onStart;
-        if (params && params.abovePercent){ //abovePercent
-            const percentages = Object.keys(params.abovePercent)
-            this.abovePercent = new Array<{value: number, function: Function}>();
-            for (let percent of percentages){
-                const p = {value: Number(percent), function: params.abovePercent[Number(percent)] as Function }
-                this.abovePercent.push(p) //pushin' p
+        
+        (() => {
+            if (params && (params.onPercent || params.onEnd || params.onStart)){
+                this.onPercent = new Array<{value: number, callback: Callback}>();
+                if (params.onEnd) this.onPercent.push({value: 1, callback: {functions: params.onEnd, state: CallbackState.NOT_PLAYED}});
+                if (params.onStart) this.onPercent.push({value: 0, callback: {functions: params.onStart, state: CallbackState.NOT_PLAYED}});
+
+                if (params.onPercent === undefined) return;
+                const percentages = Object.keys(params.onPercent)
+                for (let percent of percentages){
+                    const p = {value: Number(percent), callback: { functions: params.onPercent[Number(percent)] as doubleFunction, state: CallbackState.NOT_PLAYED}}
+                    this.onPercent.push(p) //pushin' p
+                }
+                //Sort our abovePercent so we can exit early if necessarily
+                //Sorts from least to greatest
+                this.onPercent.sort( (firstEl, secondEl)=>{
+                    if (firstEl.value > secondEl.value) return 1; //sort the first value before the second value
+                    if (firstEl.value < secondEl.value) return -1; //sort the second value before the first value
+                    return 0; //sort order stays the same
+                })
             }
-            //Sort our abovePercent so we can exit early if necessarily
-            //Sorts from least to greatest
-            this.abovePercent.sort( (firstEl, secondEl)=>{
-                if (firstEl.value > secondEl.value) return 1; //sort the first value before the second value
-                if (firstEl.value < secondEl.value) return -1; //sort the second value before the first value
-                return 0; //sort order stays the same
-            })
-        }
+        })()
     }
 
     //Adds a timeline
@@ -79,18 +101,43 @@ export default class ScrollScene {
         }
 
         //ScrollScene-Specific params
-        if ( (scrollPercent <= 0) && (this.onStart !== undefined)) this.onStart();
-        if ( (scrollPercent >= 1) && (this.onEnd !== undefined) ) this.onEnd();
-        if ( this.abovePercent !== undefined ){
-            (() => { //use arrow syntax so we can use return in if blocks
-                
-                //Go through all of our percentages and determine if we should call our percent
-                for (let entry of this.abovePercent){
-                    if (scrollPercent > entry.value)entry.function.call(this)
-                    else break; //exit the for loop early
-                }
+        if (this.onPercent !== undefined){
+            for (let p of this.onPercent) {
+                if (scrollPercent < p.value){ //If before value
+                    switch(p.callback.state){
+                        case(CallbackState.NOT_PLAYED):
+                            //Do nothing
+                            break;
 
-            })();
+                        case(CallbackState.PASSED):
+                            //Retract
+                            p.callback.state = CallbackState.RETRACTED
+                            if (p.callback.functions.leave) p.callback.functions.leave.call(this)
+                            break;
+
+                        case(CallbackState.RETRACTED):
+                            //Do nothing
+                            break;
+                    }
+                } else { //if after or on value
+                    switch(p.callback.state){
+                        case(CallbackState.NOT_PLAYED):
+                            //Play
+                            p.callback.state = CallbackState.PASSED;
+                            if (p.callback.functions.enter) p.callback.functions.enter.call(this);
+                            break;
+
+                        case(CallbackState.PASSED):
+                            //Do Nothing
+                            break;
+                        case(CallbackState.RETRACTED):
+                            //Play
+                            p.callback.state = CallbackState.PASSED;
+                            if (p.callback.functions.enter) p.callback.functions.enter.call(this);
+                            break;
+                    }
+                }
+            }
         }
 
     }
