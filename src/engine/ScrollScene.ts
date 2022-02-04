@@ -122,7 +122,7 @@ export default class ScrollScene {
                 query = Array.from(document.querySelectorAll(target))
                 if (query.length === 0) {console.error(`Failed to get element with selector: '${timeline.target}'`); continue; }
             } else {
-                query = new Array<any>([target]) //there was no selector at all, so instead, we'll make the query a single-object array with our target in it
+                query = new Array<any>(target) //there was no selector at all, so instead, we'll make the query a single-object array with our target in it
             }
 
             //Go through every item in the query
