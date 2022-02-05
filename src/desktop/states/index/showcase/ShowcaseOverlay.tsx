@@ -7,6 +7,12 @@ export interface ProjectData {
     categories: string[]
 }
 
+enum state {
+    CLEARING,
+    UPDATING,
+    DONE
+}
+
 //Live resizing of property divs since there is not CSS setting that LIVE updates to inner content size
 const resizeDivs = () => {
     var propertyDivs = Array.from(document.querySelectorAll('div.propertyValue'))
@@ -22,6 +28,7 @@ const resizeDivs = () => {
 export default class ShowcaseOverlay extends DomText{
 
     private animationSpeed : number = 500; //speed of overlay update animation
+    private state : state = state.DONE;
 
     Render(params: DomParams): JSX.Element {
         return(
@@ -84,7 +91,6 @@ export default class ShowcaseOverlay extends DomText{
 
     //When called, updates the project name, year, and tags
     UpdateSectionData(projectData: ProjectData){
-        console.log('called')
         const params = this.parameters as DomParams
         const p_data_projectName = document.getElementById(`${params.elementId}_p_data_projectName`)
         const p_data_projectYear = document.getElementById(`${params.elementId}_p_data_projectYear`)
@@ -92,6 +98,9 @@ export default class ShowcaseOverlay extends DomText{
 
         var timeline = anime.timeline()
         var timeline2 = anime.timeline()
+
+        //Update state
+        this.state = state.UPDATING
 
         timeline //move text to the very right
         .add({
@@ -101,6 +110,8 @@ export default class ShowcaseOverlay extends DomText{
           duration: this.animationSpeed,
           update: resizeDivs,
           complete: ()=>{
+            if (this.state !== state.UPDATING) return; //if state has been inturrupted.
+
             if (p_data_projectName) p_data_projectName.innerHTML = projectData.name;
             if (p_data_projectYear) p_data_projectYear.innerHTML = projectData.year;
             if (p_data_projectTags) p_data_projectTags.innerHTML = projectData.categories.join(', ');
@@ -112,6 +123,9 @@ export default class ShowcaseOverlay extends DomText{
                 easing: 'easeInOutQuart',
                 duration: this.animationSpeed,
                 update: resizeDivs,
+                complete: ()=>{
+                    this.state = state.DONE;
+                }
             }, 0)
 
           }
@@ -119,12 +133,17 @@ export default class ShowcaseOverlay extends DomText{
     }
 
     Clear(){
+        this.state = state.CLEARING
+
         anime({
             targets: '.overwrite',
             width: '0%',
             easing: 'easeInOutQuart',
             duration: this.animationSpeed,
-            update: resizeDivs
+            update: resizeDivs,
+            complete: ()=>{
+                this.state = state.DONE;
+            }
         })
     }
 

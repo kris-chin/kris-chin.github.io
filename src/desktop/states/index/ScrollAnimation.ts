@@ -127,8 +127,13 @@ export default class ScrollAnimation {
             this.splash_reachedEnd = (!this.splash_reachedEnd)
         }
 
+        const onReturn = () => {
+            this.showcaseOverlay.Clear();
+            console.log('back')
+        }
+
         return new ScrollScene({
-            onEnd: {enter: toggleEnd},
+            onEnd: {enter: toggleEnd, leave: onReturn},
         })
         .AddTimeline({
             target: this.world.scene.camera.position,
@@ -321,19 +326,24 @@ export default class ScrollAnimation {
         const mcmcData : ProjectData = {
             name: 'MCMCSE',
             year: '2021',
-            categories: ['backend']
+            categories: ['backend', 'data science']
         }
 
         const moveToSplash = () => {
             this.showcaseOverlay.Clear()   
             this.splash_reachedEnd = false;   
         }
+
+        const exitMCMC = () => {
+            console.log('exit mcmc')
+            this.showcaseOverlay.UpdateSectionData(websiteData);
+        }
         
         //FIXME: If you enter the second update, and then JUMP back to the start, the wrong function is called
 
         var scene = new ScrollScene({
             onStart: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(websiteData)},leave: moveToSplash},
-            onEnd: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(mcmcData)}, leave: ()=>{this.showcaseOverlay.UpdateSectionData(websiteData)}}
+            onEnd: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(mcmcData)}, leave: exitMCMC}
         })
         .AddTimeline({
             target: this.world.scene.camera.position,
