@@ -66,8 +66,8 @@ export default class ScrollScene {
         (() => {
             if (params && (params.onPercent || params.onEnd || params.onStart)){
                 this.onPercent = new Array<{value: number, callback: Callback}>();
-                if (params.onEnd) this.onPercent.push({value: 1, callback: {functions: params.onEnd, state: CallbackState.NOT_PLAYED}});
                 if (params.onStart) this.onPercent.push({value: 0, callback: {functions: params.onStart, state: CallbackState.NOT_PLAYED}});
+                if (params.onEnd) this.onPercent.push({value: 1, callback: {functions: params.onEnd, state: CallbackState.NOT_PLAYED}});
 
                 if (params.onPercent === undefined) return;
                 const percentages = Object.keys(params.onPercent)
