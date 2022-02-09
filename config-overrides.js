@@ -8,9 +8,6 @@ module.exports = (config,env) => {
             test: /\.json5$/i,
             use: 'json5-loader',
             type: 'javascript/auto',
-            options:{
-                esModule: false,
-            }
         },
         {
             test: /\.txt$/i,

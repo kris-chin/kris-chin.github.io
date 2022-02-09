@@ -10,6 +10,7 @@ $mainFont : arial;
 //Keep all text regarding the showcase transparent when not in animation
 .showcaseText {
     opacity: 0;
+    z-index: 101;
 }
 
 //Debug Scroll Text

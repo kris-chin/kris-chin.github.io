@@ -14,6 +14,9 @@ import DebugScroll from '../../globalBehaviours/DebugScroll'
 import config from '../../../config'
 import ShowcaseOverlay, {ProjectData} from './showcase/ShowcaseOverlay';
 
+//Data for showcase projects (loaded externally)
+import showcaseData from './showcaseData.json5';
+
 //World Class that manages the actual events
 export default class ScrollAnimation {
 
@@ -26,7 +29,7 @@ export default class ScrollAnimation {
     private splash : ScrollScene; //Splash Screne
     private splashLength : number = 100;
     private showcase : ScrollScene; //List of featured projects
-    private showcaseLength : number = 300;
+    private showcaseLength : number = 900;
 
     //Height of the page when scroll is enabled
     private heightValue : number = 0; //The height of the 
@@ -103,7 +106,7 @@ export default class ScrollAnimation {
         else if (!this.showcase_reachedEnd) { //if in showcase
             //Calculate relative percent 
             const startPercent = this.splashLength/this.heightValue;
-            const endPercent = 0.75; //leave at 0.75 for now so we can see the scene without messing up camera movement
+            const endPercent = 1; //leave at 0.75 for now so we can see the scene without messing up camera movement
             local_percent = ( scroll_percent - startPercent ) / ( endPercent - startPercent )
 
             //Apply showcase animation
@@ -317,62 +320,77 @@ export default class ScrollAnimation {
     private Showcase(valueIncrement: number) : ScrollScene {
         //Allocate space for our page
         this.heightValue += valueIncrement;
-        const websiteData : ProjectData = {
-            name: 'krischinlayon.com',
-            year: '2022',
-            categories: ['frontend']
-        }
 
-        const mcmcData : ProjectData = {
-            name: 'MCMCSE',
-            year: '2021',
-            categories: ['backend', 'data science']
-        }
-
-        const moveToSplash = () => {
+        //Functions for non-showcase stuff
+        const moveTo_splash = () => { //return to the splash scrollscene
             this.showcaseOverlay.Clear()   
             this.splash_reachedEnd = false;   
         }
-
-        const exitMCMC = () => {
-            console.log('exit mcmc')
-            this.showcaseOverlay.UpdateSectionData(websiteData);
+        const moveTo_aboutBrief = () => { //before the showcases 
+            this.showcaseOverlay.Clear();
         }
-        
-        //FIXME: If you enter the second update, and then JUMP back to the start, the wrong function is called
+        const moveTo_contactBrief = () => { //at the end of the showcases
+            this.showcaseOverlay.Clear();
+        }
 
+        //Set up Showcase Data
+        const showcaseMap = new Map<string, {f : Function, n: number}>() //returns a percent depending on string
+        const numKeyframes = 7 //number of keyframes in showcase
+        var onPercent : any = {} //we add to this object in the for loop
+        for (let [i, showcase] of showcaseData.entries()){ //go through json5 data in order
+            const percent = (1/numKeyframes) * (i + 1); //add one to account for the first non-showcase project
+            showcaseMap.set(showcase.name, {f: () => {this.showcaseOverlay.UpdateSectionData(showcase.data)}, n: percent})
+
+            //apply functions
+            var enter = showcaseMap.get(showcase.name)?.f;
+
+             //if not the first element in the array, define our leave function
+            if (showcaseData[i - 1] !== undefined) var leave = showcaseMap.get(showcaseData[i-1].name)?.f;
+            else var leave = (() : Function | undefined => {return moveTo_aboutBrief})(); //leave points to the enter call for the keyframe before the showcases
+
+            onPercent[percent] = {enter: enter, leave: leave};
+        }
+
+        //FIXME: There's some extra finnicky stuff in regards to this
         var scene = new ScrollScene({
-            onStart: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(websiteData)},leave: moveToSplash},
-            onEnd: {enter: ()=>{this.showcaseOverlay.UpdateSectionData(mcmcData)}, leave: exitMCMC}
+            onStart: {enter: moveTo_aboutBrief, leave: moveTo_splash},
+            onEnd: {enter: moveTo_contactBrief, leave: 
+                () => {
+                    showcaseMap.get(showcaseData[showcaseData.length-1].name)?.f.call(this)
+                }
+            },
+            onPercent: onPercent
         })
         .AddTimeline({
             target: this.world.scene.camera.position,
-            x: [-4.700786932361081, 5.601202127479064], 
-            y: [1.9785631157684191, 2.886787063749276], 
-            z: [6.185930419974125, 22.88632882073922] 
+            x: [-4.700786932361081, 4.142677689654993, -5.8258712871171845, -3.877690983419306, 17.05432831067018, 27.928882435095296, 25.879418938505957], 
+            y: [1.9785631157684191, 1.9934681688817437, 1.806550918384359, 1.532921327152983, 1.363979255504522, 1.6826635304611388, 13.421275042632416], 
+            z: [6.185930419974125, 29.948544791807905, 41.89960714019091, 73.17499428994037, 45.5136984907903, 24.51178155817695, -2.1449433315417257]
         })
         .AddTimeline({
             target: this.world.scene.camera.quaternion,
-            _x: [-0.020162747554878582, -0.05756302537890129], 
-            _y: [-0.789190390326181, 0.8524111447864626], 
-            _z: [-0.025946605413106758, 0.09607174520658653], 
-            _w: [0.6132689174378438, 0.5107366817901575] 
+            _x: [-0.020162747554878582, -0.07882852639816365, -0.008136100044118565, -0.0474486902704553, 0.031009362324581152, -0.05930046430671039, -0.05621555008265134], 
+            _y: [-0.789190390326181, 0.4617472419059324, 0.9918637645045251, -0.5300612340893563, 0.8669064418473772, -0.5734559569106972, 0.9436800967523422], 
+            _z: [-0.025946605413106758, 0.041243353055009147, 0.09009325634414121, -0.029725149886468613, 0.054359480050993336, -0.04167304739671098, 0.23766114265419092], 
+            _w: [0.6132689174378438, 0.8825386868840019, 0.08957277320867602, 0.8461088141436147, -0.49452673078442233, 0.8160239442181318, 0.2232148476125619] 
         })
         .AddTimeline({
             target: this.world.scene.controls.target,
-            x: [2.2222685048489357, 1.302927534462396], 
-            y: [1.5082746433802394, 1.7738653148592478], 
-            z: [7.9505219613602955, 25.18551143720863]
+            x: [2.2222685048489357, 0.100091171665733, -6.706981089966695, 0.5930996442671232, 21.3245558683708, 32.5837080424348, 23.9065873672659], 
+            y: [1.5082746433802394, 1.10733588191635, 0.9056608240040992, 0.9738922802558272, 0.7393838354468736, 0.9597809699631968, 11.053032687239062], 
+            z: [7.9505219613602955, 27.14278931162632, 46.73820637480107, 71.00715719086749, 48.03858208547287, 22.835464354010494, 1.791979799234341]
         })
 
         //Decorate with all of our showcases
         const Website = (scrollScene: ScrollScene) => {
+            const p = showcaseMap.get('websiteData')!.n
+
             scrollScene
             .AddTimeline({
                 target: "#showcase_Website div",
                 opacity: {
                     keyframes: ['1', '0'],
-                    duration: {startPercent: 0.5, endPercent: 1}
+                    duration: {startPercent: p - (1/numKeyframes), endPercent: p}
                 }
             });
 
@@ -380,12 +398,13 @@ export default class ScrollAnimation {
         }
 
         const MCMC = (scrollScene: ScrollScene) => {
+            const p = showcaseMap.get('mcmcData')!.n
             scrollScene
             .AddTimeline({
                 target: "#showcase_MCMC div",
                 opacity: {
                     keyframes: ['0', '1'],
-                    duration: {startPercent: 0.5, endPercent: 1}
+                    duration: {startPercent: p - (1/numKeyframes), endPercent: p}
                 }
             })
             return scrollScene

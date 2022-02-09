@@ -1,0 +1,42 @@
+[
+    {
+        name: "websiteData",
+        data: {
+            name: 'krischinlayon.com',
+            year: '2022',
+            categories: ['frontend']
+        }
+    },
+    {
+        name: "mcmcData",
+        data: {
+            name: 'MCMCSE',
+            year: '2021',
+            categories: ['backend', 'data science']
+        }
+    },
+    {
+        name: "pipelineData",
+        data: {
+            name: 'Artist Analytics Pipeline',
+            year: '2022',
+            categories: ['backend', 'data science']
+        }
+    },
+    {
+        name: "ropData",
+        data: {
+            name: 'ROP Abstraction',
+            year: '2021',
+            categories: ['cybersecurity']
+        }
+    },
+    {
+        name: "networkingData",
+        data: {
+            name: 'NetworKING',
+            year: '2019',
+            categories: ['backend', 'frontend']
+        }
+    }
+]

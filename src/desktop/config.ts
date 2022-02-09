@@ -8,9 +8,10 @@
 import anime from 'animejs'; 
 import Canvas from '../engine/Canvas'
 
+
 //JSONs
-import desktop_world from './desktop_world.json';
-import models from './models.json';
+import models from './models.json5';
+import desktop_world from './desktop_world.json5';
 
 //Animations:
 import { Animation } from './states/index/StartingAnimation'
@@ -30,7 +31,6 @@ const behaviours = new Array<{name:string,factory:Function}>().concat(
 )
 //[END_BEHAVIOURS]
 //################################################################
- 
 //Export stuff for index.js to pass into engine
 var desktop = {
     //Animation that is called once page is loaded
