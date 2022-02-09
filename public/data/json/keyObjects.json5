@@ -113,4 +113,39 @@
             behaviours: [{name:"ShowcaseOverlay",params:{elementId:"ShowcaseOverlay",},},],
         },
     },
+    {
+        name: "showcase_briefAbout",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_briefAbout",params:{elementId:"showcase_briefAbout",},},],
+        },
+    },
+    {
+        name: "showcase_briefContact",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_briefContact",params:{elementId:"showcase_briefContact",},},],
+        },
+    },
+    {
+        name: "showcase_Pipeline",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_Pipeline",params:{elementId:"showcase_Pipeline",},},],
+        },
+    },
+    {
+        name: "showcase_ROP",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_ROP",params:{elementId:"showcase_ROP",},},],
+        },
+    },
+    {
+        name: "showcase_NetworKING",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_NetworKING",params:{elementId:"showcase_NetworKING",},},],
+        },
+    },
 ]

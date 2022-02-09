@@ -7,7 +7,7 @@ export default class showcase_MCMC extends ProjectionText {
         return(
             <>
                 <div className = "showcaseText">
-                    <p>Hi2</p>
+                    <p>MCMCSE</p>
                 </div>
             </>
         )
