@@ -3,6 +3,7 @@ $mainText : #001219;
 $highlightText1: #0A9396;
 $highlightText2: #9B2226;
 $backgroundColor: #EE9B00;
+$windowColor: #E9D8A6;
 
 //Font Vriables
 $mainFont : arial;
@@ -14,11 +15,14 @@ $mainFont : arial;
     pointer-events: none; //this value is automated
 
     //Window
-    width: 20em;
-    height: 10em;
-    overflow-y: scroll; //don't depend on this please
+    width: 30em;
+
+    //Stylin'
     font-family: $mainFont;
     border-style:solid;
+    border-color: $windowColor;
+    border-radius: 12px;
+    background-color: $windowColor;
 }
 
 //Debug Scroll Text
