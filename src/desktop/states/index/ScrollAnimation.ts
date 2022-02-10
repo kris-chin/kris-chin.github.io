@@ -12,7 +12,7 @@ import DebugScroll from '../../globalBehaviours/DebugScroll'
 
 //Entire source config
 import config from '../../../config'
-import ShowcaseOverlay, {ProjectData} from './showcase/ShowcaseOverlay';
+import ShowcaseOverlay from './showcase/ShowcaseOverlay';
 
 //Data for showcase projects (loaded externally)
 import showcaseData from './showcaseData.json5';
@@ -126,13 +126,22 @@ export default class ScrollAnimation {
         //Allocate space for our page
         this.heightValue += valueIncrement;
 
+        const tagline = document.getElementById('splashPage_div_tagline')
+
         const toggleEnd = () => {
+            if (tagline) {
+                // tagline.style.zIndex = '0';
+                tagline.style.pointerEvents = 'none';
+            }
             this.splash_reachedEnd = (!this.splash_reachedEnd)
         }
 
         const onReturn = () => {
+            if (tagline) {
+                // tagline.style.zIndex = '100';
+                tagline.style.pointerEvents = 'auto';
+            }
             this.showcaseOverlay.Clear();
-            console.log('back')
         }
 
         return new ScrollScene({
@@ -343,10 +352,11 @@ export default class ScrollAnimation {
 
             //apply functions
             var enter = showcaseMap.get(showcase.name)?.f;
+            var leave : Function | undefined;
 
              //if not the first element in the array, define our leave function
-            if (showcaseData[i - 1] !== undefined) var leave = showcaseMap.get(showcaseData[i-1].name)?.f;
-            else var leave = (() : Function | undefined => {return moveTo_aboutBrief})(); //leave points to the enter call for the keyframe before the showcases
+            if (showcaseData[i - 1] !== undefined) leave = showcaseMap.get(showcaseData[i-1].name)?.f;
+            else leave = (() : Function | undefined => {return moveTo_aboutBrief})(); //leave points to the enter call for the keyframe before the showcases
 
             onPercent[percent] = {enter: enter, leave: leave};
         }
