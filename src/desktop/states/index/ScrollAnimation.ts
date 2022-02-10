@@ -362,6 +362,7 @@ export default class ScrollAnimation {
             }
         }
 
+        //HACK: this is completely botched-up and needs refactoring in the future. I blame the lack of an extendible system for each showcase item
         //Set up Showcase Data
         const showcaseMap = new Map<string, {f : Function, n: number}>() //returns a percent depending on string
         const numKeyframes = 7 //number of keyframes in showcase
@@ -372,6 +373,7 @@ export default class ScrollAnimation {
             var percent = (1/numKeyframes) * (i + 1); //add one to account for the first non-showcase project
 
             showcaseMap.set(showcase.name, {f: () => {
+                if (showcaseData[i-1] !== undefined) togglePointerEvents(`#${showcaseData[i-1].divName} div`, false) //disable previous showcase text
                 this.showcaseOverlay.UpdateSectionData(showcase.data)
                 togglePointerEvents(selector, true) //enable this showcase
             }, n: percent})

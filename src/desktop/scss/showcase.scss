@@ -16,7 +16,9 @@ $mainFont : arial;
     //Window
     width: 20em;
     height: 10em;
-    overflow-y: scroll;
+    overflow-y: scroll; //don't depend on this please
+    font-family: $mainFont;
+    border-style:solid;
 }
 
 //Debug Scroll Text
