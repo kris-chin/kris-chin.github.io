@@ -61,29 +61,30 @@ export default class ScrollScene {
     constructor(scrollSceneParams?: Object){
         this.timelines = new Array<Timeline>();
         //Handle params
-        const params = scrollSceneParams as ScrollSceneParams;
-        
-        (() => {
-            if (params && (params.onPercent || params.onEnd || params.onStart)){
-                this.onPercent = new Array<{value: number, callback: Callback}>();
-                if (params.onStart) this.onPercent.push({value: 0, callback: {functions: params.onStart, state: CallbackState.NOT_PLAYED}});
-                if (params.onEnd) this.onPercent.push({value: 1, callback: {functions: params.onEnd, state: CallbackState.NOT_PLAYED}});
+        this.setParams(scrollSceneParams as ScrollSceneParams);
+    }
 
-                if (params.onPercent === undefined) return;
-                const percentages = Object.keys(params.onPercent)
-                for (let percent of percentages){
-                    const p = {value: Number(percent), callback: { functions: params.onPercent[Number(percent)] as doubleFunction, state: CallbackState.NOT_PLAYED}}
-                    this.onPercent.push(p) //pushin' p
-                }
-                //Sort our abovePercent so we can exit early if necessarily
-                //Sorts from least to greatest
-                this.onPercent.sort( (firstEl, secondEl)=>{
-                    if (firstEl.value > secondEl.value) return 1; //sort the first value before the second value
-                    if (firstEl.value < secondEl.value) return -1; //sort the second value before the first value
-                    return 0; //sort order stays the same
-                })
+    private setParams = (params: ScrollSceneParams) => {
+        if (params && (params.onPercent || params.onEnd || params.onStart)){
+            this.onPercent = new Array<{value: number, callback: Callback}>(); //HACK: i pray to god that this garbage-collects on OverrideParams()
+
+            if (params.onStart) this.onPercent.push({value: 0, callback: {functions: params.onStart, state: CallbackState.NOT_PLAYED}});
+            if (params.onEnd) this.onPercent.push({value: 1, callback: {functions: params.onEnd, state: CallbackState.NOT_PLAYED}});
+
+            if (params.onPercent === undefined) return;
+            const percentages = Object.keys(params.onPercent)
+            for (let percent of percentages){
+                const p = {value: Number(percent), callback: { functions: params.onPercent[Number(percent)] as doubleFunction, state: CallbackState.NOT_PLAYED}}
+                this.onPercent.push(p) //pushin' p
             }
-        })()
+            //Sort our abovePercent so we can exit early if necessarily
+            //Sorts from least to greatest
+            this.onPercent.sort( (firstEl, secondEl)=>{
+                if (firstEl.value > secondEl.value) return 1; //sort the first value before the second value
+                if (firstEl.value < secondEl.value) return -1; //sort the second value before the first value
+                return 0; //sort order stays the same
+            })
+        }
     }
 
     //Adds a timeline
@@ -91,6 +92,12 @@ export default class ScrollScene {
         this.timelines.push(timeline)
         return this //return the scrollscene so you can add another timeline on top of it
     }
+
+    //Overrides params
+    public OverrideParams(params: ScrollSceneParams) {
+        this.setParams(params);
+    }
+
 
     //Interpolates keyframes for every timeline in the ScrollScene
     public ApplyAnimations(scrollPercent: number, snap?: boolean){

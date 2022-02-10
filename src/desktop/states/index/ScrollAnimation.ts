@@ -266,13 +266,6 @@ export default class ScrollAnimation {
             }
         })
         .AddTimeline({
-            target: '#showcase_Website div', //The first part of the showcase
-            opacity: {
-                keyframes: ['0', '1'],
-                duration: {startPercent: 0.5, endPercent: 1}
-            }
-        })
-        .AddTimeline({
             target: '.ShowcaseOverlay_div_property p',
             translateX: {
                 keyframes: ['5em', '0em'],
@@ -324,6 +317,13 @@ export default class ScrollAnimation {
                 duration: {startPercent:0.9, endPercent:1}
             }
         })
+        .AddTimeline({
+            target: "#showcase_briefAbout div",
+            opacity: {
+                keyframes: ['0', '1'],
+                duration: {startPercent: 0.5, endPercent: 1}
+            }
+        })
     }
 
     private Showcase(valueIncrement: number) : ScrollScene {
@@ -347,7 +347,9 @@ export default class ScrollAnimation {
         const numKeyframes = 7 //number of keyframes in showcase
         var onPercent : any = {} //we add to this object in the for loop
         for (let [i, showcase] of showcaseData.entries()){ //go through json5 data in order
-            const percent = (1/numKeyframes) * (i + 1); //add one to account for the first non-showcase project
+
+            var percent = (1/numKeyframes) * (i + 1); //add one to account for the first non-showcase project
+            percent += ((1/numKeyframes)/2); //shift by half a unit
             showcaseMap.set(showcase.name, {f: () => {this.showcaseOverlay.UpdateSectionData(showcase.data)}, n: percent})
 
             //apply functions
@@ -358,11 +360,12 @@ export default class ScrollAnimation {
             if (showcaseData[i - 1] !== undefined) leave = showcaseMap.get(showcaseData[i-1].name)?.f;
             else leave = (() : Function | undefined => {return moveTo_aboutBrief})(); //leave points to the enter call for the keyframe before the showcases
 
-            onPercent[percent] = {enter: enter, leave: leave};
+            //Assign our ShowcaseOverlay updates to be shifted by half a unit to the left of our percent.
+            onPercent[percent - (1/numKeyframes)] = {enter: enter, leave: leave};
         }
 
-        //FIXME: There's some extra finnicky stuff in regards to this
-        var scene = new ScrollScene({
+        //Build params object to be put into our scene
+        var sceneParams = {
             onStart: {enter: moveTo_aboutBrief, leave: moveTo_splash},
             onEnd: {enter: moveTo_contactBrief, leave: 
                 () => {
@@ -370,7 +373,9 @@ export default class ScrollAnimation {
                 }
             },
             onPercent: onPercent
-        })
+        }
+
+        var scene = new ScrollScene(sceneParams)
         .AddTimeline({
             target: this.world.scene.camera.position,
             x: [-4.700786932361081, 4.142677689654993, -5.8258712871171845, -3.877690983419306, 17.05432831067018, 27.928882435095296, 25.879418938505957], 
@@ -390,17 +395,36 @@ export default class ScrollAnimation {
             y: [1.5082746433802394, 1.10733588191635, 0.9056608240040992, 0.9738922802558272, 0.7393838354468736, 0.9597809699631968, 11.053032687239062], 
             z: [7.9505219613602955, 27.14278931162632, 46.73820637480107, 71.00715719086749, 48.03858208547287, 22.835464354010494, 1.791979799234341]
         })
+        /* ---------------------------------------------------------------------------------------------------------------- */
+        /*                                   Decorators for each section of the showcase.                                   */
+        /*(Do note that the second-to-first and second-to-last items have different percents for their duration calculation)*/
+        /* ---------------------------------------------------------------------------------------------------------------- */
 
-        //Decorate with all of our showcases
+        //Determines the length which text stays visible
+        const KEYFRAME_UNIT = (1/numKeyframes)/2
+
+        const briefAbout = (scrollScene: ScrollScene) => {
+            const p = 0;
+
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_briefAbout div",
+                opacity: {
+                    keyframes: ['1', '0'], //since this is the first "section" that was transitioned into via Splash, we start at 1 here
+                    duration: {startPercent: p, endPercent: p + KEYFRAME_UNIT}
+                }
+            })
+            return scrollScene
+        }
+
         const Website = (scrollScene: ScrollScene) => {
             const p = showcaseMap.get('websiteData')!.n
-
             scrollScene
             .AddTimeline({
                 target: "#showcase_Website div",
                 opacity: {
-                    keyframes: ['1', '0'],
-                    duration: {startPercent: p - (1/numKeyframes), endPercent: p}
+                    keyframes: ['0', '1', '0'],
+                    duration: {startPercent: 0 + KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
                 }
             });
 
@@ -413,17 +437,84 @@ export default class ScrollAnimation {
             .AddTimeline({
                 target: "#showcase_MCMC div",
                 opacity: {
-                    keyframes: ['0', '1'],
-                    duration: {startPercent: p - (1/numKeyframes), endPercent: p}
+                    keyframes: ['0', '1', '0'],
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                }
+            })
+            
+            //Add a callback when hitting the center
+            sceneParams.onPercent[p] = {enter: ()=>{console.log('hi - mcmc')}, leave: ()=>{console.log('bye - mcmc')} }
+            scrollScene.OverrideParams(sceneParams)
+
+            return scrollScene
+        }
+
+        const Pipeline = (scrollScene: ScrollScene) => {
+            const p = showcaseMap.get('pipelineData')!.n
+
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_Pipeline div",
+                opacity: {
+                    keyframes: ['0', '1', '0'],
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                }
+            });
+
+            return scrollScene
+        }
+
+        const ROP = (scrollScene: ScrollScene) => {
+            const p = showcaseMap.get('ropData')!.n
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_ROP div",
+                opacity: {
+                    keyframes: ['0', '1', '0'],
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
                 }
             })
             return scrollScene
         }
 
+        const NetworKING = (scrollScene: ScrollScene) => {
+            const p = showcaseMap.get('networkingData')!.n
 
-        //Add all of our showscases to the scene
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_NetworKING div",
+                opacity: {
+                    keyframes: ['0', '1', '0'],
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: 1 - KEYFRAME_UNIT}
+                }
+            });
+
+            return scrollScene
+        }
+
+        const briefContact = (scrollScene: ScrollScene) => {
+            const p = 1;
+            scrollScene
+            .AddTimeline({
+                target: "#showcase_briefContact div",
+                opacity: {
+                    keyframes: ['0', '1', '0'],
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                }
+            })
+            return scrollScene
+        }
+
+        /* -------------------------------------------------------------------------- */
+
+        //Add all of our showcases to the scene
+        scene = briefAbout(scene)
         scene = Website(scene)
         scene = MCMC(scene)
+        scene = Pipeline(scene)
+        scene = ROP(scene)
+        scene = NetworKING(scene)
+        scene = briefContact(scene)
 
         return scene;
     }

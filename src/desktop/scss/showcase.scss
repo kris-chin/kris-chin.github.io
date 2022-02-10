@@ -9,7 +9,7 @@ $mainFont : arial;
 
 //Keep all text regarding the showcase transparent when not in animation
 .showcaseText {
-    opacity: 1; //NOTE: i'm just keeping this at 1 for visibility sake, animate this later
+    opacity: 0; 
     z-index: 101;
 }
 
