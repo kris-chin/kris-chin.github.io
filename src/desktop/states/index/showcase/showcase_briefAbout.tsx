@@ -8,7 +8,7 @@ export default class showcase_briefAbout extends ProjectionText{
             <>
                 <div className = "showcaseText">
                     <h3>Welcome!</h3>
-                    <p>Welcome to my small site! If you keep scrolling, you can see some projects that I am very proud of.</p>
+                    <p>Welcome to my site! If you keep scrolling, you can see some projects that I am very proud of.</p>
                     <p>If you would like to learn more about me, click the button below. Otherwise, enjoy your stay!</p>
                     <button>About Me</button>
                 </div>

@@ -1,6 +1,7 @@
 [
     {
         name: "websiteData",
+        divName: "showcase_Website",
         data: {
             name: 'krischinlayon.com',
             year: '2022',
@@ -9,6 +10,7 @@
     },
     {
         name: "mcmcData",
+        divName: "showcase_MCMC",
         data: {
             name: 'MCMCSE',
             year: '2021',
@@ -17,6 +19,7 @@
     },
     {
         name: "pipelineData",
+        divName: "showcase_Pipeline",
         data: {
             name: 'Artist Analytics Pipeline',
             year: '2022',
@@ -25,6 +28,7 @@
     },
     {
         name: "ropData",
+        divName: "showcase_ROP",
         data: {
             name: 'ROP Abstraction',
             year: '2021',
@@ -33,6 +37,7 @@
     },
     {
         name: "networkingData",
+        divName: "showcase_NetworKING",
         data: {
             name: 'NetworKING',
             year: '2019',

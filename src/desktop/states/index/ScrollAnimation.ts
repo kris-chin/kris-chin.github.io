@@ -342,26 +342,58 @@ export default class ScrollAnimation {
             this.showcaseOverlay.Clear();
         }
 
+        //Helper Function for changing clickablity of item:
+        const togglePointerEvents = (selector:string, toggle: boolean) => {
+            enum z{
+                CLICKABLE = 'auto',
+                UNCLICKABLE = 'none',
+            }
+
+            const e = document.querySelector(selector) as HTMLElement
+            if (e === null) {console.error(`Couldn't find '${selector}'`); return;}
+            
+            if (toggle){
+                //console.log(`'${selector}': clickable`);
+                e!.style.pointerEvents = z.CLICKABLE
+            }
+            else{
+                //console.log(`'${selector}':unclickable`)
+                e!.style.pointerEvents = z.UNCLICKABLE
+            }
+        }
+
         //Set up Showcase Data
         const showcaseMap = new Map<string, {f : Function, n: number}>() //returns a percent depending on string
         const numKeyframes = 7 //number of keyframes in showcase
         var onPercent : any = {} //we add to this object in the for loop
         for (let [i, showcase] of showcaseData.entries()){ //go through json5 data in order
+            const selector = `#${showcase.divName} div` //get the inner div 
 
             var percent = (1/numKeyframes) * (i + 1); //add one to account for the first non-showcase project
-            percent += ((1/numKeyframes)/2); //shift by half a unit
-            showcaseMap.set(showcase.name, {f: () => {this.showcaseOverlay.UpdateSectionData(showcase.data)}, n: percent})
+
+            showcaseMap.set(showcase.name, {f: () => {
+                this.showcaseOverlay.UpdateSectionData(showcase.data)
+                togglePointerEvents(selector, true) //enable this showcase
+            }, n: percent})
 
             //apply functions
             var enter = showcaseMap.get(showcase.name)?.f;
             var leave : Function | undefined;
 
              //if not the first element in the array, define our leave function
-            if (showcaseData[i - 1] !== undefined) leave = showcaseMap.get(showcaseData[i-1].name)?.f;
-            else leave = (() : Function | undefined => {return moveTo_aboutBrief})(); //leave points to the enter call for the keyframe before the showcases
+            if (showcaseData[i - 1] !== undefined) leave = () => {
+                showcaseMap.get(showcaseData[i-1].name)?.f.call(this);
+                togglePointerEvents(selector, false) //disable this showcase
+            };
+            else {
+                leave = (() : Function | undefined => {
+                    togglePointerEvents(selector, false) //disable this showcase
+                    return moveTo_aboutBrief;
+                })(); //leave points to the enter call for the keyframe before the showcases
+            }
 
             //Assign our ShowcaseOverlay updates to be shifted by half a unit to the left of our percent.
-            onPercent[percent - (1/numKeyframes)] = {enter: enter, leave: leave};
+            onPercent[percent - (1/numKeyframes)/2] = {enter: enter, leave: leave};
         }
 
         //Build params object to be put into our scene
@@ -424,7 +456,7 @@ export default class ScrollAnimation {
                 target: "#showcase_Website div",
                 opacity: {
                     keyframes: ['0', '1', '0'],
-                    duration: {startPercent: 0 + KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                    duration: {startPercent: 0 + KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
                 }
             });
 
@@ -438,13 +470,17 @@ export default class ScrollAnimation {
                 target: "#showcase_MCMC div",
                 opacity: {
                     keyframes: ['0', '1', '0'],
-                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
                 }
             })
             
             //Add a callback when hitting the center
-            sceneParams.onPercent[p] = {enter: ()=>{console.log('hi - mcmc')}, leave: ()=>{console.log('bye - mcmc')} }
-            scrollScene.OverrideParams(sceneParams)
+            // sceneParams.onPercent[p] = {enter: ()=>{
+            //     console.log('hi - mcmc')
+            // }, leave: ()=>{
+            //     console.log('bye - mcmc')
+            // } }
+            // scrollScene.OverrideParams(sceneParams)
 
             return scrollScene
         }
@@ -457,7 +493,7 @@ export default class ScrollAnimation {
                 target: "#showcase_Pipeline div",
                 opacity: {
                     keyframes: ['0', '1', '0'],
-                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
                 }
             });
 
@@ -471,7 +507,7 @@ export default class ScrollAnimation {
                 target: "#showcase_ROP div",
                 opacity: {
                     keyframes: ['0', '1', '0'],
-                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
+                    duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
                 }
             })
             return scrollScene
@@ -479,15 +515,20 @@ export default class ScrollAnimation {
 
         const NetworKING = (scrollScene: ScrollScene) => {
             const p = showcaseMap.get('networkingData')!.n
+            const selector = '#showcase_NetworKING div'
 
             scrollScene
             .AddTimeline({
-                target: "#showcase_NetworKING div",
+                target: selector,
                 opacity: {
                     keyframes: ['0', '1', '0'],
                     duration: {startPercent: p - KEYFRAME_UNIT, endPercent: 1 - KEYFRAME_UNIT}
                 }
             });
+            
+            //make unclickable early on
+            sceneParams.onPercent[1 - KEYFRAME_UNIT] = {enter: () => {togglePointerEvents(selector, false)}, leave: ()=>{togglePointerEvents(selector,true)}}
+            scrollScene.OverrideParams(sceneParams)
 
             return scrollScene
         }
