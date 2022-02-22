@@ -1,7 +1,7 @@
 /*
     ExternalMeshLoader.ts
 
-    Loader Class responsible for loading whole meshes. Typically in OBJ files
+    Loader Class responsible for loading OBJ Files
     Saves the Meshes in a map with strings for keys.
 
     The class loads from data/Models.json because all the model data is already stored in /models/ and doesn't need any configuration
