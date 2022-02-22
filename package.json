@@ -50,6 +50,7 @@
     "@types/three": "^0.136.1",
     "gh-pages": ">=3.2.3",
     "json5": "^2.2.0",
+    "json5-jest": "^1.0.1",
     "json5-loader": "^4.0.1",
     "raw-loader": "^4.0.2",
     "react-app-rewired": "^2.1.11",

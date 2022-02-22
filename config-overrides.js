@@ -27,8 +27,11 @@ module.exports = {
         //Set up TS-Jest so we can transform TS files
         config.preset = 'ts-jest'
         config.testEnvironment = 'node'
+
+        //Set up transformers for jest for certain file extensions
         config.transform = {
-            "^.+\\.[t|j]sx?$": "ts-jest" 
+            "^.+\\.[t|j]sx?$" : "ts-jest",
+            "^.+\\.json5?$" : "json5-jest" 
         }
 
         //From my understanding: When we mix JS imports with TS imports, it gets kinda funky,
