@@ -193,82 +193,79 @@ export class World extends THREE.Group {
         //First look for the object key in our map
         const keyObject = this.keyObjects.get(info.key) as KeyObject
 
-        //If the keyObject is inside our map
-        if (keyObject){
-            //get our keys from KeyObject
-            let materialKey = keyObject.sceneObject.material;
-            let geometryKey = keyObject.sceneObject.geometry;
-            let behaviourKeys = keyObject.sceneObject.behaviours;
-            let meshKey = keyObject.sceneObject.mesh;
-            let debugEnabled : boolean = false;
-            if (args && args.debug) debugEnabled = true
-            let uniqueId : string | null = null;
-            if (args && args.uniqueId) uniqueId = args.uniqueId;
-
-            //Determine if Material or Geometry have behaviours
-            //NOTE: these behaviours are not appened to the "behaviours" list
-            if (materialKey && materialKey.startsWith("behaviour:")){
-                const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
-                materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
-            }
-
-            if (geometryKey && geometryKey.startsWith("behaviour:")){
-                const geoBehaviour = geometryKey.split(":")[1]
-                geometryKey = this.behaviours.GetBehaviour(geoBehaviour)?.Get()
-            }
-
-            //Create new Object
-            let object = new SceneObject({name: info.key, id: this.totalIDs, uniqueId: uniqueId, state: info.state, debug: debugEnabled}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
-            this.totalIDs += 1; //increment total IDs
-            if (args && args.parent){
-                object.parent = args.parent //set the SceneObject parent (NOT the mesh parent)
-                object.parent.children!.push(object) //push the sceneobject as a child
-            }
-
-            //Push Object into world array
-            this.sceneObjects.push(object)
-
-            //Generate behaviours and apply to object
-            let behaviours : (Array<Behaviour | undefined> | undefined) = undefined;
-            if (behaviourKeys){
-                behaviours = behaviourKeys.map(key=>{
-                    return this.behaviours.GetBehaviour(key.name,object,key.params)
-                })
-            }
-            
-
-            object.Initialize(this, behaviours!); //Point the Object to the World and create mesh with behaviours
-
-            if (object.mesh && object.innerMesh){
-
-                //Set the threeJS mesh parent (NOT SCENEOBJECT PARENT)
-                if (args && args.parent) object.mesh.parent = args.parent.mesh as THREE.Object3D //set object's mesh parent to the parent's mesh
-                else object.mesh.parent = this //set the object's mesh parent to the world
-
-                object.mesh.name = info.key //Set the mesh name to the object key
-                object.innerMesh.castShadow = true; //Allow the object to cast a shadow
-                if (keyObject.sceneObject.recieveShadows) object.innerMesh.receiveShadow = true; //Allow the object to recieve shdadows
-                
-                if (object.GetRenderState()) object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
-
-                //If a position argument is provided, set the position
-                if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z);
-                if (args && args.rot) object.mesh.rotation.set(args.rot.x,args.rot.y,args.rot.z);
-                if (args && args.sca) object.mesh.scale.set(args.sca.x, args.sca.y, args.sca.z);
-
-                //Lastly, if the object has a unique id, map it to the uniqueIdMap
-                if (args && object.uniqueId) this.uniqueObjectMap.set(object.uniqueId, object);
-
-                return object
-            } else {
-                console.error("Failed to create mesh: %o", object)
-                return null
-            }
-        } else {
+        //If the keyObject is not inside our map
+        if (keyObject === undefined){
             console.error(`Invalid Object Key: '${info.key}'`)
             return null
         }
+        //get our keys from KeyObject
+        let materialKey = keyObject.sceneObject.material;
+        let geometryKey = keyObject.sceneObject.geometry;
+        let behaviourKeys = keyObject.sceneObject.behaviours;
+        let meshKey = keyObject.sceneObject.mesh;
+        let debugEnabled : boolean = false;
+        if (args && args.debug) debugEnabled = true
+        let uniqueId : string | null = null;
+        if (args && args.uniqueId) uniqueId = args.uniqueId;
+
+        //Determine if Material or Geometry have behaviours
+        //NOTE: these behaviours are not appened to the "behaviours" list
+        if (materialKey && materialKey.startsWith("behaviour:")){
+            const matBehaviour = materialKey.split(":")[1] //get the second element when you split by :, which should be the stuff after the "behaviour:"
+            materialKey = this.behaviours.GetBehaviour(matBehaviour)?.Get()
+        }
+
+        if (geometryKey && geometryKey.startsWith("behaviour:")){
+            const geoBehaviour = geometryKey.split(":")[1]
+            geometryKey = this.behaviours.GetBehaviour(geoBehaviour)?.Get()
+        }
+
+        //Create new Object
+        let object = new SceneObject({name: info.key, id: this.totalIDs, uniqueId: uniqueId, state: info.state, debug: debugEnabled}, {geometryString: geometryKey, materialString: materialKey, meshString: meshKey}, arg)
+        this.totalIDs += 1; //increment total IDs
+        if (args && args.parent){
+            object.parent = args.parent //set the SceneObject parent (NOT the mesh parent)
+            object.parent.children!.push(object) //push the sceneobject as a child
+        }
+
+        //Push Object into world array
+        this.sceneObjects.push(object)
+
+        //Generate behaviours and apply to object
+        let behaviours : (Array<Behaviour | undefined> | undefined) = undefined;
+        if (behaviourKeys){
+            behaviours = behaviourKeys.map(key=>{
+                return this.behaviours.GetBehaviour(key.name,object,key.params)
+            })
+        }
         
+        object.Initialize(this, behaviours!); //Point the Object to the World and create mesh with behaviours
+
+        //If object failed to create
+        if (!(object.mesh && object.innerMesh) ){
+            console.error("Failed to create mesh: %o", object)
+            return null
+        }
+
+        //Set the threeJS mesh parent (NOT SCENEOBJECT PARENT)
+        if (args && args.parent) object.mesh.parent = args.parent.mesh as THREE.Object3D //set object's mesh parent to the parent's mesh
+        else object.mesh.parent = this //set the object's mesh parent to the world
+
+        object.mesh.name = info.key //Set the mesh name to the object key
+        object.innerMesh.castShadow = true; //Allow the object to cast a shadow
+        if (keyObject.sceneObject.recieveShadows) object.innerMesh.receiveShadow = true; //Allow the object to recieve shdadows
+        
+        if (object.GetRenderState()) object.mesh.parent.add(object.mesh) //Add the Mesh to the THREE Group, which actually renders the mesh
+
+        //If a position argument is provided, set the position
+        if (args && args.pos) object.mesh.position.set(args.pos.x,args.pos.y,args.pos.z);
+        if (args && args.rot) object.mesh.rotation.set(args.rot.x,args.rot.y,args.rot.z);
+        if (args && args.sca) object.mesh.scale.set(args.sca.x, args.sca.y, args.sca.z);
+
+        //Lastly, if the object has a unique id, map it to the uniqueIdMap
+        if (args && object.uniqueId) this.uniqueObjectMap.set(object.uniqueId, object);
+
+        return object
     }
 
     public ResetObject(sceneObject : SceneObject){
@@ -305,16 +302,11 @@ export class World extends THREE.Group {
 
         //Find Original Object Pointer in state and remove from it's associated state
         const state = this.worldStates.filter((state)=>{return (state.worldState.name === sceneObject.state)})
-        if (state.length === 1){
+        if (state.length !== 1) console.error("Couldn't find associated state for object")
 
-            //Get the index of the pointer for the old object. point it to the new object
-            const originalIndex = state[0].sceneObjects.indexOf(sceneObject);
-            state[0].sceneObjects.splice(originalIndex,1) //remove object from array
-
-
-        } else {
-            console.error("Couldn't find associated state for object")
-        }
+        //Get the index of the pointer for the old object. point it to the new object
+        const originalIndex = state[0].sceneObjects.indexOf(sceneObject);
+        state[0].sceneObjects.splice(originalIndex,1) //remove object from array
 
         //Go through the sceneObject's behaviours and call OnDestroy()
         if (sceneObject.behaviours){
@@ -340,15 +332,16 @@ export class World extends THREE.Group {
                 else sceneObject = this.AddObject({key: object.name, state: state.name})
 
                 //Stuff for only if the SceneObject was successfully created
-                if (sceneObject){
-                    if (state.stateSettings.loadOutside) sceneObject.SetRenderState(true)
-                    else sceneObject.SetRenderState(false)
-
-                    //Push our pointers to the scene object into the array
-                    stateSceneObjects.push(sceneObject) 
-                } else {
+                if (sceneObject === null){
                     console.error("SceneObject was not successfully created")
+                    return;
                 }
+
+                if (state.stateSettings.loadOutside) sceneObject.SetRenderState(true)
+                else sceneObject.SetRenderState(false)
+
+                //Push our pointers to the scene object into the array
+                stateSceneObjects.push(sceneObject)  
             }
 
             //push into our worldStates array
@@ -363,51 +356,51 @@ export class World extends THREE.Group {
 
         //check if the provided state exists
         const desiredState = this.worldStates.filter( (worldState)=>{return (worldState.worldState.name === state) })
-        if (desiredState.length === 1){
 
-            //Change URL
-            window.history.pushState('','',state)
-
-            //check if current state only renders when selected
-            //if it is, disable rendering for those objects
-            if (this.currentState.worldState.stateSettings.loadOutside === false) {
-                for (let o of this.currentState.sceneObjects){
-                    if (o) o.SetRenderState(false)
-                }
-            }
-
-            //change actual state
-            this.currentState = desiredState[0]
-            //move camera accordingly
-            if (animeParams) this.scene.MoveCamera(desiredState[0].worldState.cameraAngle, animeParams)
-            else this.scene.MoveCamera(desiredState[0].worldState.cameraAngle)
-
-            //if this new state needs to be rendered, render objects
-            if (desiredState[0].worldState.stateSettings.loadOutside === false){
-                for (let o of this.currentState.sceneObjects){ //currentState is now pointing to something else
-                    if (o) o.SetRenderState(true)
-                }
-            }
-
-            //if this new state needs to be reset, reset objects
-            if (desiredState[0].worldState.stateSettings.resetOnEnter){
-
-                //We don't use an "of" iterator, instead, we loop the length of the array
-                //This is because using javascript's of iterator doesn't work with this function since it modifies the items in the array
-                //It's hella hacky and if you change the Reset() function, you'll need to modify the behaviour here
-                for (let i = 0; i < this.currentState.sceneObjects.length; i++){
-                    const object = this.currentState.sceneObjects[0] //we always get the first object in the array because ResetObject() modifies the array.
-                    this.ResetObject(object);
-                }
-            }
-
-            //Play state's starting animation
-            if (this.currentState.worldState.stateSettings.hasStartingAnimation)
-                (this.scene.canvas.data.state_startingAnimations[`${this.currentState.worldState.name}`] as Function).call(this,this)
-
-        } else {
+        if (desiredState.length !== 1){
             console.error(`Invalid State: '${state}' \nKeeping Original State: '${this.currentState.worldState.name}'`)
+            return;
         }
+
+        //Change URL
+        window.history.pushState('','',state)
+
+        //check if current state only renders when selected
+        //if it is, disable rendering for those objects
+        if (this.currentState.worldState.stateSettings.loadOutside === false) {
+            for (let o of this.currentState.sceneObjects){
+                if (o) o.SetRenderState(false)
+            }
+        }
+
+        //change actual state
+        this.currentState = desiredState[0]
+        //move camera accordingly
+        if (animeParams) this.scene.MoveCamera(desiredState[0].worldState.cameraAngle, animeParams)
+        else this.scene.MoveCamera(desiredState[0].worldState.cameraAngle)
+
+        //if this new state needs to be rendered, render objects
+        if (desiredState[0].worldState.stateSettings.loadOutside === false){
+            for (let o of this.currentState.sceneObjects){ //currentState is now pointing to something else
+                if (o) o.SetRenderState(true)
+            }
+        }
+
+        //if this new state needs to be reset, reset objects
+        if (desiredState[0].worldState.stateSettings.resetOnEnter){
+
+            //We don't use an "of" iterator, instead, we loop the length of the array
+            //This is because using javascript's of iterator doesn't work with this function since it modifies the items in the array
+            //It's hella hacky and if you change the Reset() function, you'll need to modify the behaviour here
+            for (let i = 0; i < this.currentState.sceneObjects.length; i++){
+                const object = this.currentState.sceneObjects[0] //we always get the first object in the array because ResetObject() modifies the array.
+                this.ResetObject(object);
+            }
+        }
+
+        //Play state's starting animation
+        if (this.currentState.worldState.stateSettings.hasStartingAnimation)
+            (this.scene.canvas.data.state_startingAnimations[`${this.currentState.worldState.name}`] as Function).call(this,this)
     }
 
     //Returns State Name
