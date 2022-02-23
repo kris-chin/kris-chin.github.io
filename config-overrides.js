@@ -44,6 +44,10 @@ module.exports = {
         //Add support for our other extensions
         config.moduleFileExtensions.push(".json5",".txt")
 
+        //Specify Setup and Teardown Scripts to call before and after tests.
+        config.globalSetup = "<rootDir>/test/global-setup.js"
+        config.globalTeardown = "<rootDir>/test/global-teardown.js"
+
         return config;
     }
 };
