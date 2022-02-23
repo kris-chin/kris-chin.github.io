@@ -12,16 +12,12 @@ import * as THREE from 'three';
 import SceneObject from './SceneObject';
 import Scene, { CameraAngle } from './Scene';
 import {CanvasProps} from './Canvas';
-import GeometryLoader from './loaders/GeometryLoader';
-import MaterialLoader from './loaders/MaterialLoader';
-import { KeyObjectLoader, KeyObject } from './loaders/KeyObjectLoader';
 import BehaviourFactory from './loaders/BehaviourFactory';
 import Behaviour from './Behaviour';
-import ExternalMeshLoader from './loaders/ExternalMeshLoader';
 import ObjectDebug from './dom/ObjectDebug';
-
-//Arbitrary import of testWorld JSON 
 import anime from 'animejs';
+import LoaderManager, {Maps} from './loaders/LoaderManager';
+import {KeyObject} from './loaders/KeyObjectLoader';
 
 //Interface for the Page States in the world
 interface WorldState {
@@ -56,6 +52,9 @@ export interface args{
 
 export class World extends THREE.Group {
 
+    //External worldState Data provided by Canvas
+    private worldStateData: Array<WorldState>
+
     //Structures to hold all of our 3D information
     sceneObjects : Array<SceneObject | null>; //All SceneObjects in world (not to be confused with MESHes)
     private uniqueObjectMap : Map<string, SceneObject> //A map of all unique objects. 
@@ -64,12 +63,6 @@ export class World extends THREE.Group {
     behaviours : BehaviourFactory;
     private keyObjects : Map<string,Object> //placeable objects. used for keys
     externalMeshes : Map<string, THREE.Mesh>;
-
-    //Loaders for 3D information
-    private loader_geometries : GeometryLoader;
-    private loader_materials : MaterialLoader;
-    private loader_keyObjects : KeyObjectLoader;
-    private loader_externalMeshes : ExternalMeshLoader;
 
     //Respective Scene Object
     scene : Scene;
@@ -86,6 +79,7 @@ export class World extends THREE.Group {
         this.scene = scene;
         this.time = 0;
         this.totalIDs = 0;
+        this.worldStateData = world;
 
         //Create our objects list and Maps
         this.sceneObjects = [] //Note: this is just an array of ALL sceneobjects. not for state-specific ones
@@ -96,84 +90,90 @@ export class World extends THREE.Group {
         this.behaviours = new BehaviourFactory(this); //Behaviours are added to sceneobjects in AddObject()
         this.worldStates = new Array<{worldState: WorldState, sceneObjects: (SceneObject)[]}>();
         this.externalMeshes = new Map<string, THREE.Mesh>();
+        
+        //Load 3D Information then continue with intialization
+        this.StartLoaders();
+    }
 
-        //Setup Loaders and pass our maps into them for loading
-        this.loader_materials = new MaterialLoader(this.materials);
-        this.loader_geometries = new GeometryLoader(this.geometries);
-        this.loader_keyObjects = new KeyObjectLoader(this.keyObjects);
-        this.loader_externalMeshes = new ExternalMeshLoader(this.externalMeshes, this, this.scene.canvas.data.meshes);
+    private async StartLoaders() {
+        let maps : Maps = {
+            materials: this.materials,
+            geometries: this.geometries,
+            keyObjects: this.keyObjects,
+            externalMeshes: this.externalMeshes,
+            GLBs: undefined
+        }
 
-        //Load Materials and Geometries asynchroniously. Place objects after promises are all collected
-        Promise.all([
-            this.loader_materials.LoadMaterials(),
-            this.loader_geometries.LoadGeometries(),
-            this.loader_keyObjects.LoadKeyObjects(),
-            this.loader_externalMeshes.LoadExternalMeshes()]
-        )
-            .then(data => {
-                this.materials = data[0] //set material map
-                this.geometries = data[1] //set geometry map
-                this.keyObjects = data[2]
-                this.externalMeshes = data[3]
+        let loader_manager : LoaderManager= new LoaderManager(this, maps);
+        let data : Array<any> = await loader_manager.RunLoaders();
+        this.FinishInitialization(data);
+    }
 
-                this.PlaceObjects(world) //place objects. arbitrarily places based on testWorld
+    //Finishes World Initialization. (called after loader manager recieves all data)
+    private FinishInitialization(data: Array<any>) {
+        //Set up now that we have our data
+        this.materials = data[0] //set material map
+        this.geometries = data[1] //set geometry map
+        this.keyObjects = data[2]
+        this.externalMeshes = data[3]
 
-                //Initialize current state to page prop
-                const desiredState = this.worldStates.filter( (worldState)=>{return (worldState.worldState.name === (this.scene.canvas.props as CanvasProps).page)})
-                if (desiredState.length === 1){
-                    this.currentState = desiredState[0]
-                    this.scene.MoveCamera(this.currentState.worldState.cameraAngle,{
-                        easing: 'linear',
-                        duration: 1 //set a really fast duration so it's not noticiable on pageLoad
-                    })
+        this.PlaceObjects(this.worldStateData) //place objects.
 
-                    //if this new state needs to be rendered, render objects
-                    if (this.currentState.worldState.stateSettings.loadOutside === false){
-                        for (let o of this.currentState.sceneObjects){ //currentState is now pointing to something else
-                            if (o) o.SetRenderState(true)
-                        }
-                    }
-
-                } else {
-                    //Load the first state
-                    this.currentState = this.worldStates[0]
-                    console.error(`State: '${(this.scene.canvas.props as CanvasProps).page}' doesn't exist.\nDefaulting to the first state: '${this.currentState.worldState.name}'`)
-                    window.history.pushState('','',this.currentState.worldState.name) //change URL
-                    this.scene.MoveCamera(this.currentState.worldState.cameraAngle,{
-                        easing: 'linear',
-                        duration: 1 //set a really fast duration so it's not noticiable on pageLoad
-                    })
-
-                    //if this new state needs to be rendered, render objects
-                    if (this.currentState.worldState.stateSettings.loadOutside === false){
-                        for (let o of this.currentState.sceneObjects){ //currentState is now pointing to something else
-                            if (o) o.SetRenderState(true)
-                        }
-                    }
-                }
-
-                //If controls are enabled, add a CameraDebug
-                if (this.scene.CONTROLS) this.AddObject({key:'CameraDebug',state:this.GetState()})
-
-                //If object debug mode is enabled. add a ObjectDebug and all desired debug objects
-                if (this.scene.DEBUG_MODE){
-                    const objectDebug : (SceneObject | null)= this.AddObject({key: 'ObjectDebug', state:this.GetState()})
-
-                    //This is kinda hacky but our Debug KeyObject only has 1 behaviour, so we know that it is the debug behaviour
-                    const debug : (ObjectDebug | undefined) = objectDebug!.behaviours![0] as ObjectDebug
-
-                    //go through objects and add if debug is enabled
-                    for (let o of this.sceneObjects){
-                        if (o && o.debug) debug!.AddDebugObject(o) //point object to our debug object
-                    }
-
-                }
-
-                //Call Canvas to load
-                this.scene.canvas.OnLoadCompete();
-
-                console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
+        //Initialize current state to page prop
+        const desiredState = this.worldStates.filter( (worldState)=>{return (worldState.worldState.name === (this.scene.canvas.props as CanvasProps).page)})
+        if (desiredState.length === 1){
+            this.currentState = desiredState[0]
+            this.scene.MoveCamera(this.currentState.worldState.cameraAngle,{
+                easing: 'linear',
+                duration: 1 //set a really fast duration so it's not noticiable on pageLoad
             })
+
+            //if this new state needs to be rendered, render objects
+            if (this.currentState.worldState.stateSettings.loadOutside === false){
+                for (let o of this.currentState.sceneObjects){ //currentState is now pointing to something else
+                    if (o) o.SetRenderState(true)
+                }
+            }
+
+        } else {
+            //Load the first state
+            this.currentState = this.worldStates[0]
+            console.error(`State: '${(this.scene.canvas.props as CanvasProps).page}' doesn't exist.\nDefaulting to the first state: '${this.currentState.worldState.name}'`)
+            window.history.pushState('','',this.currentState.worldState.name) //change URL
+            this.scene.MoveCamera(this.currentState.worldState.cameraAngle,{
+                easing: 'linear',
+                duration: 1 //set a really fast duration so it's not noticiable on pageLoad
+            })
+
+            //if this new state needs to be rendered, render objects
+            if (this.currentState.worldState.stateSettings.loadOutside === false){
+                for (let o of this.currentState.sceneObjects){ //currentState is now pointing to something else
+                    if (o) o.SetRenderState(true)
+                }
+            }
+        }
+
+        //If controls are enabled, add a CameraDebug
+        if (this.scene.CONTROLS) this.AddObject({key:'CameraDebug',state:this.GetState()})
+
+        //If object debug mode is enabled. add a ObjectDebug and all desired debug objects
+        if (this.scene.DEBUG_MODE){
+            const objectDebug : (SceneObject | null)= this.AddObject({key: 'ObjectDebug', state:this.GetState()})
+
+            //This is kinda hacky but our Debug KeyObject only has 1 behaviour, so we know that it is the debug behaviour
+            const debug : (ObjectDebug | undefined) = objectDebug!.behaviours![0] as ObjectDebug
+
+            //go through objects and add if debug is enabled
+            for (let o of this.sceneObjects){
+                if (o && o.debug) debug!.AddDebugObject(o) //point object to our debug object
+            }
+
+        }
+
+        //Call Canvas to load
+        this.scene.canvas.OnLoadCompete();
+
+        console.log("%c World Instantiated%o", "color: green; font-weight: bold;", this)
     }
 
     //Update all objects

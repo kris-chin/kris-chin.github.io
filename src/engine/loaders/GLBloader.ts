@@ -21,8 +21,6 @@ interface GLTF{
     asset: Object
 }
 
-
-
 export default class GLBloader {
 
     map: Map<string, THREE.Object3D>; //Engine Map 
@@ -44,24 +42,23 @@ export default class GLBloader {
             var promiseList = new Array<Promise<{name: string, GLTF: GLTF}>>();
 
             //go through GLBs list and push a promise for every GLB
-            console.log(this.glbs);
             for (let glb of this.glbs){
-                console.log(glb)
+                console.log(`Now Loading glb: '${glb.name}'`)
                 promiseList.push(new Promise<{name: string, GLTF: GLTF}>( (resolve,reject) => {
                     gltf_loader.load(
                         glb.filepath,
                         (gltf: Object) => {
-                            console.log('object: %o', gltf)
                             resolve({name: glb.name, GLTF: gltf as GLTF})
                         },
                         (xhr: any)=>{
-                            
+                            console.log(`${(xhr.loaded/xhr.total * 100)}% loaded`)
                         },
-                        ()=>{
-                            console.log('rejected')
+                        (error)=>{
+                            console.error("Load Failed:\n", error)
                             reject();
                         }
                     )
+                    
 
                 }));
             }
@@ -69,10 +66,7 @@ export default class GLBloader {
             //wait for all GLB promimses
             Promise.all(promiseList)
             .then(data=>{
-                console.log("this is data")
-                console.log(data)
                 for (let object of data){
-                    console.log(`${object.name}:, %o`, object.GLTF)
                     this.map.set(object.name, object.GLTF.scene)
                 }
                 resolve(this.map)
