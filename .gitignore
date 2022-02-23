@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -25,7 +23,24 @@ yarn-error.log*
 #cache
 .eslintcache
 
-#Etc
+#Local Development
 NOTES.md
 .vscode
 tools/angleList
+
+#Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+#Python Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+#Sphinx Build Docs
+docs/build/

@@ -1,0 +1,37 @@
+<mxfile host="65bd71144e">
+    <diagram id="AbCBzGUPHUno2J9MBj72" name="Page-1">
+        <mxGraphModel dx="1498" dy="595" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" style="edgeStyle=none;html=1;startArrow=classic;startFill=1;" edge="1" parent="1" source="2" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" style="edgeStyle=none;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="2" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Canvas" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="40" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="3" target="7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Scene" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="TextLayer" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;" edge="1" parent="1" source="7" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="World" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="300" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="SceneObjects" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-80" y="290" width="100" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
