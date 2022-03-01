@@ -62,7 +62,7 @@ export class World extends THREE.Group {
     materials : Map<string,(THREE.Material | Array<THREE.Material>)>; //Map of all materials used
     behaviours : BehaviourFactory;
     private keyObjects : Map<string,Object> //placeable objects. used for keys
-    externalMeshes : Map<string, THREE.Mesh>;
+    externalMeshes : Map<string, THREE.Mesh>; //Map of all of our outside Meshes. (accessed by SceneObject Contstructor)
 
     //Respective Scene Object
     scene : Scene;
@@ -101,7 +101,6 @@ export class World extends THREE.Group {
             geometries: this.geometries,
             keyObjects: this.keyObjects,
             externalMeshes: this.externalMeshes,
-            GLBs: undefined
         }
 
         let loader_manager : LoaderManager= new LoaderManager(this, maps);

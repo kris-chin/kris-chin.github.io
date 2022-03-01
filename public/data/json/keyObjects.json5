@@ -95,10 +95,24 @@
         },
     },
     {
+        name: "website_glb",
+        sceneObject: {
+            mesh: "website",
+            behaviours: [],
+        },
+    },
+    {
         name: "showcase_MCMC",
         sceneObject: {
             geometry: "box",
             behaviours: [{name:"showcase_MCMC",params:{elementId:"showcase_MCMC",},},],
+        },
+    },
+    {
+        name: "mcmc_glb",
+        sceneObject: {
+            mesh: "mcmc",
+            behaviours: [],
         },
     },
     {
@@ -135,10 +149,24 @@
         },
     },
     {
+        name: "pipeline_glb",
+        sceneObject: {
+            mesh: "pipeline",
+            behaviours: [],
+        },
+    },
+    {
         name: "showcase_ROP",
         sceneObject: {
             geometry: "box",
             behaviours: [{name:"showcase_ROP",params:{elementId:"showcase_ROP",},},],
+        },
+    },
+    {
+        name: "rop_glb",
+        sceneObject: {
+            mesh: "rop",
+            behaviours: [],
         },
     },
     {

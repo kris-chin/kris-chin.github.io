@@ -3,7 +3,7 @@
         name: "website",
         filepath: "/data/glb/website.glb"
     },
-    /*{
+    {
         name: "mcmc",
         filepath: "/data/glb/mcmc.glb"
     },
@@ -14,6 +14,5 @@
     {
         name: "rop",
         filepath: "/data/glb/rop.glb"
-    },
-    */
+    }
 ]

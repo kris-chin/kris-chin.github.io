@@ -11,6 +11,7 @@ import Canvas from '../engine/Canvas'
 
 //JSONs
 import models from './models.json5';
+import glbs from './glbs.json5';
 import desktop_world from './desktop_world.json5';
 
 //Animations:
@@ -56,6 +57,7 @@ var desktop = {
     world: desktop_world,
     backgroundColor: 0xEE9B00,
     meshes : models,
+    glbs: glbs, 
     behaviours: behaviours,
     state_startingAnimations: {
         '/test' : Animation //play this animation when on state.

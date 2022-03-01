@@ -19,7 +19,6 @@ export interface Maps {
     materials : Map<string,(THREE.Material | Array<THREE.Material>)> | undefined, //Map of all materials used
     keyObjects : Map<string,Object> | undefined, //placeable objects. used for keys
     externalMeshes : Map<string, THREE.Mesh> | undefined,
-    GLBs: Map<string, THREE.Object3D> | undefined
 };
 
 export default class LoaderManager {
@@ -42,8 +41,9 @@ export default class LoaderManager {
         this.loader_materials = new MaterialLoader(maps.materials!)
         this.loader_geometries = new GeometryLoader(maps.geometries!);
         this.loader_keyObjects = new KeyObjectLoader(maps.keyObjects!);
+        //These two loaders share the same map
         this.loader_externalMeshes = new ExternalMeshLoader(maps.externalMeshes!, world, world.scene.canvas.data['meshes']);
-        this.loader_GLBs = new GLBloader(maps.GLBs!,this.world, this.world.scene.canvas.data['glbs'])
+        this.loader_GLBs = new GLBloader(maps.externalMeshes!,this.world, this.world.scene.canvas.data['glbs']) 
     }
 
     async RunLoaders() : Promise<Array<any>> {
@@ -52,7 +52,8 @@ export default class LoaderManager {
             this.loader_materials.LoadMaterials(),
             this.loader_geometries.LoadGeometries(),
             this.loader_keyObjects.LoadKeyObjects(),
-            this.loader_externalMeshes.LoadExternalMeshes()]
+            this.loader_externalMeshes.LoadExternalMeshes(),
+            this.loader_GLBs.LoadGLBs()]
         )
         .then((data : Array<any>) => {return data;});
 

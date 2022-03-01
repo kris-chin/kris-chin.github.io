@@ -51,7 +51,7 @@ export default class GLBloader {
                             resolve({name: glb.name, GLTF: gltf as GLTF})
                         },
                         (xhr: any)=>{
-                            console.log(`${(xhr.loaded/xhr.total * 100)}% loaded`)
+                            console.log(`${((xhr.loaded/xhr.total) * 100)}% loaded`)
                         },
                         (error)=>{
                             console.error("Load Failed:\n", error)
