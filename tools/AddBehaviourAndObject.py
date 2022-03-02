@@ -48,7 +48,7 @@ f.close()
 regex0 = r'(export default class (.*?) extends)'
 match = re.search(regex0,data_class)
 if match == None: 
-    print('something didn\'t work right')
+    print('something didn\'t work right [0]')
     exit(1)
 
 #Set our classname
@@ -85,7 +85,7 @@ regex1 = r'\/\/\[BEGIN_BEHAVIOURS\](.*)\/\/\[END_BEHAVIOURS\]' #Matches everythi
 
 match = re.search(regex1,data_behaviours, flags=re.DOTALL)
 if match == None:
-    print('Something didn\'t work right')
+    print('Something didn\'t work right [1]')
     exit(1)
 
 #With our import list, add our new class in the import spot
@@ -101,7 +101,7 @@ regex2 = r'\}\n\]|\[\n' #Specifically selects either the beginning or the end of
 #Find all matches
 match = re.findall(regex2,data_behaviours)
 if match == None:
-    print('Something didn\'t work right')
+    print('Something didn\'t work right [2]')
     exit(1)
 
 #We now pointed at the end of the behaviours list, we'll replace the newline with our text
@@ -128,7 +128,7 @@ if BEHAVIOURS_EXISTS == False:
     #Find import list (we use the old pattern)
     match = re.search(regex1, data_config, flags=re.DOTALL)
     if match == None:
-        print('Something didn\'t work right')
+        print('Something didn\'t work right [3]')
         exit(1)
     
     raw_match = match.group(0)
@@ -140,7 +140,7 @@ if BEHAVIOURS_EXISTS == False:
         regex2 = r';\nconst behaviours' #Get the end of the imports line
         raw_match_2 = re.search(regex2, raw_match)
         if raw_match_2 == None:
-            print('Something didn\'t work right')
+            print('Something didn\'t work right [4]')
             exit(1)
         raw_match_2 = raw_match_2.group(0)
         new_import = "\nimport * as b" + str(import_count) + " from './" + str(behaviours.parent.relative_to(pathlib.Path(BASE_DIR).resolve())) + "/_behaviours';\n"
@@ -151,7 +151,7 @@ if BEHAVIOURS_EXISTS == False:
         regex2 = r'\n\)' #specifically get the end of the array definition
         raw_match_2 = re.search(regex2, raw_match).group(0)
         if raw_match_2 == None:
-                print('Something didn\'t work right')
+                print('Something didn\'t work right [5]')
                 exit(1)
         new_array = ",\n    b"+str(import_count)+".behaviours\n)"
         raw_match = raw_match.replace(raw_match_2, new_array)

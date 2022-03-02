@@ -82,6 +82,7 @@ export class Scene {
         //add the helper camera to debug the light
         //this.scene.add(new THREE.CameraHelper(this.camera));
 
+        //Set up Renderer
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true; //enables shadows

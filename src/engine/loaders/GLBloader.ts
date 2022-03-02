@@ -67,6 +67,7 @@ export default class GLBloader {
             Promise.all(promiseList)
             .then(data=>{
                 for (let object of data){
+                    object.GLTF.scene.animations = object.GLTF.animations //Set imported animations to this the Object3D
                     this.map.set(object.name, object.GLTF.scene)
                 }
                 resolve(this.map)

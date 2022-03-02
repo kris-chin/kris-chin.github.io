@@ -90,7 +90,6 @@
     {
         name: "showcase_Website",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_Website",params:{elementId:"showcase_Website",},},],
         },
     },
@@ -104,7 +103,6 @@
     {
         name: "showcase_MCMC",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_MCMC",params:{elementId:"showcase_MCMC",},},],
         },
     },
@@ -112,7 +110,7 @@
         name: "mcmc_glb",
         sceneObject: {
             mesh: "mcmc",
-            behaviours: [],
+            behaviours: [{name: "LoopingAnimation", params:{}}],
         },
     },
     {
@@ -130,21 +128,18 @@
     {
         name: "showcase_briefAbout",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_briefAbout",params:{elementId:"showcase_briefAbout",},},],
         },
     },
     {
         name: "showcase_briefContact",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_briefContact",params:{elementId:"showcase_briefContact",},},],
         },
     },
     {
         name: "showcase_Pipeline",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_Pipeline",params:{elementId:"showcase_Pipeline",},},],
         },
     },
@@ -152,13 +147,12 @@
         name: "pipeline_glb",
         sceneObject: {
             mesh: "pipeline",
-            behaviours: [],
+            behaviours: [{name: "LoopingAnimation", params:{loop: false}}],
         },
     },
     {
         name: "showcase_ROP",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_ROP",params:{elementId:"showcase_ROP",},},],
         },
     },
@@ -166,14 +160,13 @@
         name: "rop_glb",
         sceneObject: {
             mesh: "rop",
-            behaviours: [],
+            behaviours: [{name: "LoopingAnimation", params:{}}],
         },
     },
     {
         name: "showcase_NetworKING",
         sceneObject: {
-            geometry: "box",
             behaviours: [{name:"showcase_NetworKING",params:{elementId:"showcase_NetworKING",},},],
         },
-    },
+    }
 ]

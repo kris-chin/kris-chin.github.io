@@ -6,7 +6,9 @@ import SceneObject from '../../engine/SceneObject'
 import AmbientLight from './AmbientLight';
 import DirectionalLight from './DirectionalLight';
 import DebugScroll from './DebugScroll';
+import LoopingAnimation from './LoopingAnimation';
 //[END_BEHAVIOURS]
+
 
 
 var behaviours : {name:string, factory: Function}[] = [
@@ -21,6 +23,10 @@ var behaviours : {name:string, factory: Function}[] = [
     {
 	name: 'DebugScroll',
 	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new DebugScroll(parent,params)}
+    },
+    {
+	name: 'LoopingAnimation',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new LoopingAnimation(parent,params)}
     }
 ]
 
