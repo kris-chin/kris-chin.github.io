@@ -36,7 +36,7 @@
     {
         name: "AmbientLight",
         sceneObject: {
-            behaviours: [{name:"AmbientLight",params:{color:16777215,intensity:0.25,},},],
+            behaviours: [{name:"AmbientLight",params:{color:'#FFFFFF',intensity:0.25,},},],
         },
     },
     {

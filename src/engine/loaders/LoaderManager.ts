@@ -55,7 +55,11 @@ export default class LoaderManager {
             this.loader_externalMeshes.LoadExternalMeshes(),
             this.loader_GLBs.LoadGLBs()]
         )
-        .then((data : Array<any>) => {return data;});
+        .then((data : Array<any>) => {
+            //Update the properties of the materials loaded from the GLBLoader
+            this.loader_GLBs.SetMaterialProperties();
+            return data;
+        });
 
         return data;
     }
