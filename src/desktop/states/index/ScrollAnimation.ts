@@ -318,7 +318,7 @@ export default class ScrollAnimation {
             }
         })
         .AddTimeline({
-            target: "#showcase_briefAbout div",
+            target: "div.briefAbout.showcaseText",
             opacity: {
                 keyframes: ['0', '1'],
                 duration: {startPercent: 0.5, endPercent: 1}
@@ -368,12 +368,13 @@ export default class ScrollAnimation {
         const numKeyframes = 7 //number of keyframes in showcase
         var onPercent : any = {} //we add to this object in the for loop
         for (let [i, showcase] of showcaseData.entries()){ //go through json5 data in order
-            const selector = `#${showcase.divName} div` //get the inner div 
+
+            const selector = `div.${showcase.divName}` //get the inner div 
 
             var percent = (1/numKeyframes) * (i + 1); //add one to account for the first non-showcase project
 
             showcaseMap.set(showcase.name, {f: () => {
-                if (showcaseData[i-1] !== undefined) togglePointerEvents(`#${showcaseData[i-1].divName} div`, false) //disable previous showcase text
+                if (showcaseData[i-1] !== undefined) togglePointerEvents(`div.${showcaseData[i-1].divName}`, false) //disable previous showcase text
                 this.showcaseOverlay.UpdateSectionData(showcase.data)
                 togglePointerEvents(selector, true) //enable this showcase
             }, n: percent})
@@ -442,7 +443,7 @@ export default class ScrollAnimation {
 
             scrollScene
             .AddTimeline({
-                target: "#showcase_briefAbout div",
+                target: "div.briefAbout.showcaseText",
                 opacity: {
                     keyframes: ['1', '0'], //since this is the first "section" that was transitioned into via Splash, we start at 1 here
                     duration: {startPercent: p, endPercent: p + KEYFRAME_UNIT}
@@ -455,7 +456,7 @@ export default class ScrollAnimation {
             const p = showcaseMap.get('websiteData')!.n
             scrollScene
             .AddTimeline({
-                target: "#showcase_Website div",
+                target: "div.website.showcaseText",
                 opacity: {
                     keyframes: ['0', '1', '0'],
                     duration: {startPercent: 0 + KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
@@ -469,7 +470,7 @@ export default class ScrollAnimation {
             const p = showcaseMap.get('mcmcData')!.n
             scrollScene
             .AddTimeline({
-                target: "#showcase_MCMC div",
+                target: "div.mcmcse.showcaseText",
                 opacity: {
                     keyframes: ['0', '1', '0'],
                     duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
@@ -492,7 +493,7 @@ export default class ScrollAnimation {
 
             scrollScene
             .AddTimeline({
-                target: "#showcase_Pipeline div",
+                target: "div.pipeline.showcaseText",
                 opacity: {
                     keyframes: ['0', '1', '0'],
                     duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
@@ -506,7 +507,7 @@ export default class ScrollAnimation {
             const p = showcaseMap.get('ropData')!.n
             scrollScene
             .AddTimeline({
-                target: "#showcase_ROP div",
+                target: "div.rop.showcaseText",
                 opacity: {
                     keyframes: ['0', '1', '0'],
                     duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT*2}
@@ -517,7 +518,7 @@ export default class ScrollAnimation {
 
         const NetworKING = (scrollScene: ScrollScene) => {
             const p = showcaseMap.get('networkingData')!.n
-            const selector = '#showcase_NetworKING div'
+            const selector = 'div.networking.showcaseText'
 
             scrollScene
             .AddTimeline({
@@ -539,7 +540,7 @@ export default class ScrollAnimation {
             const p = 1;
             scrollScene
             .AddTimeline({
-                target: "#showcase_briefContact div",
+                target: "div.briefContact.showcaseText",
                 opacity: {
                     keyframes: ['0', '1', '0'],
                     duration: {startPercent: p - KEYFRAME_UNIT, endPercent: p + KEYFRAME_UNIT}
