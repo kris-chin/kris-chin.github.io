@@ -109,7 +109,7 @@ export default class GLBloader {
         for (let material of this.meshStandardMaterials){
 
             //TODO: if the material requires specific set texture maps (eg. alphaMap, aoMap, bumpMap, etc), then apply them. this may not be the best place to do it. 
-            //NOTE: These maps can be acquired via seperate bakes in Blender
+            //NOTE: These maps can be acquired via seperate bakes in Blender,
 
             //TODO: Read object3D.userData and change MeshStandardMaterial into different materials (eg. MeshPhysicalMaterial for glass)
 

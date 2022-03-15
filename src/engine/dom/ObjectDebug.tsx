@@ -105,6 +105,7 @@ export default class name extends DomText{
 
         const log = () =>{
             console.log(JSON.parse(JSON.stringify({
+                behaviours: this.co.initialArgs?.behaviours,
                 debug: true, //keep debug on just in case
                 uniqueId : this.co.uniqueId,
                 pos: {

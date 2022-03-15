@@ -66,6 +66,7 @@
                     }
                 }},
                 {"name": "showcase_briefAbout", "args" : { 
+                    "behaviours": [{name:"Rotate", params:{speed:-2}}],
                     "debug": true,
                     "uniqueId": null,
                     "pos": {

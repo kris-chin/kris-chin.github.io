@@ -46,8 +46,9 @@ export interface args{
     pos : {x: number, y: number, z: number} //Position
     rot : {x: number, y: number, z:number} //Rotation
     sca : {x: number, y: number, z: number} //Scale
-    debug : boolean //is debug enabled?
-    uniqueId: string //has a unique id
+    debug : boolean, //is debug enabled?
+    uniqueId: string, //has a unique id
+    behaviours: Array<{name: string, params: Object}> | undefined //behaviours that are added to the object on top of the keyObject.
 }
 
 export class World extends THREE.Group {
@@ -186,6 +187,7 @@ export class World extends THREE.Group {
 
     //Helper Method for pushing objects into array
     //Returns a reference to the new object in case you want to work with it
+    //NOTE: If you want to add new paramters to the object. just add them to the arg interface
     public AddObject(info : {key : string, state: string}, arg? : Object) : SceneObject | null {  
         const args = arg as args //Cast our Arguments as our args interface. This allows for optional arguments
 
@@ -238,6 +240,13 @@ export class World extends THREE.Group {
             })
         }
         
+        //if behaviours were specified, append them to the behaviours list
+        if (args && args.behaviours && behaviours){
+            for (let item of args.behaviours){
+                behaviours.push(this.behaviours.GetBehaviour(item.name,object,item.params));
+            }
+        }
+
         object.Initialize(this, behaviours!); //Point the Object to the World and create mesh with behaviours
 
         //If object failed to create
