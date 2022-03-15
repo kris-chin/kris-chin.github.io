@@ -36,7 +36,7 @@
     {
         name: "AmbientLight",
         sceneObject: {
-            behaviours: [{name:"AmbientLight",params:{color:'#FFFFFF',intensity:0.25,},},],
+            behaviours: [{name:"AmbientLight",params:{color:"#FFFFFF",intensity:0.25,},},],
         },
     },
     {
@@ -110,7 +110,7 @@
         name: "mcmc_glb",
         sceneObject: {
             mesh: "mcmc",
-            behaviours: [{name: "LoopingAnimation", params:{}}],
+            behaviours: [{name:"LoopingAnimation",params:{},},],
         },
     },
     {
@@ -148,7 +148,7 @@
         name: "pipeline_glb",
         sceneObject: {
             mesh: "pipeline",
-            behaviours: [{name: "LoopingAnimation", params:{loop: false}}],
+            behaviours: [{name:"LoopingAnimation",params:{loop:false,},},],
         },
     },
     {
@@ -161,7 +161,7 @@
         name: "rop_glb",
         sceneObject: {
             mesh: "rop",
-            behaviours: [{name: "LoopingAnimation", params:{}}],
+            behaviours: [{name:"LoopingAnimation",params:{},},],
         },
     },
     {
@@ -169,5 +169,12 @@
         sceneObject: {
             behaviours: [{name:"showcase_NetworKING",params:{elementId:"showcase_NetworKING",},},],
         },
-    }
+    },
+    {
+        name: "ProjTextBox",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"ProjTextBox",params:{elementId:"ProjTextBox",},},],
+        },
+    },
 ]

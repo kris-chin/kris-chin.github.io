@@ -7,7 +7,9 @@ import AmbientLight from './AmbientLight';
 import DirectionalLight from './DirectionalLight';
 import DebugScroll from './DebugScroll';
 import LoopingAnimation from './LoopingAnimation';
+import ProjTextBox from './ProjTextBox';
 //[END_BEHAVIOURS]
+
 
 
 
@@ -27,6 +29,10 @@ var behaviours : {name:string, factory: Function}[] = [
     {
 	name: 'LoopingAnimation',
 	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new LoopingAnimation(parent,params)}
+    },
+    {
+	name: 'ProjTextBox',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new ProjTextBox(parent,params)}
     }
 ]
 

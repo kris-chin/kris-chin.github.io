@@ -146,6 +146,7 @@
                     }
                 }},
                 {"name": "mcmc_glb", "args" : {
+                    "behaviours": [{name: "ProjTextBox", params:{JSXKey: "mcmcse_box1"}}],
                     "debug": true,
                     "uniqueId": null,
                     "pos": {
