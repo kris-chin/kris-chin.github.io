@@ -163,6 +163,19 @@ export class SceneObject {
         return this.isRendered
     }
 
+    //Finds and returns a specified behaviour type within the SceneObject
+    //If there are multiple behaviours of the same type, it finds the first one
+    //behaviour_constructor should be passed in the Class Type itself, not an object 
+    FindBehaviour(behaviour_constructor : Function ) : Behaviour | null{
+
+        for (let b of this.behaviours!){
+            if (b instanceof behaviour_constructor)
+                return b;
+        }
+
+        return null;
+    }
+
 }
 
 export default SceneObject
