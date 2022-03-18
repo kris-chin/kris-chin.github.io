@@ -127,7 +127,7 @@ export class SceneObject {
                 if (!this.meshIsInWorld()) { //if the mesh is not added yet and needs to be added
                     if (this.parent) this.parent.mesh!.add(this.mesh!)
                     else this.world.add(this.mesh!)
-                    console.log(`Added ${this.name}`)
+                    //console.log(`Added ${this.name}`)
                 }
                 this.CHECK_RENDER = true;
             }
