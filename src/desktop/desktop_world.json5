@@ -231,8 +231,9 @@
                     }
                 }},
                 /* -------------------------- Project 5: NetworKING ------------------------- */
-                {"name": "cubeCircle", "args" : {
-                    "behaviours": [{name: "ProjTextBox", params:{JSXKey: "networking_box1"}}],
+                {"name": "meshless", "args" : {
+                    "behaviours": [{name: "ProjTextBox", params:{JSXKey: "networking_box1"}},
+                                   {name: "Graph", params:{}}],
                     "debug": true,
                     "uniqueId": null,
                     "pos": {

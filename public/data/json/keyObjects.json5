@@ -177,4 +177,22 @@
             behaviours: [{name:"ProjTextBox",params:{elementId:"ProjTextBox",},},],
         },
     },
+    {
+        name: "meshless",
+        sceneObject: {
+            behaviours: [],
+        },
+    },
+    {
+        name: "Graph_Node",
+        sceneObject: {
+            behaviours: [{name:"Graph_Node",params:{elementId:"Graph_Node",},},],
+        },
+    },
+    {
+        name: "Graph_Link",
+        sceneObject: {
+            behaviours: [{name:"Graph_Link",params:{elementId:"Graph_Link",},},],
+        },
+    },
 ]

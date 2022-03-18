@@ -11,7 +11,13 @@ import showcase_briefContact from './showcase_briefContact';
 import showcase_Pipeline from './showcase_Pipeline';
 import showcase_ROP from './showcase_ROP';
 import showcase_NetworKING from './showcase_NetworKING';
+import Graph from './Graph';
+import Graph_Node from './Graph_Node';
+import Graph_Link from './Graph_Link';
 //[END_BEHAVIOURS]
+
+
+
 
 
 
@@ -47,6 +53,18 @@ var behaviours : {name:string, factory: Function}[] = [
     {
 	name: 'showcase_NetworKING',
 	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new showcase_NetworKING(parent,params)}
+    },
+    {
+	name: 'Graph',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new Graph(parent,params)}
+    },
+    {
+	name: 'Graph_Node',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new Graph_Node(parent,params)}
+    },
+    {
+	name: 'Graph_Link',
+	factory: (parent : SceneObject|undefined, params:Object|undefined)=>{return new Graph_Link(parent,params)}
     }
 ]
 
