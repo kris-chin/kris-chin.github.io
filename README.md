@@ -9,7 +9,7 @@ Currently, the project still needs a lot of polish and has not been properly dep
 
 Check out the docs!
 
-## How to use the engine, tools, scrol library, etc...
+## How to use the engine, tools, scroll library, etc...
 
 Check out the docs!
 
