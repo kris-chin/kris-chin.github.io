@@ -1,0 +1,198 @@
+[
+    {
+        name: "cube",
+        sceneObject: {
+            geometry: "box",
+            material: "behaviour:RandomColor",
+            behaviours: [{name:"Rotate",params:{speed:-2,},},],
+        },
+    },
+    {
+        name: "plane",
+        sceneObject: {
+            geometry: "plane",
+            material: "white",
+        },
+    },
+    {
+        name: "skybox",
+        sceneObject: {
+            geometry: "skybox",
+            material: "skybox0",
+        },
+    },
+    {
+        name: "cubeCircle",
+        sceneObject: {
+            behaviours: [{name:"CubeCircle",params:{rotation:0,},},],
+        },
+    },
+    {
+        name: "DirectionalLight",
+        sceneObject: {
+            behaviours: [{name:"DirectionalLight",params:{color:16777215,intensity:1,},},],
+        },
+    },
+    {
+        name: "AmbientLight",
+        sceneObject: {
+            behaviours: [{name:"AmbientLight",params:{color:"#FFFFFF",intensity:0.25,},},],
+        },
+    },
+    {
+        name: "DOM_Links",
+        sceneObject: {
+            behaviours: [{name:"Links",params:{elementId:"links",},},],
+        },
+    },
+    {
+        name: "ProjectionTextCube",
+        sceneObject: {
+            geometry: "box",
+            material: "white",
+            behaviours: [{name:"ProjectionText",params:{elementId:"projectionTextCube",},},],
+        },
+    },
+    {
+        name: "CameraDebug",
+        sceneObject: {
+            behaviours: [{name:"CameraDebug",params:{elementId:"cameraDebug",},},],
+        },
+    },
+    {
+        name: "SlowlyRotatingCube",
+        sceneObject: {
+            geometry: "box",
+            material: "white",
+            behaviours: [{name:"Rotate",params:{speed:0.1,},},],
+        },
+    },
+    {
+        name: "SplashDOM",
+        sceneObject: {
+            behaviours: [{name:"Splash",params:{elementId:"splashPage",},},{name:"SplashOverlay",params:{elementId:"splashOverlay",},},],
+        },
+    },
+    {
+        name: "statue",
+        sceneObject: {
+            mesh: "statue",
+            recieveShadows: false,
+            behaviours: [{name:"Rotate",params:{speed:0.01,},},],
+        },
+    },
+    {
+        name: "ObjectDebug",
+        sceneObject: {
+            behaviours: [{name:"ObjectDebug",params:{elementId:"objectDebug",},},],
+        },
+    },
+    {
+        name: "showcase_Website",
+        sceneObject: {
+            behaviours: [{name:"showcase_Website",params:{elementId:"showcase_Website",},},],
+        },
+    },
+    {
+        name: "website_glb",
+        sceneObject: {
+            mesh: "website",
+            behaviours: [],
+        },
+    },
+    {
+        name: "showcase_MCMC",
+        sceneObject: {
+            behaviours: [{name:"showcase_MCMC",params:{elementId:"showcase_MCMC",},},],
+        },
+    },
+    {
+        name: "mcmc_glb",
+        sceneObject: {
+            mesh: "mcmc",
+            behaviours: [{name:"LoopingAnimation",params:{},},],
+        },
+    },
+    {
+        name: "DebugScroll",
+        sceneObject: {
+            behaviours: [{name:"DebugScroll",params:{elementId:"DebugScroll",},},],
+        },
+    },
+    {
+        name: "ShowcaseOverlay",
+        sceneObject: {
+            behaviours: [{name:"ShowcaseOverlay",params:{elementId:"ShowcaseOverlay",},},],
+        },
+    },
+    {
+        name: "showcase_briefAbout",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"showcase_briefAbout",params:{elementId:"showcase_briefAbout",},},],
+        },
+    },
+    {
+        name: "showcase_briefContact",
+        sceneObject: {
+            behaviours: [{name:"showcase_briefContact",params:{elementId:"showcase_briefContact",},},],
+        },
+    },
+    {
+        name: "showcase_Pipeline",
+        sceneObject: {
+            behaviours: [{name:"showcase_Pipeline",params:{elementId:"showcase_Pipeline",},},],
+        },
+    },
+    {
+        name: "pipeline_glb",
+        sceneObject: {
+            mesh: "pipeline",
+            behaviours: [{name:"LoopingAnimation",params:{loop:false,},},],
+        },
+    },
+    {
+        name: "showcase_ROP",
+        sceneObject: {
+            behaviours: [{name:"showcase_ROP",params:{elementId:"showcase_ROP",},},],
+        },
+    },
+    {
+        name: "rop_glb",
+        sceneObject: {
+            mesh: "rop",
+            behaviours: [{name:"LoopingAnimation",params:{},},],
+        },
+    },
+    {
+        name: "showcase_NetworKING",
+        sceneObject: {
+            behaviours: [{name:"showcase_NetworKING",params:{elementId:"showcase_NetworKING",},},],
+        },
+    },
+    {
+        name: "ProjTextBox",
+        sceneObject: {
+            geometry: "box",
+            behaviours: [{name:"ProjTextBox",params:{elementId:"ProjTextBox",},},],
+        },
+    },
+    {
+        name: "meshless",
+        sceneObject: {
+            behaviours: [],
+        },
+    },
+    {
+        name: "Graph_Node",
+        sceneObject: {
+            behaviours: [{name:"Graph_Node",params:{elementId:"Graph_Node",},},],
+        },
+    },
+    {
+        name: "Graph_Link",
+        sceneObject: {
+            behaviours: [{name:"Graph_Link",params:{elementId:"Graph_Link",},},],
+        },
+    },
+]

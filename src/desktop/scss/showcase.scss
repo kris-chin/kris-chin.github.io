@@ -1,0 +1,142 @@
+//Colorscheme variales
+$mainText : #001219;
+$highlightText1: #0A9396;
+$highlightText2: #9B2226;
+$backgroundColor: #EE9B00;
+$windowColor: #E9D8A6;
+
+//Font Vriables
+$mainFont : arial;
+
+//Keep all text regarding the showcase transparent when not in animation
+.showcaseText {
+    opacity: 0; //this value is automated
+    z-index: 101;
+    pointer-events: none; //this value is automated
+
+    //Window
+    width: 30em;
+
+    //Stylin'
+    font-family: $mainFont;
+    border-style:solid;
+    border-color: $windowColor;
+    border-radius: 12px;
+    background-color: $windowColor;
+}
+
+//Debug Scroll Text
+#DebugScroll {
+
+    p{
+        display:block;
+    }
+
+    #DebugScroll_warn{
+        color: red
+    }
+}
+
+//Overlay shown in showcase
+#ShowcaseOverlay {
+    font-family: $mainFont;
+
+    //Left side of the overlay
+    #ShowcaseOverlay_div_links {
+        $width: 10em;
+        width: $width;
+
+        transform: translate(5vw + 0.5vw, 5vh);
+
+        .ShowcaseOverlay_div_link{
+            display: block;
+            position:relative;
+            width: 10em;
+            font-size: 1.75em;
+            padding-bottom: 0.1em;
+            font-weight: bold;
+
+            a{
+                opacity: 0; //updated with animation
+            }
+            
+            //Standardize the sizes of the icons and move them
+            svg{
+                width: 1em;
+                height: 1em;
+                padding-left: 1em;
+                transform: translate(-3em, 100vh);
+                position:absolute;
+            }
+        }
+    }
+
+    //Right side of the overlay
+    #ShowcaseOverlay_div_sectionInfo {
+        $width: 10em;
+
+        width: $width;
+        text-align:right;
+        transform: translate(calc(95vw - $width - 1vw), 5vh);
+
+        #ShowcaseOverlay_div_sectionTitleWrapper{
+            display:block;
+            position:relative;
+            overflow:hidden;
+            width:30em;
+            float:right;
+
+            
+            #ShowcaseOverlay_p_sectionTitle{
+                width:100%;
+                font-size:4em;
+                float:right;
+
+                transform: translateY(-1em); //start hidden
+            }
+        }
+
+
+        #ShowcaseOverlay_div_sectionData {
+            width:100%;
+            display:block;
+            position:relative;
+            font-size:1.5em;
+
+            .ShowcaseOverlay_div_property{
+                position:relative;
+                width:20em;
+                display:block;
+                float:right; //get these elements within the div to align right
+                overflow:hidden;
+                
+                //Wrapper for the "overwrite" effect
+                div {
+                    position:relative;
+                    display:inline-block;
+                }
+                p {
+                    transform: translateX(5em); //start hidden
+                    display:inline-block;
+                    //padding-left: 0.5em;
+                }
+            }
+        }
+    }
+}
+
+//class for overwrite animation
+.overwrite {
+    width: 0%;
+    white-space: nowrap;
+}
+
+//label in overlay
+.label {
+    padding-right: 0.5em;
+}
+
+//the upper div for the proprty value
+.propertyValue {
+    width: 0%;
+}

@@ -7,6 +7,8 @@
 var config = {
     CONTROLS : false, //enable full orbit controls?
     DEBUG_MODE: false, //enable object debug mode?
+    SHOW_SCROLL: false, //for desktop, shows scroll percent
+    SCROLL_SNAP: false //snap to keyframes?
 }
 
 export default config;

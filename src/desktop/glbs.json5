@@ -1,0 +1,18 @@
+[
+    {
+        name: "website",
+        filepath: "/data/glb/website.glb"
+    },
+    {
+        name: "mcmc",
+        filepath: "/data/glb/mcmc.glb"
+    },
+    {
+        name: "pipeline",
+        filepath: "/data/glb/pipeline.glb"
+    },
+    {
+        name: "rop",
+        filepath: "/data/glb/rop.glb"
+    }
+]

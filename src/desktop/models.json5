@@ -1,0 +1,11 @@
+[
+    {
+        "name": "statue",
+        "filePath_obj": "/data/models/statue/statue2.obj",
+        "filePath_mtl": "/data/models/statue/statue2.mtl",
+        "params":
+            {
+                "defaultScale": {"x":0.01,"y":0.01,"z":0.01}
+            }
+    }
+]

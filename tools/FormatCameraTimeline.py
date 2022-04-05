@@ -5,7 +5,7 @@
 # Reads a JSON List of CameraAngle JSON objects and condenses them into a timeline for ScrolLScene
 
 import sys
-import json
+import json5
 import re
 
 #Make sure we have an appropriate amount of args
@@ -20,7 +20,7 @@ for i in range(1, len(sys.argv)):
     
     #Read the file and load it as JSON
     f = open(filePath, 'r')
-    data = json.load(f)
+    data = json5.load(f)
     f.close()
 
     #Set up our values to append to
@@ -69,7 +69,7 @@ for i in range(1, len(sys.argv)):
     }
 
     f2 = open(filePath + "_combined", 'w')
-    s = json.dumps(timeline) #Dump json into a string
+    s = json5.dumps(timeline) #Dump json into a string
 
     #Apply regex so that we don't just have a json but a easily copyable file
     regex0 = r'((: [{])|(\], )|(}, ))' #indent JSON
