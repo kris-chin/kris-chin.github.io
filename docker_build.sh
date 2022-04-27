@@ -1,0 +1,1 @@
+docker build -t krischin/kris-chin.github.io:latest .
