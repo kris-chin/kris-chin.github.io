@@ -1,0 +1,41 @@
+[
+    {
+        "name" : "red",
+        "type" : "lambert",
+        "materialParameters" : {
+            "color" : 0x9B2226
+        }
+    },
+    {
+        "name" : "yellow",
+        "type" : "lambert",
+        "materialParameters" : {
+            "color" : 0xEE9B00
+        }
+    },
+    {
+        "name" : "green",
+        "type" : "lambert",
+        "materialParameters" : {
+            "color" : 0x94D2BD
+        }
+    },
+    {
+        "name" : "blue",
+        "type" : "lambert",
+        "materialParameters" : {
+            "color" : 0x005F73
+        }
+    },
+    {
+        "name" : "white",
+        "type" : "lambert",
+        "materialParameters" : {
+            "color" : 0xffffff
+        }
+    },
+    {
+        "name" : "skybox0",
+        "type" : "skybox"
+    }
+]

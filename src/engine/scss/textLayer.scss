@@ -1,0 +1,87 @@
+//Colorscheme variales
+$mainText : #001219;
+$highlightText1: #0A9396;
+$highlightText2: #9B2226;
+$backgroundColor: #EE9B00;
+
+//Font Vriables
+$mainFont : arial;
+
+#textLayer{
+    z-index: 100; //Put the text above the canvas
+    background-color: $backgroundColor;
+    
+    //set width and height of the textLayer div to the body, which is the size of the canvas
+    //this way we can properly overflow any text elements on smaller screens
+    width:100%; //100% of body
+    height:100%; //100% of body
+
+    //Scroll-related settings
+    overflow: hidden; 
+    position:absolute; 
+
+    //any div will be absolute
+    div{
+        position:absolute;
+        transform:translate3d(0,0,0.01); //im not sure if this automatically does GPU computation but i think this is fine
+    }
+
+    p{
+        font-weight: bold;
+        display:inline-block;
+        margin: 0;
+        color: $mainText;
+
+        //colored emphasis text
+        span.highlight1{
+            color:$highlightText1
+        }
+        span.highlight2{
+            color: $highlightText2;
+        }
+
+    }
+
+    h1{
+        color: $mainText;
+    }
+
+    #textLayer_progressInfo{
+        font-family: $mainFont;
+        //The following code sets the text-alignment to center, and then moves it to the center of the screen
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%) translate(50vw,50vh);
+        //
+        
+        font-size: 10em;
+    }
+
+    //===============================COMPONENT STYLES================================================
+
+    #cameraDebug{
+        width: 100vh;
+
+        #cameraDebug_warn{
+            color:red;
+        }
+    }
+
+    #objectDebug{
+        width: 30em;
+        p {
+            display: block;
+        }
+    }
+
+}
+
+body{
+    overflow-x: hidden; //keep the window the same width
+    margin: 0; 
+    background: $backgroundColor;
+}
+
+button{
+    pointer-events:all;
+}

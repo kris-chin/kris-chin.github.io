@@ -1,0 +1,8 @@
+#These are the packages used for all Python in the codebase
+
+#Packages for tooling
+json5
+
+#Documentation
+sphinx
+sphinx-rtd-theme

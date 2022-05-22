@@ -3,8 +3,17 @@ import ReactDOM from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
-import Splash from './components/Splash';
-import Projects from './components/Projects';
+//Engine imports
+import Canvas from './engine/Canvas';
+import './engine/scss/textLayer.scss';
+
+//Desktop Imports
+import { desktop } from './desktop/config';
+import './desktop/scss/splashPage.scss';
+import './desktop/scss/showcase.scss'
+
+//General config
+import config from './config';
 
 const history = createBrowserHistory();
 
@@ -13,11 +22,12 @@ ReactDOM.render(
 
     <Router history={history}>
       <Switch>
-          <Route exact path="/">
-            <Splash />
-          </Route>
-          <Route path = "/things">
-            <Projects />
+          <Route path ="/test"> 
+            <Canvas
+              page = {history.location.pathname}
+              config = {config}
+              data = {desktop}
+            />
           </Route>
         </Switch>
     </Router>
